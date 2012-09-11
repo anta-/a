@@ -1,3 +1,5 @@
+{-# LANGUAGE ViewPatterns #-}
+
 module Main where
 
 import System.Environment (getArgs)
@@ -85,18 +87,14 @@ smwDisCMap f =
 regexb s r = let (_,t,_) = s =~ r :: (String,String,String) in
     not. null$ t
 
-longAdressing :: String -> String
-longAdressing s =
-    if regexb s ",y"
-    then "PHX : TYX : " ++ (replace ",y" ",x". f) s ++ " : PLX"
-    else if regexb s "stz"
-    then "PHA : TDC : " ++ (replace "stz" "sta". f) s ++ " : PLA"
-    else f s
-    where
-        f = replace "\\.w" ".l". replace "\\.b" ".l"
+longAdressing :: String -> String -> String
+longAdressing m (replace "\\.b" ".w" -> s) =
+    if s `regexb` "lda|sta|ora|and|eor|adc|cmp|sbc" && not (s `regexb` ",y")
+    then replace "\\.w" ".l" s
+    else printf "PHB : PEA %s>>8 : PLB : PLB : %s : PLB" m s
 
 findAndCreateHijacking f s aa mm = do
-    let storeCodes = map (fst. head. readHex *** (longAdressing. formatSMWDisCtoXkas. substAddr aa mm)) (findSMWDisC f aa)
+    let storeCodes = map (fst. head. readHex *** (longAdressing mm. formatSMWDisCtoXkas. substAddr aa mm)) (findSMWDisC f aa)
     unzip$ map (\(a, c)-> createHijack (g a c$ createHonkeCode s a 4)) storeCodes
     where
         g a t (xs,p,q) = (map (\(b,c)-> if b == a then t else c) xs, p, q)
@@ -109,7 +107,7 @@ main = do
     f <- smwDisCtext
     let s = smwDisCMap f
     if length ar >= 3 && ar!!2 == "-h"
-    then putStrLn ((headerCode a m++)$ (\(x,y)-> unlines x ++ "\n\n(...)\n\n;"++replicate 30 '='++"\n; \n" ++ unlines y)$ findAndCreateHijacking f s a m)
+    then putStrLn ((headerCode a m++)$ (\(x,y)-> unlines x ++ "\n\n\n;"++replicate 30 '='++"\n; \n" ++ unlines y)$ findAndCreateHijacking f s a m)
     else putStrLn (createRelocate a m f)
 
 
