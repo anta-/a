@@ -78,7 +78,21 @@ createHijack (code, hjAddr, hjSize) =
 regex1 s r = let (_,_,_,t) = s =~ r :: (String,String,String,[String]) in
     listToMaybe t
 
-smwDisCtext = lines <$> readFile "SMWDisC.txt"
+numberingSMWDisC :: [String] -> [String]
+numberingSMWDisC = f 0. filter (`regexb` "^[^\\s]*:\\s+[0-9A-F]{2}[0-9A-F\\s]{0,9}\\s*[^\\s]*\\s?[^\\s]*.*$")
+    where
+        f _ [] = []
+        f n (x:xs) =
+            let ns = words$ fromJust$ x `regex1` "^[^\\s]*:\\s+([0-9A-F]{2}[0-9A-F\\s]{0,9})\\s*[^\\s]*\\s?[^\\s]*.*$" in
+            let (y, n') = g (h n) x in
+            y : f ((fromMaybe n n')+length ns) xs
+        g a x = case x `regex1` "^[^\\s]*([0-9A-F]{6}):" of
+            Nothing -> (replace "^[^\\s]*:" (a++":") x, Nothing)
+            Just a' -> (x, Just (h'. fst. head$ readHex a'))
+        h n = printf "%02X%04X" (n `div` 0x8000) (n `mod` 0x8000 + 0x8000)
+        h' (subtract 0x8000-> n) = (n `div` 0x10000 * 0x8000) + (n `mod` 0x8000)
+
+smwDisCtext = numberingSMWDisC <$> lines <$> readFile "SMWDisC.txt"
 smwDisCMap f =
     Map.fromList$ filterMap (\x->
         (\a-> (fst. head$ readHex a, x)) <$> regex1 x "^[^\\s]*([0-9A-F]{6}):"
@@ -89,9 +103,11 @@ regexb s r = let (_,t,_) = s =~ r :: (String,String,String) in
 
 longAdressing :: String -> String -> String
 longAdressing m (replace "\\.b" ".w" -> s) =
-    if s `regexb` "lda|sta|ora|and|eor|adc|cmp|sbc" && not (s `regexb` ",y")
-    then replace "\\.w" ".l" s
-    else printf "PHB : PEA %s>>8 : PLB : PLB : %s : PLB" m s
+    if s `regexb` "lda|sta|ora|and|eor|adc|cmp|sbc"
+    then if s `regexb` ",y"
+        then printf "PHX : TYX : %s : PLX" (replace ",y" ",x"$ replace "\\.w" ".l" s)
+        else replace "\\.w" ".l" s
+    else printf "PHB : db $F4 : dw %s>>8 : PLB : PLB : %s : PLB" m s
 
 findAndCreateHijacking f s aa mm = do
     let storeCodes = map (fst. head. readHex *** (longAdressing mm. formatSMWDisCtoXkas. substAddr aa mm)) (findSMWDisC f aa)
@@ -99,11 +115,23 @@ findAndCreateHijacking f s aa mm = do
     where
         g a t (xs,p,q) = (map (\(b,c)-> if b == a then t else c) xs, p, q)
 
+spriteTables = do
+    f <- smwDisCtext
+    ts <- zip [(0::Int)..]. filter (not. isPrefixOf ";"). lines <$> readFile "sprite_tables.txt"
+    return$ unlines$ map (\(i, x)-> g i f x ("!st_"++map(\x->if x=='$'then '_'else x)x)) ts
+    where
+        g i f a m = (header++). unlines.
+            map (orgCode. second (formatSMWDisCtoXkas. substAddr a m))$
+            findSMWDisC f a
+            where
+                header = printf "%s = $%04X\n" (map toLower m) (0x0FBE+i*0xC) :: String
+
 main = do
     ar <- getArgs
+    when (length ar == 1 && ar!!0 == "--st") ((writeFile "st.asm" =<< spriteTables) >> fail "end")
     when (length ar < 2) (putStrLn "SMWDisC_find [find string] [variable name] [-h hijack(long addressing)]\nexample: SMWDisC_find $0FBE !pointer_of_16x" >> fail "end")
-    let a = ar!!0
-    let m = ar!!1
+    let a = map toLower$ ar!!0
+    let m = map toLower$ ar!!1
     f <- smwDisCtext
     let s = smwDisCMap f
     if length ar >= 3 && ar!!2 == "-h"

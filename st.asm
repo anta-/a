@@ -1,0 +1,7086 @@
+!st__14c8 = $0FBE
+org $00FA12
+	stz.w !st__14c8,x
+org $00FA53
+	sta.w !st__14c8,y
+org $00FA91
+	lda.w !st__14c8,y
+org $00FAC0
+	sta.w !st__14c8,y
+org $00FACE
+	sta.w !st__14c8,y
+org $00FB6B
+	sta.w !st__14c8,y
+org $00FC1B
+	stz.w !st__14c8,x
+org $00FC25
+	lda.w !st__14c8,y
+org $00FC9A
+	sta.w !st__14c8,x
+org $00FCEE
+	stz.w !st__14c8,x
+org $0180E5
+	lda.w !st__14c8,x
+org $018127
+	lda.w !st__14c8,x
+org $018174
+	sta.w !st__14c8,x
+org $0183EB
+	stz.w !st__14c8,x
+org $018437
+	sta.w !st__14c8,x
+org $018462
+	sta.w !st__14c8,x
+org $018472
+	lda.w !st__14c8,y
+org $0184AB
+	sta.w !st__14c8,y
+org $0183EB
+	stz.w !st__14c8,x
+org $018437
+	sta.w !st__14c8,x
+org $018462
+	sta.w !st__14c8,x
+org $018472
+	lda.w !st__14c8,y
+org $0184AB
+	sta.w !st__14c8,y
+org $018778
+	stz.w !st__14c8,x
+org $0188A1
+	lda.w !st__14c8,y
+org $018972
+	lda.w !st__14c8,y
+org $01899A
+	sta.w !st__14c8,y
+org $018A1D
+	lda.w !st__14c8,y
+org $018A75
+	sta.w !st__14c8,y
+org $018AA5
+	lda.w !st__14c8,y
+org $018AF1
+	sta.w !st__14c8,x
+org $018C1C
+	lda.w !st__14c8,x
+org $019020
+	stz.w !st__14c8,x
+org $019332
+	sta.w !st__14c8,x
+org $01938E
+	lda.w !st__14c8,x
+org $0193BF
+	lda.w !st__14c8,x
+org $019564
+	sta.w !st__14c8,x
+org $019642
+	sta.w !st__14c8,x
+org $019698
+	sta.w !st__14c8,x
+org $0196CD
+	sta.w !st__14c8,x
+org $0196E9
+	sta.w !st__14c8,y
+org $01976D
+	lda.w !st__14c8,y
+org $019778
+	sta.w !st__14c8,y
+org $0199DC
+	stz.w !st__14c8,x
+org $019ACD
+	sta.w !st__14c8,x
+org $019AED
+	stz.w !st__14c8,x
+org $01A25D
+	lda.w !st__14c8,x
+org $01A28D
+	sta.w !st__14c8,y
+org $01A2C2
+	sta.w !st__14c8,x
+org $01A397
+	lda.w !st__14c8,x
+org $01A417
+	lda.w !st__14c8,x
+org $01A4BA
+	lda.w !st__14c8,y
+org $01A4CE
+	lda.w !st__14c8,x
+org $01A4F2
+	lda.w !st__14c8,x
+org $01A506
+	lda.w !st__14c8,x
+org $01A51A
+	lda.w !st__14c8,x
+org $01A555
+	lda.w !st__14c8,x
+org $01A5E5
+	sta.w !st__14c8,y
+org $01A66D
+	sta.w !st__14c8,x
+org $01A691
+	sta.w !st__14c8,x
+org $01A6AE
+	sta.w !st__14c8,y
+org $01A86D
+	sta.w !st__14c8,x
+org $01A88B
+	lda.w !st__14c8,x
+org $01A9D5
+	sta.w !st__14c8,x
+org $01A9EB
+	sta.w !st__14c8,x
+org $01AA01
+	ldy.w !st__14c8,x
+org $01AA2F
+	sta.w !st__14c8,x
+org $01AA68
+	sta.w !st__14c8,x
+org $01AAA1
+	sta.w !st__14c8,x
+org $01AC8E
+	lda.w !st__14c8,x
+org $01ACA1
+	stz.w !st__14c8,x
+org $01AEA6
+	lda.w !st__14c8,x
+org $01AF9F
+	lda.w !st__14c8,x
+org $01B01D
+	lda.w !st__14c8,x
+org $01B142
+	sta.w !st__14c8,x
+org $01B264
+	sta.w !st__14c8,x
+org $01B559
+	lda.w !st__14c8,x
+org $01BC64
+	stz.w !st__14c8,x
+org $01BC94
+	sta.w !st__14c8,x
+org $01BCDC
+	stz.w !st__14c8,x
+org $01BDBF
+	lda.w !st__14c8,y
+org $01BDCB
+	stz.w !st__14c8,x
+org $01BDF7
+	stz.w !st__14c8,x
+org $01BF1F
+	lda.w !st__14c8,y
+org $01BF2F
+	sta.w !st__14c8,y
+org $01C17F
+	stz.w !st__14c8,x
+org $01C1EE
+	lda.w !st__14c8,x
+org $01C2B9
+	sta.w !st__14c8,x
+org $01C2D5
+	lda.w !st__14c8,y
+org $01C2E5
+	sta.w !st__14c8,y
+org $01C2F4
+	sta.w !st__14c8,x
+org $01C30F
+	stz.w !st__14c8,x
+org $01C3B2
+	lda.w !st__14c8,x
+org $01C4C6
+	stz.w !st__14c8,x
+org $01C701
+	lda.w !st__14c8,x
+org $01D053
+	stz.w !st__14c8,x
+org $01D060
+	lda.w !st__14c8,y
+org $01D06B
+	sta.w !st__14c8,y
+org $01D43E
+	stz.w !st__14c8,x
+org $01D484
+	stz.w !st__14c8,x
+org $01D4E7
+	lda.w !st__14c8,x
+org $01DA0A
+	lda.w !st__14c8,x
+org $01DB5F
+	lda.w !st__14c8,x
+org $01DDB1
+	stz.w !st__14c8,x
+org $01DDB9
+	sta.w !st__14c8,x
+org $01E16A
+	stz.w !st__14c8,x
+org $01E1CA
+	lda.w !st__14c8,y
+org $01E1F3
+	lda.w !st__14c8,y
+org $01E41F
+	lda.w !st__14c8,x
+org $01E6DC
+	sta.w !st__14c8,x
+org $01E768
+	stz.w !st__14c8,x
+org $01E7CD
+	stz.w !st__14c8,x
+org $01E7DD
+	lda.w !st__14c8,y
+org $01E9AD
+	lda.w !st__14c8,x
+org $01E9B5
+	stz.w !st__14c8,x
+org $01EA29
+	sta.w !st__14c8,y
+org $01EBDC
+	lda.w !st__14c8,x
+org $01EBF6
+	lda.w !st__14c8,x
+org $01EC8D
+	sta.w !st__14c8,y
+org $01F1B7
+	sta.w !st__14c8,y
+org $01F234
+	sta.w !st__14c8,y
+org $01F27E
+	stz.w !st__14c8,x
+org $01F358
+	sta.w !st__14c8,y
+org $01F375
+	sta.w !st__14c8,y
+org $01F575
+	lda.w !st__14c8,y
+org $01F5C9
+	sta.w !st__14c8,y
+org $01F640
+	lda.w !st__14c8,y
+org $01F64A
+	lda.w !st__14c8,y
+org $01F6D9
+	sta.w !st__14c8,y
+org $01F6F5
+	lda.w !st__14c8,y
+org $01F74E
+	sta.w !st__14c8,x
+org $01F84C
+	sta.w !st__14c8,x
+org $01F88C
+	lda.w !st__14c8,x
+org $01F8E4
+	lda.w !st__14c8,x
+org $01FA09
+	lda.w !st__14c8,x
+org $01FA3D
+	lda.w !st__14c8,x
+org $01FB32
+	stz.w !st__14c8,x
+org $01FDA9
+	lda.w !st__14c8,y
+org $01FDB9
+	sta.w !st__14c8,y
+org $0280A1
+	stz.w !st__14c8,x
+org $028141
+	lda.w !st__14c8,y
+org $02816A
+	sta.w !st__14c8,y
+org $028638
+	sta.w !st__14c8,x
+org $028907
+	lda.w !st__14c8,x
+org $02892A
+	sta.w !st__14c8,x
+org $028961
+	stz.w !st__14c8,x
+org $0289B7
+	sta.w !st__14c8,x
+org $0289E1
+	lda.w !st__14c8,y
+org $028B3E
+	sta.w !st__14c8,x
+org $0293B3
+	lda.w !st__14c8,x
+org $029432
+	lda.w !st__14c8,x
+org $02945D
+	sta.w !st__14c8,x
+org $029482
+	sta.w !st__14c8,x
+org $0294CE
+	lda.w !st__14c8,x
+org $029DA3
+	lda.w !st__14c8,y
+org $02A0BD
+	lda.w !st__14c8,x
+org $02A10D
+	sta.w !st__14c8,x
+org $02A12F
+	sta.w !st__14c8,x
+org $02A918
+	lda.w !st__14c8,x
+org $02A975
+	sta.w !st__14c8,x
+org $02A9B6
+	sta.w !st__14c8,x
+org $02A9FE
+	lda.w !st__14c8,y
+org $02AC05
+	lda.w !st__14c8,x
+org $02AC0C
+	stz.w !st__14c8,x
+org $02AC1A
+	stz.w !st__14c8,x
+org $02AC1F
+	sta.w !st__14c8
+org $02AF4E
+	sta.w !st__14c8,x
+org $02AFB8
+	sta.w !st__14c8,x
+org $02B04A
+	sta.w !st__14c8,x
+org $02B090
+	sta.w !st__14c8,x
+org $02B122
+	sta.w !st__14c8,y
+org $02B16A
+	sta.w !st__14c8,x
+org $02B1CB
+	sta.w !st__14c8,x
+org $02B216
+	sta.w !st__14c8,x
+org $02B27D
+	lda.w !st__14c8,x
+org $02B28A
+	sta.w !st__14c8,x
+org $02B2E5
+	sta.w !st__14c8,x
+org $02B338
+	sta.w !st__14c8,x
+org $02B3ED
+	sta.w !st__14c8,y
+org $02B4AE
+	sta.w !st__14c8,y
+org $02B677
+	lda.w !st__14c8,x
+org $02B695
+	lda.w !st__14c8,x
+org $02B6AB
+	stz.w !st__14c8,x
+org $02B7B4
+	lda.w !st__14c8,y
+org $02B836
+	sta.w !st__14c8,y
+org $02B9C4
+	lda.w !st__14c8,y
+org $02B9E0
+	sta.w !st__14c8,y
+org $02BAB7
+	lda.w !st__14c8,y
+org $02BAC2
+	sta.w !st__14c8,y
+org $02BD2F
+	lda.w !st__14c8,x
+org $02BDB0
+	stz.w !st__14c8,x
+org $02C1A2
+	sta.w !st__14c8,y
+org $02C22C
+	lda.w !st__14c8,x
+org $02C5C4
+	sta.w !st__14c8,y
+org $02C7B5
+	sta.w !st__14c8,x
+org $02D07A
+	lda.w !st__14c8,x
+org $02D08D
+	stz.w !st__14c8,x
+org $02D58A
+	lda.w !st__14c8,x
+org $02D8F6
+	lda.w !st__14c8,x
+org $02D8FF
+	sta.w !st__14c8,x
+org $02DA5D
+	lda.w !st__14c8,x
+org $02DB66
+	lda.w !st__14c8,y
+org $02DBFF
+	sta.w !st__14c8,y
+org $02DCBE
+	lda.w !st__14c8,x
+org $02DD9C
+	sta.w !st__14c8,y
+org $02DF02
+	stz.w !st__14c8,x
+org $02E274
+	stz.w !st__14c8,x
+org $02E318
+	lda.w !st__14c8,x
+org $02E605
+	lda.w !st__14c8,y
+org $02E93D
+	lda.w !st__14c8,x
+org $02EA63
+	lda.w !st__14c8,y
+org $02EAFA
+	sta.w !st__14c8,y
+org $02EB34
+	lda.w !st__14c8,x
+org $02ED9B
+	sta.w !st__14c8,y
+org $02EDDF
+	lda.w !st__14c8,x
+org $02EDEF
+	sta.w !st__14c8,y
+org $02EE21
+	lda.w !st__14c8,y
+org $02EF70
+	lda.w !st__14c8,y
+org $02EF7D
+	sta.w !st__14c8,y
+org $02F21D
+	lda.w !st__14c8,x
+org $02F29F
+	sta.w !st__14c8,x
+org $02F45F
+	stz.w !st__14c8,x
+org $02F54A
+	lda.w !st__14c8,y
+org $02F55A
+	sta.w !st__14c8,y
+org $03808F
+	lda.w !st__14c8,x
+org $0381D5
+	sta.w !st__14c8,x
+org $0381E6
+	lda.w !st__14c8,y
+org $038211
+	stz.w !st__14c8,x
+org $0384E5
+	lda.w !st__14c8,x
+org $038536
+	lda.w !st__14c8,x
+org $038717
+	stz.w !st__14c8,x
+org $038773
+	lda.w !st__14c8,x
+org $0388B6
+	lda.w !st__14c8,x
+org $03898C
+	lda.w !st__14c8,x
+org $038AE1
+	sta.w !st__14c8,y
+org $038FA4
+	lda.w !st__14c8,x
+org $039387
+	stz.w !st__14c8,x
+org $03951A
+	lda.w !st__14c8,x
+org $039530
+	stz.w !st__14c8,x
+org $0395E0
+	sta.w !st__14c8,x
+org $0395F4
+	sta.w !st__14c8,x
+org $039910
+	lda.w !st__14c8,x
+org $039ACE
+	sta.w !st__14c8,y
+org $039BD8
+	lda.w !st__14c8,x
+org $039C4E
+	lda.w !st__14c8,x
+org $03A51D
+	lda.w !st__14c8
+org $03A6CA
+	lda.w !st__14c8,y
+org $03A6E4
+	sta.w !st__14c8,y
+org $03A7EB
+	lda.w !st__14c8,y
+org $03A7FD
+	sta.w !st__14c8,y
+org $03A8D8
+	lda.w !st__14c8,y
+org $03A8EA
+	sta.w !st__14c8,y
+org $03B022
+	lda.w !st__14c8,y
+org $03B02D
+	sta.w !st__14c8,y
+org $03B0DF
+	lda.w !st__14c8,y
+org $03B157
+	sta.w !st__14c8,y
+org $03B2AD
+	lda.w !st__14c8,x
+org $03B8AC
+	lda.w !st__14c8,x
+org $03B8BF
+	stz.w !st__14c8,x
+org $03C034
+	sta.w !st__14c8,y
+org $03C069
+	sta.w !st__14c8,x
+org $03C211
+	lda.w !st__14c8,y
+org $03C2DC
+	lda.w !st__14c8,x
+org $03C2E8
+	sta.w !st__14c8,x
+org $03C4E8
+	lda.w !st__14c8,y
+org $03C4F6
+	stz.w !st__14c8,x
+org $03C7C7
+	lda.w !st__14c8,y
+org $03C7D2
+	sta.w !st__14c8,y
+org $03C955
+	stz.w !st__14c8,x
+org $03CBC7
+	sta.w !st__14c8,y
+org $03CC17
+	lda.w !st__14c8,x
+org $03CCEA
+	sta.w !st__14c8,y
+org $03CDF9
+	stz.w !st__14c8,x
+org $03CE8E
+	stz.w !st__14c8,x
+
+!st_ram_spriteyhi = $0FCA
+org $00FA70
+	sta.w !st_ram_spriteyhi,y
+org $00FC60
+	sta.w !st_ram_spriteyhi,y
+org $00FCB9
+	sta.w !st_ram_spriteyhi,x
+org $00FD04
+	sta.w !st_ram_spriteyhi,x
+org $00FF49
+	lda.w !st_ram_spriteyhi,x
+org $00FF7A
+	lda.w !st_ram_spriteyhi,x
+org $018362
+	lda.w !st_ram_spriteyhi,x
+org $018367
+	sta.w !st_ram_spriteyhi,x
+org $0183BA
+	lda.w !st_ram_spriteyhi,x
+org $018408
+	inc.w !st_ram_spriteyhi,x
+org $018495
+	lda.w !st_ram_spriteyhi,x
+org $0184BE
+	lda.w !st_ram_spriteyhi,x
+org $0184C1
+	sta.w !st_ram_spriteyhi,y
+org $0185A8
+	lda.w !st_ram_spriteyhi,x
+org $0185AD
+	sta.w !st_ram_spriteyhi,x
+org $0185BF
+	dec.w !st_ram_spriteyhi,x
+org $018362
+	lda.w !st_ram_spriteyhi,x
+org $018367
+	sta.w !st_ram_spriteyhi,x
+org $0183BA
+	lda.w !st_ram_spriteyhi,x
+org $018408
+	inc.w !st_ram_spriteyhi,x
+org $018495
+	lda.w !st_ram_spriteyhi,x
+org $0184BE
+	lda.w !st_ram_spriteyhi,x
+org $0184C1
+	sta.w !st_ram_spriteyhi,y
+org $0185A8
+	lda.w !st_ram_spriteyhi,x
+org $0185AD
+	sta.w !st_ram_spriteyhi,x
+org $0185BF
+	dec.w !st_ram_spriteyhi,x
+org $0188C4
+	lda.w !st_ram_spriteyhi,y
+org $018BF7
+	lda.w !st_ram_spriteyhi,x
+org $018BFD
+	sta.w !st_ram_spriteyhi,x
+org $018C04
+	sta.w !st_ram_spriteyhi,x
+org $018F84
+	lda.w !st_ram_spriteyhi,x
+org $019175
+	lda.w !st_ram_spriteyhi,x
+org $01917A
+	sta.w !st_ram_spriteyhi,x
+org $019196
+	lda.w !st_ram_spriteyhi,x
+org $01919B
+	sta.w !st_ram_spriteyhi,x
+org $0193A4
+	lda.w !st_ram_spriteyhi,x
+org $0193A9
+	sta.w !st_ram_spriteyhi,x
+org $019461
+	lda.w !st_ram_spriteyhi,x
+org $0194CB
+	lda.w !st_ram_spriteyhi,x
+org $0195BA
+	lda.w !st_ram_spriteyhi,x
+org $01970D
+	lda.w !st_ram_spriteyhi,x
+org $019710
+	sta.w !st_ram_spriteyhi,y
+org $019790
+	lda.w !st_ram_spriteyhi,x
+org $019793
+	sta.w !st_ram_spriteyhi,y
+org $0199F3
+	lda.w !st_ram_spriteyhi,x
+org $019E9D
+	lda.w !st_ram_spriteyhi,x
+org $019EA3
+	sta.w !st_ram_spriteyhi,x
+org $019F02
+	sta.w !st_ram_spriteyhi,x
+org $01A123
+	sta.w !st_ram_spriteyhi,x
+org $01A245
+	lda.w !st_ram_spriteyhi,x
+org $01A2D0
+	lda.w !st_ram_spriteyhi,x
+org $01A2D5
+	sta.w !st_ram_spriteyhi,x
+org $01A347
+	lda.w !st_ram_spriteyhi,x
+org $01A34C
+	sta.w !st_ram_spriteyhi,y
+org $01A3B2
+	lda.w !st_ram_spriteyhi,x
+org $01A474
+	lda.w !st_ram_spriteyhi,x
+org $01A491
+	lda.w !st_ram_spriteyhi,y
+org $01AAEA
+	lda.w !st_ram_spriteyhi,x
+org $01ABFF
+	adc.w !st_ram_spriteyhi,x
+org $01AC02
+	sta.w !st_ram_spriteyhi,x
+org $01AC43
+	lda.w !st_ram_spriteyhi,x
+org $01ACE6
+	sbc.w !st_ram_spriteyhi,x
+org $01AD4D
+	sbc.w !st_ram_spriteyhi,x
+org $01AE23
+	lda.w !st_ram_spriteyhi,x
+org $01B186
+	lda.w !st_ram_spriteyhi,x
+org $01B24F
+	lda.w !st_ram_spriteyhi,x
+org $01B254
+	sta.w !st_ram_spriteyhi,x
+org $01B491
+	lda.w !st_ram_spriteyhi,x
+org $01B63B
+	lda.w !st_ram_spriteyhi,x
+org $01B641
+	sta.w !st_ram_spriteyhi,x
+org $01B648
+	sta.w !st_ram_spriteyhi,x
+org $01B7CB
+	lda.w !st_ram_spriteyhi,x
+org $01B898
+	lda.w !st_ram_spriteyhi,x
+org $01B924
+	lda.w !st_ram_spriteyhi,x
+org $01B9A6
+	ldy.w !st_ram_spriteyhi,x
+org $01B9BE
+	lda.w !st_ram_spriteyhi,x
+org $01B9C3
+	sta.w !st_ram_spriteyhi,x
+org $01B9F4
+	sta.w !st_ram_spriteyhi,x
+org $01BCA8
+	sta.w !st_ram_spriteyhi,x
+org $01BE1B
+	sta.w !st_ram_spriteyhi,x
+org $01BF4A
+	lda.w !st_ram_spriteyhi,x
+org $01BF4F
+	sta.w !st_ram_spriteyhi,y
+org $01C06C
+	lda.w !st_ram_spriteyhi,x
+org $01C071
+	sta.w !st_ram_spriteyhi,x
+org $01C089
+	lda.w !st_ram_spriteyhi,x
+org $01C091
+	sta.w !st_ram_spriteyhi,x
+org $01C1C3
+	lda.w !st_ram_spriteyhi,x
+org $01C1E0
+	lda.w !st_ram_spriteyhi,x
+org $01C404
+	lda.w !st_ram_spriteyhi,x
+org $01C76A
+	lda.w !st_ram_spriteyhi,x
+org $01C76F
+	sta.w !st_ram_spriteyhi,x
+org $01CAFC
+	lda.w !st_ram_spriteyhi,x
+org $01CD45
+	sta.w !st_ram_spriteyhi,x
+org $01CFEE
+	dec.w !st_ram_spriteyhi,x
+org $01D084
+	lda.w !st_ram_spriteyhi,x
+org $01D089
+	sta.w !st_ram_spriteyhi,y
+org $01D0C4
+	lda.w !st_ram_spriteyhi,x
+org $01D395
+	lda.w !st_ram_spriteyhi,x
+org $01D39A
+	sta.w !st_ram_spriteyhi,x
+org $01D431
+	lda.w !st_ram_spriteyhi,x
+org $01D517
+	inc.w !st_ram_spriteyhi,x
+org $01D5D1
+	lda.w !st_ram_spriteyhi,x
+org $01D5D7
+	sta.w !st_ram_spriteyhi,x
+org $01D62C
+	lda.w !st_ram_spriteyhi,x
+org $01D631
+	sta.w !st_ram_spriteyhi,x
+org $01D666
+	sta.w !st_ram_spriteyhi,x
+org $01D6BD
+	sta.w !st_ram_spriteyhi,x
+org $01D811
+	lda.w !st_ram_spriteyhi,x
+org $01D8A8
+	lda.w !st_ram_spriteyhi,x
+org $01D8BC
+	sta.w !st_ram_spriteyhi,x
+org $01D93E
+	sta.w !st_ram_spriteyhi,x
+org $01DA55
+	lda.w !st_ram_spriteyhi,x
+org $01DAC6
+	lda.w !st_ram_spriteyhi,x
+org $01DACC
+	sta.w !st_ram_spriteyhi,x
+org $01DAD3
+	sta.w !st_ram_spriteyhi,x
+org $01DB18
+	lda.w !st_ram_spriteyhi,x
+org $01DB1E
+	sta.w !st_ram_spriteyhi,x
+org $01DB32
+	sta.w !st_ram_spriteyhi,x
+org $01DDD6
+	sta.w !st_ram_spriteyhi,x
+org $01E055
+	lda.w !st_ram_spriteyhi,x
+org $01E062
+	lda.w !st_ram_spriteyhi,x
+org $01E067
+	sta.w !st_ram_spriteyhi,x
+org $01E0EA
+	lda.w !st_ram_spriteyhi,x
+org $01E22A
+	lda.w !st_ram_spriteyhi,x
+org $01E336
+	lda.w !st_ram_spriteyhi,x
+org $01E673
+	lda.w !st_ram_spriteyhi,x
+org $01E826
+	sta.w !st_ram_spriteyhi,x
+org $01E87B
+	sta.w !st_ram_spriteyhi,x
+org $01E8BD
+	lda.w !st_ram_spriteyhi,x
+org $01E8C2
+	sta.w !st_ram_spriteyhi,y
+org $01EA4A
+	lda.w !st_ram_spriteyhi,x
+org $01EA4D
+	sta.w !st_ram_spriteyhi,y
+org $01EB6F
+	sta.w !st_ram_spriteyhi,x
+org $01ECBB
+	lda.w !st_ram_spriteyhi,x
+org $01ECC0
+	sta.w !st_ram_spriteyhi,y
+org $01ED21
+	lda.w !st_ram_spriteyhi,x
+org $01EDD8
+	lda.w !st_ram_spriteyhi,x
+org $01EF2F
+	lda.w !st_ram_spriteyhi,x
+org $01EF35
+	sta.w !st_ram_spriteyhi,x
+org $01EFA0
+	inc.w !st_ram_spriteyhi,x
+org $01EFA7
+	sta.w !st_ram_spriteyhi,x
+org $01F218
+	lda.w !st_ram_spriteyhi,x
+org $01F21B
+	sta.w !st_ram_spriteyhi,y
+org $01F2AD
+	lda.w !st_ram_spriteyhi,x
+org $01F50F
+	lda.w !st_ram_spriteyhi,x
+org $01F514
+	sta.w !st_ram_spriteyhi,y
+org $01F557
+	lda.w !st_ram_spriteyhi,x
+org $01F5E2
+	sta.w !st_ram_spriteyhi,y
+org $01F7D5
+	lda.w !st_ram_spriteyhi,x
+org $01FD68
+	lda.w !st_ram_spriteyhi,x
+org $01FDEE
+	sta.w !st_ram_spriteyhi,y
+org $01FFB0
+	lda.w !st_ram_spriteyhi,x
+org $02806A
+	sta.w !st_ram_spriteyhi,x
+org $028549
+	lda.w !st_ram_spriteyhi,x
+org $028621
+	lda.w !st_ram_spriteyhi,x
+org $028641
+	sta.w !st_ram_spriteyhi,x
+org $028981
+	sta.w !st_ram_spriteyhi,x
+org $0289A2
+	sta.w !st_ram_spriteyhi,x
+org $028B5E
+	sta.w !st_ram_spriteyhi,x
+org $028BDD
+	lda.w !st_ram_spriteyhi,x
+org $02A956
+	sta.w !st_ram_spriteyhi,x
+org $02A965
+	sta.w !st_ram_spriteyhi,x
+org $02AC34
+	lda.w !st_ram_spriteyhi,x
+org $02AC37
+	sta.w !st_ram_spriteyhi
+org $02AD02
+	lda.w !st_ram_spriteyhi,x
+org $02AF68
+	sta.w !st_ram_spriteyhi,x
+org $02AFDB
+	sta.w !st_ram_spriteyhi,x
+org $02B067
+	sta.w !st_ram_spriteyhi,x
+org $02B0AE
+	sta.w !st_ram_spriteyhi,x
+org $02B149
+	sta.w !st_ram_spriteyhi,y
+org $02B180
+	sta.w !st_ram_spriteyhi,x
+org $02B1E7
+	sta.w !st_ram_spriteyhi,x
+org $02B232
+	sta.w !st_ram_spriteyhi,x
+org $02B2A5
+	sta.w !st_ram_spriteyhi,x
+org $02B300
+	sta.w !st_ram_spriteyhi,x
+org $02B35C
+	sta.w !st_ram_spriteyhi,x
+org $02B40A
+	sta.w !st_ram_spriteyhi,y
+org $02B4D0
+	sta.w !st_ram_spriteyhi,y
+org $02B857
+	lda.w !st_ram_spriteyhi,x
+org $02B85A
+	sta.w !st_ram_spriteyhi,y
+org $02B9B3
+	lda.w !st_ram_spriteyhi,x
+org $02BAE1
+	sta.w !st_ram_spriteyhi,y
+org $02C1E0
+	lda.w !st_ram_spriteyhi,x
+org $02C1E5
+	sta.w !st_ram_spriteyhi,y
+org $02C48F
+	lda.w !st_ram_spriteyhi,x
+org $02C5DC
+	lda.w !st_ram_spriteyhi,x
+org $02C5DF
+	sta.w !st_ram_spriteyhi,y
+org $02CC3B
+	adc.w !st_ram_spriteyhi,x
+org $02CC3E
+	sta.w !st_ram_spriteyhi,x
+org $02CC4E
+	lda.w !st_ram_spriteyhi,x
+org $02CD74
+	lda.w !st_ram_spriteyhi,x
+org $02D03D
+	lda.w !st_ram_spriteyhi,x
+org $02D0B6
+	sbc.w !st_ram_spriteyhi,x
+org $02D0F3
+	lda.w !st_ram_spriteyhi,x
+org $02D155
+	lda.w !st_ram_spriteyhi,x
+org $02D2B9
+	adc.w !st_ram_spriteyhi,x
+org $02D2BC
+	sta.w !st_ram_spriteyhi,x
+org $02D2E4
+	lda.w !st_ram_spriteyhi,y
+org $02D3BE
+	lda.w !st_ram_spriteyhi,x
+org $02D43F
+	stz.w !st_ram_spriteyhi,x
+org $02D517
+	sbc.w !st_ram_spriteyhi,x
+org $02D6D9
+	lda.w !st_ram_spriteyhi,x
+org $02D710
+	lda.w !st_ram_spriteyhi,x
+org $02D715
+	sta.w !st_ram_spriteyhi,x
+org $02D758
+	sta.w !st_ram_spriteyhi,x
+org $02DAD8
+	lda.w !st_ram_spriteyhi,x
+org $02DB90
+	lda.w !st_ram_spriteyhi,x
+org $02DB95
+	sta.w !st_ram_spriteyhi,y
+org $02DDB3
+	lda.w !st_ram_spriteyhi,x
+org $02DDB6
+	sta.w !st_ram_spriteyhi,y
+org $02DF6B
+	lda.w !st_ram_spriteyhi,x
+org $02E0AA
+	lda.w !st_ram_spriteyhi,x
+org $02E104
+	lda.w !st_ram_spriteyhi,x
+org $02E10A
+	sta.w !st_ram_spriteyhi,x
+org $02E119
+	sta.w !st_ram_spriteyhi,x
+org $02E1E7
+	lda.w !st_ram_spriteyhi,x
+org $02E2D0
+	lda.w !st_ram_spriteyhi,x
+org $02E483
+	lda.w !st_ram_spriteyhi,x
+org $02E4B5
+	lda.w !st_ram_spriteyhi,x
+org $02E4BC
+	sta.w !st_ram_spriteyhi,x
+org $02E4D4
+	sta.w !st_ram_spriteyhi,x
+org $02E511
+	lda.w !st_ram_spriteyhi,x
+org $02E545
+	lda.w !st_ram_spriteyhi,x
+org $02E853
+	lda.w !st_ram_spriteyhi,x
+org $02E859
+	sta.w !st_ram_spriteyhi,x
+org $02E862
+	sta.w !st_ram_spriteyhi,x
+org $02E8D8
+	lda.w !st_ram_spriteyhi,x
+org $02E8F8
+	lda.w !st_ram_spriteyhi,x
+org $02EB12
+	lda.w !st_ram_spriteyhi,x
+org $02EB15
+	sta.w !st_ram_spriteyhi,y
+org $02EDA8
+	lda.w !st_ram_spriteyhi,x
+org $02EDAB
+	sta.w !st_ram_spriteyhi,y
+org $02EE89
+	lda.w !st_ram_spriteyhi,x
+org $02EEDF
+	lda.w !st_ram_spriteyhi,x
+org $02EF95
+	lda.w !st_ram_spriteyhi,x
+org $02EF98
+	sta.w !st_ram_spriteyhi,y
+org $02EFD6
+	lda.w !st_ram_spriteyhi,x
+org $02F56E
+	sta.w !st_ram_spriteyhi,x
+org $02F95C
+	sta.w !st_ram_spriteyhi
+org $02FC26
+	sta.w !st_ram_spriteyhi
+org $038221
+	lda.w !st_ram_spriteyhi,x
+org $038804
+	lda.w !st_ram_spriteyhi,x
+org $038B16
+	lda.w !st_ram_spriteyhi,x
+org $038B1B
+	sta.w !st_ram_spriteyhi,y
+org $038CC0
+	lda.w !st_ram_spriteyhi,x
+org $03904C
+	lda.w !st_ram_spriteyhi,x
+org $039118
+	lda.w !st_ram_spriteyhi,x
+org $03935E
+	lda.w !st_ram_spriteyhi,x
+org $039364
+	sta.w !st_ram_spriteyhi,x
+org $03936C
+	sta.w !st_ram_spriteyhi,x
+org $03939A
+	lda.w !st_ram_spriteyhi,x
+org $0398B6
+	stz.w !st_ram_spriteyhi
+org $0399E6
+	sta.w !st_ram_spriteyhi,x
+org $039AE6
+	lda.w !st_ram_spriteyhi,x
+org $039AE9
+	sta.w !st_ram_spriteyhi,y
+org $039B2B
+	lda.w !st_ram_spriteyhi,x
+org $039B34
+	sta.w !st_ram_spriteyhi,x
+org $039B3D
+	sta.w !st_ram_spriteyhi,x
+org $039DE1
+	lda.w !st_ram_spriteyhi,x
+org $039F7A
+	lda.w !st_ram_spriteyhi,x
+org $03A02B
+	sta.w !st_ram_spriteyhi,x
+org $03A04D
+	lda.w !st_ram_spriteyhi,x
+org $03A053
+	sta.w !st_ram_spriteyhi,x
+org $03A05B
+	sta.w !st_ram_spriteyhi,x
+org $03A0FE
+	sta.w !st_ram_spriteyhi,x
+org $03A63C
+	lda.w !st_ram_spriteyhi,x
+org $03A7D1
+	sta.w !st_ram_spriteyhi,x
+org $03A81C
+	sta.w !st_ram_spriteyhi,y
+org $03A90A
+	lda.w !st_ram_spriteyhi,x
+org $03A90F
+	sta.w !st_ram_spriteyhi,y
+org $03AB7F
+	lda.w !st_ram_spriteyhi,x
+org $03ABA2
+	lda.w !st_ram_spriteyhi,x
+org $03AC5F
+	sta.w !st_ram_spriteyhi,x
+org $03AC82
+	lda.w !st_ram_spriteyhi,x
+org $03AD4B
+	lda.w !st_ram_spriteyhi,x
+org $03ADA0
+	lda.w !st_ram_spriteyhi,x
+org $03B03D
+	lda.w !st_ram_spriteyhi,x
+org $03B042
+	sta.w !st_ram_spriteyhi,y
+org $03B18E
+	lda.w !st_ram_spriteyhi,x
+org $03B6D5
+	lda.w !st_ram_spriteyhi,y
+org $03B71B
+	lda.w !st_ram_spriteyhi,y
+org $03B7A6
+	lda.w !st_ram_spriteyhi,x
+org $03B834
+	sbc.w !st_ram_spriteyhi,x
+org $03B86F
+	lda.w !st_ram_spriteyhi,x
+org $03B8E8
+	sbc.w !st_ram_spriteyhi,x
+org $03C017
+	lda.w !st_ram_spriteyhi,x
+org $03C077
+	lda.w !st_ram_spriteyhi,x
+org $03C07C
+	sta.w !st_ram_spriteyhi,x
+org $03C2FE
+	sta.w !st_ram_spriteyhi,x
+org $03C32C
+	lda.w !st_ram_spriteyhi,x
+org $03C331
+	sta.w !st_ram_spriteyhi,x
+org $03C46E
+	lda.w !st_ram_spriteyhi,x
+org $03C7EB
+	sta.w !st_ram_spriteyhi,y
+org $03CBCF
+	lda.w !st_ram_spriteyhi,x
+org $03CBD2
+	sta.w !st_ram_spriteyhi,y
+org $03CD1A
+	lda.w !st_ram_spriteyhi,x
+org $03CD1D
+	sta.w !st_ram_spriteyhi,y
+org $03CE69
+	lda.w !st_ram_spriteyhi,x
+org $03DEED
+	lda.w !st_ram_spriteyhi,x
+org $07FC63
+	lda.w !st_ram_spriteyhi,x
+org $0CA00F
+	stz.w !st_ram_spriteyhi
+org $0CA283
+	sta.w !st_ram_spriteyhi
+
+!st_ram_spritexhi = $0FD6
+org $00FA5F
+	sta.w !st_ram_spritexhi,y
+org $00FBC2
+	adc.w !st_ram_spritexhi,x
+org $00FBC5
+	sta.w !st_ram_spritexhi,x
+org $00FC56
+	sta.w !st_ram_spritexhi,y
+org $00FCA7
+	sta.w !st_ram_spritexhi,x
+org $00FCFB
+	sta.w !st_ram_spritexhi,x
+org $00FF32
+	lda.w !st_ram_spritexhi,x
+org $00FF61
+	lda.w !st_ram_spritexhi,x
+org $0183D1
+	lda.w !st_ram_spritexhi,x
+org $018445
+	lda.w !st_ram_spritexhi,x
+org $01844A
+	sta.w !st_ram_spritexhi,x
+org $0184B3
+	lda.w !st_ram_spritexhi,x
+org $0184B6
+	sta.w !st_ram_spritexhi,y
+org $0183D1
+	lda.w !st_ram_spritexhi,x
+org $018445
+	lda.w !st_ram_spritexhi,x
+org $01844A
+	sta.w !st_ram_spritexhi,x
+org $0184B3
+	lda.w !st_ram_spritexhi,x
+org $0184B6
+	sta.w !st_ram_spritexhi,y
+org $0188B4
+	lda.w !st_ram_spritexhi,y
+org $018F74
+	lda.w !st_ram_spritexhi,x
+org $019166
+	lda.w !st_ram_spritexhi,x
+org $01916B
+	sta.w !st_ram_spritexhi,x
+org $019187
+	lda.w !st_ram_spritexhi,x
+org $01918C
+	sta.w !st_ram_spritexhi,x
+org $0191B8
+	adc.w !st_ram_spritexhi,x
+org $0191BB
+	sta.w !st_ram_spritexhi,x
+org $0191D8
+	lda.w !st_ram_spritexhi,x
+org $0191DE
+	sta.w !st_ram_spritexhi,x
+org $0193FC
+	lda.w !st_ram_spritexhi,x
+org $019402
+	sta.w !st_ram_spritexhi,x
+org $019476
+	lda.w !st_ram_spritexhi,x
+org $0194E7
+	lda.w !st_ram_spritexhi,x
+org $0195AD
+	lda.w !st_ram_spritexhi,x
+org $019702
+	lda.w !st_ram_spritexhi,x
+org $019705
+	sta.w !st_ram_spritexhi,y
+org $019785
+	lda.w !st_ram_spritexhi,x
+org $019788
+	sta.w !st_ram_spritexhi,y
+org $0199EA
+	lda.w !st_ram_spritexhi,x
+org $019E40
+	lda.w !st_ram_spritexhi,x
+org $019EAE
+	lda.w !st_ram_spritexhi,x
+org $019EB4
+	sta.w !st_ram_spritexhi,x
+org $019EDB
+	lda.w !st_ram_spritexhi,x
+org $019EE0
+	sta.w !st_ram_spritexhi,x
+org $019EFB
+	sta.w !st_ram_spritexhi,x
+org $01A056
+	sta.w !st_ram_spritexhi,x
+org $01A104
+	sta.w !st_ram_spritexhi,x
+org $01A237
+	lda.w !st_ram_spritexhi,x
+org $01A337
+	lda.w !st_ram_spritexhi,x
+org $01A33C
+	sta.w !st_ram_spritexhi,y
+org $01A36F
+	lda.w !st_ram_spritexhi,x
+org $01A379
+	lda.w !st_ram_spritexhi,x
+org $01A441
+	lda.w !st_ram_spritexhi,x
+org $01A44B
+	lda.w !st_ram_spritexhi,y
+org $01A573
+	lda.w !st_ram_spritexhi,x
+org $01A576
+	sbc.w !st_ram_spritexhi,y
+org $01A7AA
+	lda.w !st_ram_spritexhi,x
+org $01A7B4
+	sta.w !st_ram_spritexhi,y
+org $01AC6F
+	sbc.w !st_ram_spritexhi,x
+org $01ACB5
+	lda.w !st_ram_spritexhi,x
+org $01AD3B
+	sbc.w !st_ram_spritexhi,x
+org $01AE1A
+	lda.w !st_ram_spritexhi,x
+org $01B16D
+	adc.w !st_ram_spritexhi,x
+org $01B52D
+	adc.w !st_ram_spritexhi,x
+org $01B7D9
+	lda.w !st_ram_spritexhi,x
+org $01B8F7
+	adc.w !st_ram_spritexhi,x
+org $01B90E
+	lda.w !st_ram_spritexhi,x
+org $01BC9D
+	sta.w !st_ram_spritexhi,x
+org $01BE2D
+	sta.w !st_ram_spritexhi,x
+org $01BF3C
+	lda.w !st_ram_spritexhi,x
+org $01BF3F
+	sta.w !st_ram_spritexhi,y
+org $01C07C
+	lda.w !st_ram_spritexhi,x
+org $01C1D7
+	lda.w !st_ram_spritexhi,x
+org $01C75B
+	lda.w !st_ram_spritexhi,x
+org $01C760
+	sta.w !st_ram_spritexhi,x
+org $01CADE
+	lda.w !st_ram_spritexhi,x
+org $01CD83
+	sta.w !st_ram_spritexhi,x
+org $01CEBF
+	cmp.w !st_ram_spritexhi,x
+org $01D077
+	lda.w !st_ram_spritexhi,x
+org $01D09E
+	sta.w !st_ram_spritexhi,y
+org $01D359
+	lda.w !st_ram_spritexhi,x
+org $01D35F
+	sta.w !st_ram_spritexhi,x
+org $01D372
+	sta.w !st_ram_spritexhi,x
+org $01D412
+	lda.w !st_ram_spritexhi,x
+org $01D472
+	lda.w !st_ram_spritexhi,x
+org $01D610
+	lda.w !st_ram_spritexhi,x
+org $01D617
+	sta.w !st_ram_spritexhi,x
+org $01D6B6
+	sta.w !st_ram_spritexhi,x
+org $01D6FD
+	lda.w !st_ram_spritexhi,x
+org $01D702
+	sta.w !st_ram_spritexhi,x
+org $01D801
+	lda.w !st_ram_spritexhi,x
+org $01D8B1
+	lda.w !st_ram_spritexhi,x
+org $01D8C5
+	sta.w !st_ram_spritexhi,x
+org $01D947
+	sta.w !st_ram_spritexhi,x
+org $01DAB5
+	lda.w !st_ram_spritexhi,x
+org $01DABB
+	sta.w !st_ram_spritexhi,x
+org $01DADA
+	sta.w !st_ram_spritexhi,x
+org $01DB07
+	lda.w !st_ram_spritexhi,x
+org $01DB0D
+	sta.w !st_ram_spritexhi,x
+org $01DB39
+	sta.w !st_ram_spritexhi,x
+org $01DDC8
+	sta.w !st_ram_spritexhi,x
+org $01E1BF
+	lda.w !st_ram_spritexhi,x
+org $01E1C4
+	sta.w !st_ram_spritexhi,x
+org $01E21F
+	lda.w !st_ram_spritexhi,x
+org $01E32D
+	lda.w !st_ram_spritexhi,x
+org $01E82F
+	sta.w !st_ram_spritexhi,x
+org $01E86C
+	sta.w !st_ram_spritexhi,x
+org $01E8AF
+	lda.w !st_ram_spritexhi,x
+org $01E8B2
+	sta.w !st_ram_spritexhi,y
+org $01EA3F
+	lda.w !st_ram_spritexhi,x
+org $01EA42
+	sta.w !st_ram_spritexhi,y
+org $01EB5E
+	sta.w !st_ram_spritexhi,x
+org $01ECA9
+	lda.w !st_ram_spritexhi,x
+org $01ECB0
+	sta.w !st_ram_spritexhi,y
+org $01ED13
+	lda.w !st_ram_spritexhi,x
+org $01EF4B
+	lda.w !st_ram_spritexhi,x
+org $01EF52
+	sta.w !st_ram_spritexhi,x
+org $01EF88
+	sta.w !st_ram_spritexhi,x
+org $01F209
+	lda.w !st_ram_spritexhi,x
+org $01F210
+	sta.w !st_ram_spritexhi,y
+org $01F2A2
+	lda.w !st_ram_spritexhi,x
+org $01F4DE
+	adc.w !st_ram_spritexhi,x
+org $01F4E4
+	sta.w !st_ram_spritexhi,y
+org $01F546
+	adc.w !st_ram_spritexhi,x
+org $01F5D8
+	sta.w !st_ram_spritexhi,y
+org $01FD58
+	lda.w !st_ram_spritexhi,x
+org $01FDDE
+	sta.w !st_ram_spritexhi,y
+org $01FFA0
+	lda.w !st_ram_spritexhi,x
+org $02805C
+	sta.w !st_ram_spritexhi,x
+org $028498
+	sbc.w !st_ram_spritexhi,x
+org $0284FD
+	lda.w !st_ram_spritexhi,x
+org $028557
+	lda.w !st_ram_spritexhi,x
+org $02860B
+	lda.w !st_ram_spritexhi,x
+org $02864A
+	sta.w !st_ram_spritexhi,x
+org $028978
+	sta.w !st_ram_spritexhi,x
+org $028994
+	sta.w !st_ram_spritexhi,x
+org $028B53
+	sta.w !st_ram_spritexhi,x
+org $02A94D
+	sta.w !st_ram_spritexhi,x
+org $02A96E
+	sta.w !st_ram_spritexhi,x
+org $02AC2A
+	lda.w !st_ram_spritexhi,x
+org $02AC2D
+	sta.w !st_ram_spritexhi
+org $02AD27
+	lda.w !st_ram_spritexhi,x
+org $02AF5F
+	sta.w !st_ram_spritexhi,x
+org $02AFD2
+	sta.w !st_ram_spritexhi,x
+org $02B075
+	sta.w !st_ram_spritexhi,x
+org $02B0C2
+	sta.w !st_ram_spritexhi,x
+org $02B139
+	sta.w !st_ram_spritexhi,y
+org $02B19F
+	sta.w !st_ram_spritexhi,x
+org $02B1FF
+	sta.w !st_ram_spritexhi,x
+org $02B246
+	sta.w !st_ram_spritexhi,x
+org $02B2C4
+	sta.w !st_ram_spritexhi,x
+org $02B316
+	sta.w !st_ram_spritexhi,x
+org $02B383
+	sta.w !st_ram_spritexhi,x
+org $02B3FE
+	sta.w !st_ram_spritexhi,y
+org $02B4BF
+	sta.w !st_ram_spritexhi,y
+org $02B843
+	lda.w !st_ram_spritexhi,x
+org $02B846
+	sta.w !st_ram_spritexhi,y
+org $02B96D
+	lda.w !st_ram_spritexhi,x
+org $02B9AA
+	lda.w !st_ram_spritexhi,x
+org $02BAD3
+	sta.w !st_ram_spritexhi,y
+org $02BB2E
+	lda.w !st_ram_spritexhi,x
+org $02C1B3
+	lda.w !st_ram_spritexhi,x
+org $02C1CE
+	sta.w !st_ram_spritexhi,y
+org $02C482
+	lda.w !st_ram_spritexhi,x
+org $02C5D1
+	lda.w !st_ram_spritexhi,x
+org $02C5D4
+	sta.w !st_ram_spritexhi,y
+org $02CC16
+	lda.w !st_ram_spritexhi,x
+org $02CC1B
+	sta.w !st_ram_spritexhi,x
+org $02CC45
+	lda.w !st_ram_spritexhi,x
+org $02CD68
+	lda.w !st_ram_spritexhi,x
+org $02D069
+	sbc.w !st_ram_spritexhi,x
+org $02D10D
+	lda.w !st_ram_spritexhi,x
+org $02D171
+	lda.w !st_ram_spritexhi,x
+org $02D2DA
+	lda.w !st_ram_spritexhi,y
+org $02D382
+	lda.w !st_ram_spritexhi,x
+org $02D38C
+	lda.w !st_ram_spritexhi,x
+org $02D403
+	adc.w !st_ram_spritexhi,x
+org $02D406
+	sta.w !st_ram_spritexhi,x
+org $02D43A
+	sta.w !st_ram_spritexhi,x
+org $02D4B3
+	lda.w !st_ram_spritexhi,x
+org $02D505
+	sbc.w !st_ram_spritexhi,x
+org $02D6D2
+	lda.w !st_ram_spritexhi,x
+org $02D6FB
+	lda.w !st_ram_spritexhi,x
+org $02D700
+	sta.w !st_ram_spritexhi,x
+org $02D75F
+	sta.w !st_ram_spritexhi,x
+org $02DACD
+	lda.w !st_ram_spritexhi,x
+org $02DB82
+	lda.w !st_ram_spritexhi,x
+org $02DB85
+	sta.w !st_ram_spritexhi,y
+org $02DDA6
+	lda.w !st_ram_spritexhi,x
+org $02DDAB
+	sta.w !st_ram_spritexhi,y
+org $02DF30
+	lda.w !st_ram_spritexhi,x
+org $02E09D
+	lda.w !st_ram_spritexhi,x
+org $02E1DA
+	lda.w !st_ram_spritexhi,x
+org $02E2C7
+	lda.w !st_ram_spritexhi,x
+org $02E47A
+	lda.w !st_ram_spritexhi,x
+org $02E4AE
+	lda.w !st_ram_spritexhi,x
+org $02E4CB
+	sta.w !st_ram_spritexhi,x
+org $02E4DB
+	sta.w !st_ram_spritexhi,x
+org $02E53C
+	lda.w !st_ram_spritexhi,x
+org $02E8CF
+	lda.w !st_ram_spritexhi,x
+org $02E8ED
+	lda.w !st_ram_spritexhi,x
+org $02EAC2
+	lda.w !st_ram_spritexhi,x
+org $02EAC5
+	sbc.w !st_ram_spritexhi,y
+org $02EAE9
+	lda.w !st_ram_spritexhi,x
+org $02EB07
+	lda.w !st_ram_spritexhi,x
+org $02EB0A
+	sta.w !st_ram_spritexhi,y
+org $02EDBC
+	lda.w !st_ram_spritexhi,x
+org $02EDC1
+	sta.w !st_ram_spritexhi,y
+org $02EF8A
+	lda.w !st_ram_spritexhi,x
+org $02EF8D
+	sta.w !st_ram_spritexhi,y
+org $02EFC9
+	lda.w !st_ram_spritexhi,x
+org $02F206
+	lda.w !st_ram_spritexhi,x
+org $02F2F1
+	lda.w !st_ram_spritexhi,x
+org $02F569
+	sta.w !st_ram_spritexhi,x
+org $02F951
+	sta.w !st_ram_spritexhi
+org $02FC0B
+	sta.w !st_ram_spritexhi
+org $038218
+	lda.w !st_ram_spritexhi,x
+org $038AED
+	lda.w !st_ram_spritexhi,x
+org $038B05
+	sta.w !st_ram_spritexhi,y
+org $039041
+	lda.w !st_ram_spritexhi,x
+org $039103
+	lda.w !st_ram_spritexhi,x
+org $03934D
+	lda.w !st_ram_spritexhi,x
+org $039353
+	sta.w !st_ram_spritexhi,x
+org $039373
+	sta.w !st_ram_spritexhi,x
+org $039391
+	lda.w !st_ram_spritexhi,x
+org $0398AF
+	stz.w !st_ram_spritexhi
+org $0399C2
+	sta.w !st_ram_spritexhi,x
+org $039ADB
+	lda.w !st_ram_spritexhi,x
+org $039ADE
+	sta.w !st_ram_spritexhi,y
+org $039B18
+	lda.w !st_ram_spritexhi,x
+org $039C9A
+	lda.w !st_ram_spritexhi,x
+org $039CA0
+	sta.w !st_ram_spritexhi,x
+org $039DCC
+	lda.w !st_ram_spritexhi,x
+org $039F6F
+	lda.w !st_ram_spritexhi,x
+org $03A020
+	sta.w !st_ram_spritexhi,x
+org $03A107
+	sta.w !st_ram_spritexhi,x
+org $03A62D
+	lda.w !st_ram_spritexhi,x
+org $03A78D
+	lda.w !st_ram_spritexhi,x
+org $03A7B5
+	sta.w !st_ram_spritexhi,x
+org $03A814
+	sta.w !st_ram_spritexhi,y
+org $03A8FA
+	lda.w !st_ram_spritexhi,x
+org $03A8FF
+	sta.w !st_ram_spritexhi,y
+org $03AB36
+	lda.w !st_ram_spritexhi,x
+org $03AC5C
+	sta.w !st_ram_spritexhi,x
+org $03AC73
+	lda.w !st_ram_spritexhi,x
+org $03AD8E
+	lda.w !st_ram_spritexhi,x
+org $03B049
+	lda.w !st_ram_spritexhi,x
+org $03B05F
+	sta.w !st_ram_spritexhi,y
+org $03B6B8
+	lda.w !st_ram_spritexhi,y
+org $03B6FE
+	lda.w !st_ram_spritexhi,y
+org $03B76A
+	lda.w !st_ram_spritexhi,x
+org $03B774
+	lda.w !st_ram_spritexhi,x
+org $03B822
+	sbc.w !st_ram_spritexhi,x
+org $03B89B
+	sbc.w !st_ram_spritexhi,x
+org $03C009
+	lda.w !st_ram_spritexhi,x
+org $03C1DD
+	lda.w !st_ram_spritexhi,x
+org $03C1E3
+	sta.w !st_ram_spritexhi,x
+org $03C2F5
+	sta.w !st_ram_spritexhi,x
+org $03C47B
+	lda.w !st_ram_spritexhi,x
+org $03C7DC
+	sta.w !st_ram_spritexhi,y
+org $03CBD9
+	lda.w !st_ram_spritexhi,x
+org $03CBF3
+	sta.w !st_ram_spritexhi,y
+org $03CD0F
+	lda.w !st_ram_spritexhi,x
+org $03CD12
+	sta.w !st_ram_spritexhi,y
+org $03DEE2
+	lda.w !st_ram_spritexhi,x
+org $07FC73
+	lda.w !st_ram_spritexhi,x
+org $0CA008
+	stz.w !st_ram_spritexhi
+org $0CA27A
+	sta.w !st_ram_spritexhi
+
+!st__14ec = $0FE2
+org $01ABE1
+	adc.w !st__14ec,x
+org $01ABE4
+	sta.w !st__14ec,x
+org $02D29B
+	adc.w !st__14ec,x
+org $02D29E
+	sta.w !st__14ec,x
+org $07F75B
+	stz.w !st__14ec,x
+
+!st__14f8 = $0FEE
+org $07F756
+	stz.w !st__14f8,x
+
+!st__1504 = $0FFA
+org $01C785
+	ldy.w !st__1504,x
+org $01C78F
+	adc.w !st__1504,x
+org $01C792
+	sta.w !st__1504,x
+org $01CA8C
+	lda.w !st__1504,x
+org $01CA98
+	sta.w !st__1504,x
+org $01CCF0
+	lda.w !st__1504,x
+org $01CD01
+	lda.w !st__1504,x
+org $07F77F
+	stz.w !st__1504,x
+
+!st__1510 = $1006
+org $01CCF8
+	adc.w !st__1510,x
+org $01CCFB
+	sta.w !st__1510,x
+
+!st__151c = $1012
+org $0183BD
+	sta.w !st__151c,x
+org $01840E
+	lda.w !st__151c,x
+org $018413
+	sta.w !st__151c,x
+org $018421
+	sta.w !st__151c,x
+org $018456
+	sta.w !st__151c,x
+org $0184D2
+	sta.w !st__151c,x
+org $018522
+	sta.w !st__151c,x
+org $01855A
+	sta.w !st__151c,x
+org $0183BD
+	sta.w !st__151c,x
+org $01840E
+	lda.w !st__151c,x
+org $018413
+	sta.w !st__151c,x
+org $018421
+	sta.w !st__151c,x
+org $018456
+	sta.w !st__151c,x
+org $0184D2
+	sta.w !st__151c,x
+org $018522
+	sta.w !st__151c,x
+org $01855A
+	sta.w !st__151c,x
+org $018B54
+	stz.w !st__151c,x
+org $018B9A
+	lda.w !st__151c,x
+org $018BAD
+	sta.w !st__151c,x
+org $018D0A
+	lda.w !st__151c,x
+org $018D1F
+	inc.w !st__151c,x
+org $018D50
+	lda.w !st__151c,x
+org $018D7A
+	lda.w !st__151c,x
+org $018D87
+	inc.w !st__151c,x
+org $018D8C
+	lda.w !st__151c,x
+org $018D93
+	stz.w !st__151c,x
+org $018FB8
+	lda.w !st__151c,x
+org $0198B3
+	lda.w !st__151c,x
+org $01A9BA
+	inc.w !st__151c,x
+org $01AB17
+	ldy.w !st__151c,x
+org $01AD61
+	sta.w !st__151c,x
+org $01AE2D
+	ldy.w !st__151c,x
+org $01AE98
+	sta.w !st__151c,x
+org $01AF2E
+	cmp.w !st__151c,x
+org $01B00E
+	inc.w !st__151c,x
+org $01B0B6
+	ldy.w !st__151c,x
+org $01B0CF
+	lda.w !st__151c,x
+org $01B1BB
+	sta.w !st__151c,x
+org $01B1F0
+	cmp.w !st__151c,x
+org $01B238
+	sta.w !st__151c,x
+org $01B243
+	dec.w !st__151c,x
+org $01B280
+	lda.w !st__151c,x
+org $01B295
+	inc.w !st__151c,x
+org $01B5EA
+	cmp.w !st__151c,x
+org $01B5ED
+	sta.w !st__151c,x
+org $01B6B7
+	lda.w !st__151c,x
+org $01B6C6
+	lda.w !st__151c,x
+org $01B6CD
+	sta.w !st__151c,x
+org $01B6E9
+	lda.w !st__151c,x
+org $01B6F8
+	lda.w !st__151c,x
+org $01B6FF
+	sta.w !st__151c,x
+org $01B720
+	lda.w !st__151c,x
+org $01C081
+	sta.w !st__151c,x
+org $01C0C6
+	lda.w !st__151c,x
+org $01C223
+	lda.w !st__151c,x
+org $01C236
+	inc.w !st__151c,x
+org $01C319
+	sta.w !st__151c,x
+org $01C3CB
+	lda.w !st__151c,x
+org $01C3DA
+	lda.w !st__151c,x
+org $01C46F
+	lda.w !st__151c,x
+org $01C4B1
+	lda.w !st__151c,x
+org $01C74C
+	sta.w !st__151c,x
+org $01C795
+	lda.w !st__151c,x
+org $01C7A0
+	sbc.w !st__151c,x
+org $01C7A3
+	sta.w !st__151c,x
+org $01C7BE
+	sta.w !st__151c,x
+org $01CA7E
+	lda.w !st__151c,x
+org $01CB15
+	lda.w !st__151c,x
+org $01CD10
+	adc.w !st__151c,x
+org $01CD13
+	sta.w !st__151c,x
+org $01CE0B
+	lda.w !st__151c,x
+org $01CE30
+	inc.w !st__151c,x
+org $01CE3A
+	inc.w !st__151c,x
+org $01CE53
+	inc.w !st__151c,x
+org $01CFB9
+	sta.w !st__151c,x
+org $01CFD7
+	sta.w !st__151c,x
+org $01D03A
+	inc.w !st__151c,x
+org $01D2A8
+	lda.w !st__151c,x
+org $01D3A8
+	sta.w !st__151c,x
+org $01D3B1
+	lda.w !st__151c,x
+org $01D51A
+	lda.w !st__151c,x
+org $01D6A3
+	sta.w !st__151c,x
+org $01D7B5
+	lda.w !st__151c,x
+org $01D8D0
+	sta.w !st__151c,x
+org $01E058
+	sta.w !st__151c,x
+org $01E0ED
+	sbc.w !st__151c,x
+org $01E1E6
+	sta.w !st__151c,x
+org $01E396
+	lda.w !st__151c,x
+org $01E7F9
+	lda.w !st__151c,x
+org $01E836
+	sta.w !st__151c,x
+org $01EA09
+	ora.w !st__151c,y
+org $01EAFB
+	lda.w !st__151c,x
+org $01EB27
+	lda.w !st__151c,x
+org $01ECDC
+	sta.w !st__151c,x
+org $01ED88
+	ora.w !st__151c,x
+org $01EFCA
+	lda.w !st__151c,x
+org $01EFE2
+	lda.w !st__151c,x
+org $01F1D3
+	stz.w !st__151c,x
+org $01F314
+	lda.w !st__151c,x
+org $01F31A
+	sta.w !st__151c,x
+org $01F337
+	lda.w !st__151c,x
+org $01F33F
+	sta.w !st__151c,x
+org $01F344
+	stz.w !st__151c,x
+org $01F43E
+	lda.w !st__151c,x
+org $01F4BE
+	adc.w !st__151c,x
+org $01F4C3
+	lda.w !st__151c,x
+org $01F52C
+	adc.w !st__151c,x
+org $01F531
+	lda.w !st__151c,x
+org $01F73A
+	stz.w !st__151c,x
+org $01F78A
+	sta.w !st__151c,x
+org $01F83D
+	lda.w !st__151c,x
+org $0289FE
+	sta.w !st__151c,x
+org $028A32
+	sta.w !st__151c,x
+org $02AF76
+	sta.w !st__151c,x
+org $02B2CC
+	inc.w !st__151c,x
+org $02B736
+	lda.w !st__151c,x
+org $02B80A
+	sta.w !st__151c,x
+org $02BBD7
+	lda.w !st__151c,x
+org $02C076
+	sta.w !st__151c,x
+org $02C090
+	dec.w !st__151c,x
+org $02C152
+	sta.w !st__151c,x
+org $02C190
+	sta.w !st__151c,x
+org $02C221
+	sta.w !st__151c,x
+org $02C39E
+	sta.w !st__151c,x
+org $02C560
+	sta.w !st__151c,x
+org $02C697
+	sta.w !st__151c,x
+org $02C6F2
+	sta.w !st__151c,x
+org $02C773
+	sta.w !st__151c,x
+org $02C8B1
+	lda.w !st__151c,x
+org $02CDE4
+	ldy.w !st__151c,x
+org $02CE24
+	cmp.w !st__151c,x
+org $02CE2F
+	lda.w !st__151c,x
+org $02CE44
+	dec.w !st__151c,x
+org $02CE49
+	lda.w !st__151c,x
+org $02CE61
+	cmp.w !st__151c,x
+org $02CE67
+	lda.w !st__151c,x
+org $02CFF2
+	sta.w !st__151c,x
+org $02D64B
+	adc.w !st__151c,x
+org $02D650
+	sta.w !st__151c,x
+org $02D653
+	lda.w !st__151c,x
+org $02D942
+	lda.w !st__151c,x
+org $02D955
+	inc.w !st__151c,x
+org $02DBC1
+	lda.w !st__151c,x
+org $02DBD4
+	inc.w !st__151c,x
+org $02DF9A
+	stz.w !st__151c,x
+org $02DFEB
+	sta.w !st__151c,x
+org $02E050
+	lda.w !st__151c,x
+org $02E0F1
+	lda.w !st__151c,x
+org $02E177
+	inc.w !st__151c,x
+org $02E2AD
+	sta.w !st__151c,x
+org $02E2BE
+	lda.w !st__151c,x
+org $02E4B9
+	lda.w !st__151c,x
+org $02E514
+	sbc.w !st__151c,x
+org $02E577
+	adc.w !st__151c,x
+org $02E57A
+	sta.w !st__151c,x
+org $02E6E4
+	stz.w !st__151c,x
+org $02EBAB
+	inc.w !st__151c,x
+org $02EBAE
+	lda.w !st__151c,x
+org $02F06D
+	lda.w !st__151c,x
+org $02F089
+	lda.w !st__151c,x
+org $02F11D
+	lda.w !st__151c,x
+org $02F274
+	lda.w !st__151c,x
+org $02F28F
+	inc.w !st__151c,x
+org $02F482
+	inc.w !st__151c,x
+org $02F485
+	ldy.w !st__151c,x
+org $038150
+	lda.w !st__151c,x
+org $038163
+	inc.w !st__151c,x
+org $03862C
+	ldy.w !st__151c,x
+org $0387D4
+	sta.w !st__151c,x
+org $038842
+	lda.w !st__151c,x
+org $03893C
+	lda.w !st__151c,x
+org $03894F
+	inc.w !st__151c,x
+org $038C62
+	sta.w !st__151c,x
+org $038C7D
+	sbc.w !st__151c,x
+org $0392EC
+	lda.w !st__151c,x
+org $039475
+	ldy.w !st__151c,x
+org $0399E9
+	lda.w !st__151c,x
+org $039AAF
+	ora.w !st__151c,x
+org $039AC3
+	inc.w !st__151c,x
+org $039B51
+	lda.w !st__151c,x
+org $039D75
+	sta.w !st__151c,x
+org $039EA9
+	lda.w !st__151c,x
+org $039F25
+	ldy.w !st__151c,x
+org $039F72
+	sta.w !st__151c,x
+org $03A01D
+	lda.w !st__151c,x
+org $03A308
+	lda.w !st__151c,x
+org $03A325
+	lda.w !st__151c,x
+org $03A487
+	sta.w !st__151c,x
+org $03A502
+	lda.w !st__151c,x
+org $03A67B
+	lda.w !st__151c,x
+org $03A689
+	sta.w !st__151c,x
+org $03A6C2
+	sta.w !st__151c,x
+org $03A796
+	sta.w !st__151c,x
+org $03A7C8
+	sta.w !st__151c,x
+org $03A8A1
+	sta.w !st__151c,x
+org $03ABB1
+	sta.w !st__151c,x
+org $03ABE7
+	sta.w !st__151c,x
+org $03ADBF
+	inc.w !st__151c,x
+org $03ADF0
+	lda.w !st__151c,x
+org $03B07E
+	lda.w !st__151c,x
+org $03B123
+	lda.w !st__151c,x
+org $03B12E
+	lda.w !st__151c,x
+org $03C877
+	sta.w !st__151c,x
+org $03C8B8
+	adc.w !st__151c,x
+org $03C8C5
+	lda.w !st__151c,x
+org $03C8CF
+	sta.w !st__151c,x
+org $03C8D6
+	sta.w !st__151c,x
+org $03C8E4
+	lda.w !st__151c,x
+org $03CC22
+	lda.w !st__151c,x
+org $03CCD6
+	inc.w !st__151c,x
+org $03CD2B
+	inc.w !st__151c,x
+org $03CDD6
+	sta.w !st__151c,x
+org $03CDFD
+	stz.w !st__151c,x
+org $03CE1F
+	sta.w !st__151c,x
+org $03CE76
+	sta.w !st__151c,x
+org $03CEDD
+	sta.w !st__151c,x
+org $07F72A
+	stz.w !st__151c,x
+
+!st__1528 = $101E
+org $0189B4
+	lda.w !st__1528,x
+org $018A0F
+	stz.w !st__1528,x
+org $018A29
+	sta.w !st__1528,y
+org $018BA0
+	ora.w !st__1528,x
+org $018BB0
+	lda.w !st__1528,x
+org $019762
+	sta.w !st__1528,y
+org $019928
+	lda.w !st__1528,x
+org $019939
+	stz.w !st__1528,x
+org $01A796
+	stz.w !st__1528,x
+org $01AD8D
+	stz.w !st__1528,x
+org $01ADF2
+	sta.w !st__1528,x
+org $01AE4D
+	sta.w !st__1528,y
+org $01AED4
+	stz.w !st__1528,x
+org $01AEE2
+	sta.w !st__1528,x
+org $01AEF0
+	sta.w !st__1528,x
+org $01AF29
+	stz.w !st__1528,x
+org $01AF57
+	lda.w !st__1528,x
+org $01B2B9
+	sta.w !st__1528,x
+org $01B4A0
+	lda.w !st__1528,x
+org $01B547
+	sta.w !st__1528,x
+org $01C086
+	sta.w !st__1528,x
+org $01C0D9
+	lda.w !st__1528,x
+org $01C111
+	lda.w !st__1528,x
+org $01C397
+	lda.w !st__1528,x
+org $01C715
+	lda.w !st__1528,x
+org $01C728
+	inc.w !st__1528,x
+org $01C751
+	sta.w !st__1528,x
+org $01C799
+	lda.w !st__1528,x
+org $01C7A8
+	sbc.w !st__1528,x
+org $01C7AD
+	sta.w !st__1528,x
+org $01C7BA
+	sta.w !st__1528,x
+org $01CA84
+	lda.w !st__1528,x
+org $01CB1A
+	lda.w !st__1528,x
+org $01CD17
+	adc.w !st__1528,x
+org $01CD1A
+	sta.w !st__1528,x
+org $01CE6B
+	lda.w !st__1528,x
+org $01CEA5
+	inc.w !st__1528,x
+org $01CEC4
+	inc.w !st__1528,x
+org $01CF29
+	stz.w !st__1528,x
+org $01D116
+	lda.w !st__1528,x
+org $01D211
+	inc.w !st__1528,x
+org $01D248
+	stz.w !st__1528,x
+org $01D2B6
+	lda.w !st__1528,x
+org $01D7BA
+	lda.w !st__1528,x
+org $01D8D6
+	sta.w !st__1528,x
+org $01DAEA
+	ldy.w !st__1528,x
+org $01DAF1
+	sta.w !st__1528,x
+org $01DB40
+	sta.w !st__1528,x
+org $01E052
+	sta.w !st__1528,x
+org $01E0E5
+	sbc.w !st__1528,x
+org $01E586
+	inc.w !st__1528,x
+org $01E589
+	lda.w !st__1528,x
+org $01E58E
+	inc.w !st__1528,x
+org $02A0FC
+	inc.w !st__1528,x
+org $02A0FF
+	lda.w !st__1528,x
+org $02BBA4
+	sta.w !st__1528,x
+org $02BD36
+	stz.w !st__1528,x
+org $02BF61
+	inc.w !st__1528,x
+org $02BF69
+	lda.w !st__1528,x
+org $02C0E5
+	dec.w !st__1528,x
+org $02C0ED
+	sta.w !st__1528,x
+org $02C7E8
+	inc.w !st__1528,x
+org $02C7EB
+	lda.w !st__1528,x
+org $02CDF1
+	lda.w !st__1528,x
+org $02CE17
+	inc.w !st__1528,x
+org $02CE88
+	stz.w !st__1528,x
+org $02CFCE
+	lda.w !st__1528,x
+org $02CFF7
+	sta.w !st__1528,x
+org $02D6F3
+	sta.w !st__1528,x
+org $02DBDD
+	sta.w !st__1528,x
+org $02E551
+	stz.w !st__1528,x
+org $03816C
+	lda.w !st__1528,x
+org $03817F
+	inc.w !st__1528,x
+org $038646
+	sta.w !st__1528,x
+org $038DE0
+	sta.w !st__1528,x
+org $038DF7
+	sta.w !st__1528,x
+org $038EA0
+	sta.w !st__1528,x
+org $0392D6
+	stz.w !st__1528,x
+org $0399CC
+	sta.w !st__1528,x
+org $039F77
+	sta.w !st__1528,x
+org $03A023
+	lda.w !st__1528,x
+org $03A4A5
+	lda.w !st__1528,x
+org $03A4B8
+	inc.w !st__1528,x
+org $03A715
+	stz.w !st__1528,x
+org $03A731
+	ldy.w !st__1528,x
+org $03A74C
+	inc.w !st__1528,x
+org $03CCCC
+	sta.w !st__1528,x
+org $03CDDE
+	lda.w !st__1528,x
+org $07F72D
+	stz.w !st__1528,x
+
+!st__1534 = $102A
+org $018383
+	sta.w !st__1534,x
+org $0183B7
+	sta.w !st__1534,x
+org $018547
+	inc.w !st__1534,x
+org $018569
+	dec.w !st__1534,x
+org $018383
+	sta.w !st__1534,x
+org $0183B7
+	sta.w !st__1534,x
+org $018547
+	inc.w !st__1534,x
+org $018569
+	dec.w !st__1534,x
+org $018A15
+	lda.w !st__1534,x
+org $018A24
+	stz.w !st__1534,x
+org $018A70
+	stz.w !st__1534,x
+org $018AE5
+	lda.w !st__1534,x
+org $018BA3
+	ora.w !st__1534,x
+org $019638
+	sta.w !st__1534,x
+org $01A791
+	ldy.w !st__1534,x
+org $01A7BD
+	sta.w !st__1534,x
+org $01ADCB
+	lda.w !st__1534,x
+org $01ADDE
+	inc.w !st__1534,x
+org $01C094
+	sta.w !st__1534,x
+org $01C0DE
+	lda.w !st__1534,x
+org $01C377
+	lda.w !st__1534,x
+org $01C571
+	ldy.w !st__1534,x
+org $01CD89
+	sta.w !st__1534,x
+org $01D176
+	inc.w !st__1534,x
+org $01D17C
+	lda.w !st__1534,x
+org $01D1A7
+	cmp.w !st__1534,x
+org $01D771
+	ldy.w !st__1534,x
+org $01D777
+	inc.w !st__1534,x
+org $01D784
+	inc.w !st__1534,x
+org $01D787
+	lda.w !st__1534,x
+org $01D8E0
+	stz.w !st__1534,x
+org $01E43E
+	lda.w !st__1534,x
+org $01E44B
+	stz.w !st__1534,x
+org $01E5FB
+	inc.w !st__1534,x
+org $01E9D0
+	lda.w !st__1534,x
+org $01E9E3
+	inc.w !st__1534,x
+org $01F5F7
+	sta.w !st__1534,y
+org $01F878
+	sta.w !st__1534,x
+org $01FB0B
+	inc.w !st__1534,x
+org $01FB0E
+	lda.w !st__1534,x
+org $02B653
+	lda.w !st__1534,x
+org $02B878
+	sta.w !st__1534,y
+org $02C14A
+	sta.w !st__1534,x
+org $02C15B
+	inc.w !st__1534,x
+org $02C15E
+	lda.w !st__1534,x
+org $02C171
+	lda.w !st__1534,x
+org $02C3CB
+	lda.w !st__1534,x
+org $02C3E4
+	inc.w !st__1534,x
+org $02C45C
+	stz.w !st__1534,x
+org $02C67D
+	lda.w !st__1534,x
+org $02C69B
+	inc.w !st__1534,x
+org $02CDD5
+	lda.w !st__1534,x
+org $02CDDA
+	dec.w !st__1534,x
+org $02CDE1
+	stz.w !st__1534,x
+org $02CFE0
+	sta.w !st__1534,x
+org $02D6F0
+	sbc.w !st__1534,x
+org $02D6F7
+	sta.w !st__1534,x
+org $02D8E8
+	lda.w !st__1534,x
+org $02D90E
+	dec.w !st__1534,x
+org $02D911
+	lda.w !st__1534,x
+org $02D91D
+	lda.w !st__1534,x
+org $02D96B
+	lda.w !st__1534,x
+org $02D974
+	sta.w !st__1534,x
+org $02D9F1
+	lda.w !st__1534,x
+org $02DBAB
+	lda.w !st__1534,x
+org $02DBBE
+	inc.w !st__1534,x
+org $02E4BF
+	lda.w !st__1534,x
+org $02E50C
+	cmp.w !st__1534,x
+org $02E570
+	adc.w !st__1534,x
+org $02E573
+	sta.w !st__1534,x
+org $02E845
+	lda.w !st__1534,x
+org $02E84E
+	sbc.w !st__1534,x
+org $02E868
+	lda.w !st__1534,x
+org $02E86E
+	sta.w !st__1534,x
+org $02ED27
+	lda.w !st__1534,x
+org $02F075
+	inc.w !st__1534,x
+org $02F078
+	lda.w !st__1534,x
+org $03819B
+	inc.w !st__1534,x
+org $03819E
+	lda.w !st__1534,x
+org $038602
+	lda.w !st__1534,x
+org $038605
+	inc.w !st__1534,x
+org $039300
+	ldy.w !st__1534,x
+org $039303
+	inc.w !st__1534,x
+org $039F7D
+	sta.w !st__1534,x
+org $03A028
+	lda.w !st__1534,x
+org $03A4BB
+	lda.w !st__1534,x
+org $03A4CE
+	inc.w !st__1534,x
+org $03A718
+	stz.w !st__1534,x
+org $03A74F
+	ldy.w !st__1534,x
+org $03A76A
+	inc.w !st__1534,x
+org $03C4D8
+	lda.w !st__1534,x
+org $03C4FD
+	inc.w !st__1534,x
+org $03C7BE
+	lda.w !st__1534,x
+org $03C7F6
+	lda.w !st__1534,x
+org $03C7FB
+	sta.w !st__1534,y
+org $03C80C
+	inc.w !st__1534,x
+org $03C828
+	ldy.w !st__1534,x
+org $03C84C
+	ldy.w !st__1534,x
+org $03C871
+	ldy.w !st__1534,x
+org $03C893
+	ldy.w !st__1534,x
+org $03C8B1
+	ldy.w !st__1534,x
+org $03C987
+	lda.w !st__1534,x
+org $03CA03
+	lda.w !st__1534,x
+org $03CE13
+	inc.w !st__1534,x
+org $03CE16
+	lda.w !st__1534,x
+org $03CED0
+	lda.w !st__1534,x
+org $07F730
+	stz.w !st__1534,x
+
+!st__1540 = $1036
+org $00FA7C
+	sta.w !st__1540,y
+org $00FABB
+	sta.w !st__1540,y
+org $00FBC8
+	lda.w !st__1540,x
+org $00FBDF
+	lda.w !st__1540,x
+org $0180EE
+	lda.w !st__1540,x
+org $0180F3
+	dec.w !st__1540,x
+org $018379
+	sta.w !st__1540,x
+org $0184E5
+	sta.w !st__1540,x
+org $01850A
+	sta.w !st__1540,x
+org $01855F
+	sta.w !st__1540,x
+org $018594
+	sta.w !st__1540,x
+org $018379
+	sta.w !st__1540,x
+org $0184E5
+	sta.w !st__1540,x
+org $01850A
+	sta.w !st__1540,x
+org $01855F
+	sta.w !st__1540,x
+org $018594
+	sta.w !st__1540,x
+org $01899D
+	lda.w !st__1540,y
+org $018A7D
+	lda.w !st__1540,x
+org $018A84
+	sta.w !st__1540,x
+org $018AEA
+	lda.w !st__1540,x
+org $018AF6
+	sta.w !st__1540,x
+org $018CFD
+	lda.w !st__1540,x
+org $018D24
+	sta.w !st__1540,x
+org $018D82
+	lda.w !st__1540,x
+org $018D9E
+	sta.w !st__1540,x
+org $018EB1
+	lda.w !st__1540,x
+org $018EE9
+	sta.w !st__1540,x
+org $018F2B
+	lda.w !st__1540,x
+org $018F40
+	sta.w !st__1540,x
+org $019023
+	lda.w !st__1540,x
+org $01962A
+	lda.w !st__1540,x
+org $01963D
+	sta.w !st__1540,x
+org $01965C
+	lda.w !st__1540,x
+org $01969C
+	lda.w !st__1540,x
+org $0196DD
+	inc.w !st__1540,x
+org $019723
+	lda.w !st__1540,x
+org $019726
+	stz.w !st__1540,x
+org $019839
+	lda.w !st__1540,x
+org $019A4E
+	lda.w !st__1540,x
+org $019A5D
+	lda.w !st__1540,x
+org $019AD2
+	sta.w !st__1540,x
+org $019AE8
+	lda.w !st__1540,x
+org $01A07D
+	lda.w !st__1540,x
+org $01A133
+	ldy.w !st__1540,x
+org $01A155
+	lda.w !st__1540,x
+org $01A1D4
+	lda.w !st__1540,x
+org $01A72E
+	lda.w !st__1540,y
+org $01A983
+	sta.w !st__1540,x
+org $01A990
+	sta.w !st__1540,x
+org $01A9DA
+	sta.w !st__1540,x
+org $01A9FD
+	sta.w !st__1540,y
+org $01AA0F
+	stz.w !st__1540,x
+org $01AA2A
+	sta.w !st__1540,x
+org $01AA9A
+	lda.w !st__1540,x
+org $01ADC0
+	lda.w !st__1540,x
+org $01ADE3
+	sta.w !st__1540,x
+org $01AF1E
+	sta.w !st__1540,x
+org $01AF24
+	lda.w !st__1540,x
+org $01AFE1
+	lda.w !st__1540,x
+org $01B003
+	sta.w !st__1540,x
+org $01B0BE
+	lda.w !st__1540,x
+org $01B0C5
+	sta.w !st__1540,x
+org $01B1D6
+	sta.w !st__1540,x
+org $01B1F7
+	sta.w !st__1540,x
+org $01B273
+	lda.w !st__1540,x
+org $01B2A2
+	sta.w !st__1540,x
+org $01B6BF
+	lda.w !st__1540,x
+org $01B6D4
+	sta.w !st__1540,x
+org $01B6F1
+	lda.w !st__1540,x
+org $01B706
+	sta.w !st__1540,x
+org $01B969
+	lda.w !st__1540,x
+org $01BA34
+	sta.w !st__1540,x
+org $01BAE4
+	sta.w !st__1540,x
+org $01BAF5
+	lda.w !st__1540,x
+org $01BB16
+	lda.w !st__1540,x
+org $01BB49
+	lda.w !st__1540,x
+org $01BE03
+	lda.w !st__1540,x
+org $01BE7B
+	lda.w !st__1540,x
+org $01BE9E
+	lda.w !st__1540,x
+org $01BFE3
+	lda.w !st__1540,x
+org $01BFEA
+	sta.w !st__1540,x
+org $01BFFB
+	sta.w !st__1540,x
+org $01C004
+	lda.w !st__1540,x
+org $01C00B
+	sta.w !st__1540,x
+org $01C024
+	sta.w !st__1540,x
+org $01C0A7
+	lda.w !st__1540,x
+org $01C0AE
+	sta.w !st__1540,x
+org $01C11C
+	sta.w !st__1540,x
+org $01C175
+	lda.w !st__1540,x
+org $01C186
+	lda.w !st__1540,x
+org $01C1B4
+	lda.w !st__1540,x
+org $01C203
+	lda.w !st__1540,x
+org $01C2C2
+	stz.w !st__1540,x
+org $01C38F
+	lda.w !st__1540,x
+org $01C48D
+	lda.w !st__1540,x
+org $01C4BF
+	lda.w !st__1540,x
+org $01CD4A
+	sta.w !st__1540,x
+org $01CE7C
+	lda.w !st__1540,x
+org $01CE93
+	lda.w !st__1540,x
+org $01CEAA
+	sta.w !st__1540,x
+org $01CEB6
+	lda.w !st__1540,x
+org $01CECF
+	sta.w !st__1540,x
+org $01CEFD
+	lda.w !st__1540,x
+org $01CF85
+	lda.w !st__1540,x
+org $01CFDC
+	sta.w !st__1540,x
+org $01CFE0
+	ldy.w !st__1540,x
+org $01D03F
+	sta.w !st__1540,x
+org $01D043
+	lda.w !st__1540,x
+org $01D0B9
+	sta.w !st__1540,y
+org $01D23F
+	lda.w !st__1540,x
+org $01D2A0
+	sta.w !st__1540,x
+org $01D3A3
+	sta.w !st__1540,x
+org $01D455
+	lda.w !st__1540,x
+org $01D49E
+	lda.w !st__1540,x
+org $01D509
+	lda.w !st__1540,x
+org $01D5B8
+	lda.w !st__1540,x
+org $01D645
+	lda.w !st__1540,x
+org $01D659
+	lda.w !st__1540,x
+org $01D66E
+	sta.w !st__1540,x
+org $01D6B2
+	sta.w !st__1540,x
+org $01D6E0
+	inc.w !st__1540,x
+org $01D713
+	sta.w !st__1540,x
+org $01D750
+	lda.w !st__1540,x
+org $01D819
+	lda.w !st__1540,x
+org $01D891
+	sta.w !st__1540,x
+org $01D8E7
+	lda.w !st__1540,x
+org $01DA8C
+	stz.w !st__1540,x
+org $01DB2E
+	stz.w !st__1540,x
+org $01DB4B
+	lda.w !st__1540,x
+org $01DE89
+	sta.w !st__1540,x
+org $01DF19
+	lda.w !st__1540,x
+org $01E077
+	sta.w !st__1540,x
+org $01E096
+	lda.w !st__1540,x
+org $01E0DF
+	sta.w !st__1540,x
+org $01E302
+	sta.w !st__1540,x
+org $01E309
+	lda.w !st__1540,x
+org $01E3F2
+	lda.w !st__1540,x
+org $01E446
+	ldy.w !st__1540,x
+org $01E48F
+	lda.w !st__1540,x
+org $01E4DF
+	lda.w !st__1540,x
+org $01E502
+	lda.w !st__1540,x
+org $01E52D
+	lda.w !st__1540,x
+org $01E593
+	sta.w !st__1540,x
+org $01E5B3
+	sta.w !st__1540,x
+org $01E5E1
+	lda.w !st__1540,x
+org $01E600
+	sta.w !st__1540,x
+org $01E650
+	lda.w !st__1540,x
+org $01E683
+	lda.w !st__1540,x
+org $01E6ED
+	sta.w !st__1540,x
+org $01E7C2
+	sta.w !st__1540,x
+org $01E7C5
+	lda.w !st__1540,x
+org $01E926
+	lda.w !st__1540,x
+org $01F753
+	sta.w !st__1540,x
+org $01F799
+	lda.w !st__1540,x
+org $01F8F5
+	lda.w !st__1540,x
+org $01F8FC
+	sta.w !st__1540,x
+org $02809C
+	lda.w !st__1540,x
+org $0280A5
+	lda.w !st__1540,x
+org $0280B2
+	lda.w !st__1540,x
+org $0280C4
+	lda.w !st__1540,x
+org $028657
+	sta.w !st__1540,x
+org $028A0A
+	sta.w !st__1540,x
+org $028A13
+	sta.w !st__1540,x
+org $02941B
+	sta.w !st__1540,x
+org $029445
+	sta.w !st__1540,x
+org $02B41E
+	sta.w !st__1540,x
+org $02B73B
+	ldy.w !st__1540,x
+org $02B814
+	sta.w !st__1540,x
+org $02B88D
+	lda.w !st__1540,x
+org $02B8A7
+	lda.w !st__1540,x
+org $02B931
+	lda.w !st__1540,x
+org $02BD68
+	lda.w !st__1540,x
+org $02BD6F
+	sta.w !st__1540,x
+org $02BD7B
+	lda.w !st__1540,x
+org $02BDA1
+	sta.w !st__1540,x
+org $02BDB3
+	lda.w !st__1540,x
+org $02BDE4
+	sta.w !st__1540,x
+org $02BDF7
+	cmp.w !st__1540,x
+org $02C145
+	sta.w !st__1540,x
+org $02C156
+	lda.w !st__1540,x
+org $02C16A
+	sta.w !st__1540,x
+org $02C1EF
+	sta.w !st__1540,y
+org $02C3E1
+	sta.w !st__1540,x
+org $02C3ED
+	lda.w !st__1540,x
+org $02C3F2
+	inc.w !st__1540,x
+org $02C3FE
+	lda.w !st__1540,x
+org $02C409
+	sta.w !st__1540,x
+org $02C40C
+	lda.w !st__1540,x
+org $02C428
+	lda.w !st__1540,x
+org $02C43A
+	lda.w !st__1540,x
+org $02C516
+	lda.w !st__1540,x
+org $02C51D
+	sta.w !st__1540,x
+org $02C550
+	sta.w !st__1540,x
+org $02C569
+	lda.w !st__1540,x
+org $02C585
+	lda.w !st__1540,x
+org $02C5AB
+	sta.w !st__1540,x
+org $02C5F9
+	sta.w !st__1540,y
+org $02C614
+	sta.w !st__1540,x
+org $02C643
+	lda.w !st__1540,x
+org $02C662
+	sta.w !st__1540,x
+org $02C668
+	lda.w !st__1540,x
+org $02C6D1
+	sta.w !st__1540,x
+org $02C6D7
+	lda.w !st__1540,x
+org $02C6E9
+	sta.w !st__1540,x
+org $02C72B
+	lda.w !st__1540,x
+org $02C739
+	sta.w !st__1540,x
+org $02C74D
+	lda.w !st__1540,x
+org $02C75D
+	sta.w !st__1540,x
+org $02C787
+	sta.w !st__1540,x
+org $02C801
+	sta.w !st__1540,x
+org $02C898
+	lda.w !st__1540,x
+org $02CD59
+	lda.w !st__1540,x
+org $02CE0F
+	lda.w !st__1540,x
+org $02CE36
+	sta.w !st__1540,x
+org $02CFD7
+	lda.w !st__1540,x
+org $02D422
+	lda.w !st__1540,x
+org $02D42B
+	sta.w !st__1540,x
+org $02D445
+	lda.w !st__1540,x
+org $02D47B
+	sta.w !st__1540,x
+org $02D481
+	lda.w !st__1540,x
+org $02D498
+	sta.w !st__1540,x
+org $02D996
+	dec.w !st__1540,x
+org $02DAA3
+	ora.w !st__1540,x
+org $02DAAA
+	sta.w !st__1540,x
+org $02DCEF
+	lda.w !st__1540,x
+org $02DCF9
+	sta.w !st__1540,x
+org $02DCFF
+	lda.w !st__1540,x
+org $02DD1B
+	lda.w !st__1540,x
+org $02DD4D
+	ldy.w !st__1540,x
+org $02DEB0
+	lda.w !st__1540,x
+org $02DED3
+	sta.w !st__1540,x
+org $02DFC9
+	lda.w !st__1540,x
+org $02DFD0
+	sta.w !st__1540,x
+org $02DFDF
+	lda.w !st__1540,x
+org $02DFEF
+	lda.w !st__1540,x
+org $02E13E
+	lda.w !st__1540,x
+org $02E171
+	sta.w !st__1540,x
+org $02E17A
+	lda.w !st__1540,x
+org $02E1A0
+	sta.w !st__1540,x
+org $02E220
+	lda.w !st__1540,x
+org $02E759
+	lda.w !st__1540,x
+org $02E778
+	sta.w !st__1540,x
+org $02E780
+	sta.w !st__1540,x
+org $02E788
+	lda.w !st__1540,x
+org $02E7B1
+	sta.w !st__1540,x
+org $02E7C0
+	lda.w !st__1540,x
+org $02E7D4
+	lda.w !st__1540,x
+org $02E7EA
+	lda.w !st__1540,x
+org $02E96D
+	lda.w !st__1540,x
+org $02E980
+	sta.w !st__1540,x
+org $02E986
+	lda.w !st__1540,x
+org $02E9B4
+	lda.w !st__1540,x
+org $02E9BD
+	lda.w !st__1540,x
+org $02E9D5
+	lda.w !st__1540,x
+org $02F043
+	lda.w !st__1540,x
+org $02F28C
+	sta.w !st__1540,x
+org $02F396
+	lda.w !st__1540,x
+org $02F3B3
+	sta.w !st__1540,x
+org $02F44B
+	lda.w !st__1540,x
+org $02F577
+	sta.w !st__1540,x
+org $038021
+	lda.w !st__1540,x
+org $03804F
+	lda.w !st__1540,x
+org $0380CF
+	sta.w !st__1540,x
+org $0380D5
+	lda.w !st__1540,x
+org $0380DC
+	sta.w !st__1540,x
+org $0380F6
+	sta.w !st__1540,x
+org $038106
+	lda.w !st__1540,x
+org $03818B
+	lda.w !st__1540,x
+org $038194
+	sta.w !st__1540,x
+org $0381BC
+	lda.w !st__1540,x
+org $0381C3
+	sta.w !st__1540,x
+org $0381CF
+	sta.w !st__1540,x
+org $03820C
+	sta.w !st__1540,x
+org $038462
+	lda.w !st__1540,x
+org $038486
+	sta.w !st__1540,x
+org $038709
+	lda.w !st__1540,x
+org $038725
+	lda.w !st__1540,x
+org $038730
+	sta.w !st__1540,x
+org $0387A8
+	sta.w !st__1540,x
+org $0387AB
+	lda.w !st__1540,x
+org $03899C
+	ora.w !st__1540,x
+org $038AA6
+	lda.w !st__1540,x
+org $038AC3
+	sta.w !st__1540,x
+org $038C39
+	lda.w !st__1540,x
+org $038C42
+	sta.w !st__1540,x
+org $038E80
+	lda.w !st__1540,x
+org $038E8F
+	sta.w !st__1540,x
+org $039227
+	lda.w !st__1540,x
+org $03925E
+	sta.w !st__1540,x
+org $039262
+	lda.w !st__1540,x
+org $039441
+	lda.w !st__1540,x
+org $03944E
+	lda.w !st__1540,x
+org $039458
+	lda.w !st__1540,x
+org $039465
+	sta.w !st__1540,x
+org $03946B
+	lda.w !st__1540,x
+org $0395E5
+	sta.w !st__1540,x
+org $03973C
+	lda.w !st__1540,x
+org $03975A
+	sta.w !st__1540,x
+org $039761
+	lda.w !st__1540,x
+org $03977A
+	sta.w !st__1540,x
+org $039CAF
+	lda.w !st__1540,x
+org $039CBC
+	sta.w !st__1540,x
+org $039D43
+	lda.w !st__1540,x
+org $039D4C
+	sta.w !st__1540,x
+org $039F5A
+	ora.w !st__1540,x
+org $039F93
+	sta.w !st__1540,x
+org $039FA4
+	lda.w !st__1540,x
+org $039FAD
+	sta.w !st__1540,x
+org $039FC8
+	lda.w !st__1540,x
+org $039FD8
+	sta.w !st__1540,x
+org $039FF2
+	lda.w !st__1540,x
+org $03A035
+	sta.w !st__1540,x
+org $03A446
+	lda.w !st__1540,x
+org $03A461
+	sta.w !st__1540,x
+org $03A68E
+	sta.w !st__1540,x
+org $03A6E9
+	sta.w !st__1540,y
+org $03A6F8
+	lda.w !st__1540,x
+org $03A84D
+	lda.w !st__1540,x
+org $03A86A
+	sta.w !st__1540,x
+org $03ABB6
+	sta.w !st__1540,x
+org $03ABC5
+	lda.w !st__1540,x
+org $03ABE2
+	sta.w !st__1540,x
+org $03AC22
+	lda.w !st__1540,x
+org $03AD5E
+	sta.w !st__1540,x
+org $03ADB3
+	lda.w !st__1540,x
+org $03AE21
+	sta.w !st__1540,x
+org $03AE25
+	lda.w !st__1540,x
+org $03AE2E
+	sta.w !st__1540,x
+org $03AE32
+	lda.w !st__1540,x
+org $03AEB2
+	lda.w !st__1540,x
+org $03AEC4
+	sta.w !st__1540,x
+org $03AECC
+	sta.w !st__1540,x
+org $03AEE8
+	lda.w !st__1540,x
+org $03B35A
+	lda.w !st__1540,x
+org $03B36F
+	lda.w !st__1540,x
+org $03C36F
+	lda.w !st__1540,x
+org $03C376
+	sta.w !st__1540,x
+org $03CC04
+	sta.w !st__1540,y
+org $03CC8A
+	lda.w !st__1540,x
+org $03CCD3
+	sta.w !st__1540,x
+org $03CD21
+	lda.w !st__1540,x
+org $03CD28
+	sta.w !st__1540,x
+org $03CDCA
+	lda.w !st__1540,x
+org $03CDD1
+	sta.w !st__1540,x
+org $03CDEF
+	lda.w !st__1540,x
+org $03CE02
+	sta.w !st__1540,x
+org $03CE0E
+	lda.w !st__1540,x
+org $03CE7B
+	sta.w !st__1540,x
+org $03CE89
+	lda.w !st__1540,x
+org $03CEE9
+	sta.w !st__1540,x
+org $07F1CA
+	lda.w !st__1540,x
+org $07F73F
+	stz.w !st__1540,x
+
+!st_ram_disableinter = $1042
+org $00FB7A
+	sta.w !st_ram_disableinter,y
+org $0180F6
+	lda.w !st_ram_disableinter,x
+org $0180FB
+	dec.w !st_ram_disableinter,x
+org $01975F
+	sta.w !st_ram_disableinter,y
+org $0197A9
+	sta.w !st_ram_disableinter,y
+org $01A0A8
+	sta.w !st_ram_disableinter,x
+org $01A881
+	lda.w !st_ram_disableinter,x
+org $01A888
+	sta.w !st_ram_disableinter,x
+org $01AAA6
+	sta.w !st_ram_disableinter,x
+org $01AAB7
+	stz.w !st_ram_disableinter,x
+org $01BAD0
+	lda.w !st_ram_disableinter,x
+org $01BAF8
+	ora.w !st_ram_disableinter,x
+org $01BB13
+	sta.w !st_ram_disableinter,x
+org $01C4BA
+	lda.w !st_ram_disableinter,x
+org $01C708
+	lda.w !st_ram_disableinter,x
+org $01DA1C
+	lda.w !st_ram_disableinter,x
+org $01DA3C
+	sta.w !st_ram_disableinter,x
+org $01DF3D
+	lda.w !st_ram_disableinter,x
+org $01E028
+	sta.w !st_ram_disableinter,y
+org $01E02D
+	sta.w !st_ram_disableinter,y
+org $01E032
+	sta.w !st_ram_disableinter,y
+org $01E20B
+	lda.w !st_ram_disableinter,x
+org $01E237
+	sta.w !st_ram_disableinter,x
+org $01E6B5
+	stz.w !st_ram_disableinter,x
+org $01E804
+	lda.w !st_ram_disableinter,x
+org $01E892
+	sta.w !st_ram_disableinter,x
+org $01E8C7
+	sta.w !st_ram_disableinter,x
+org $01ECD6
+	sta.w !st_ram_disableinter,x
+org $01FAF7
+	ora.w !st_ram_disableinter,x
+org $01FBB2
+	lda.w !st_ram_disableinter,x
+org $01FC0E
+	lda.w !st_ram_disableinter,x
+org $01FCFA
+	lda.w !st_ram_disableinter,x
+org $01FD01
+	sta.w !st_ram_disableinter,x
+org $01FD47
+	sta.w !st_ram_disableinter,x
+org $028A1C
+	sta.w !st_ram_disableinter,x
+org $0293C6
+	ora.w !st_ram_disableinter,x
+org $029406
+	sta.w !st_ram_disableinter,x
+org $0294E4
+	ora.w !st_ram_disableinter,x
+org $02D98D
+	sta.w !st_ram_disableinter,x
+org $02EB1F
+	sta.w !st_ram_disableinter,x
+org $02F254
+	lda.w !st_ram_disableinter,x
+org $02F25D
+	sta.w !st_ram_disableinter,x
+org $02F381
+	lda.w !st_ram_disableinter,x
+org $02F38B
+	sta.w !st_ram_disableinter,x
+org $0387F1
+	sta.w !st_ram_disableinter,x
+org $03881E
+	lda.w !st_ram_disableinter,x
+org $039590
+	lda.w !st_ram_disableinter,x
+org $039597
+	sta.w !st_ram_disableinter,x
+org $039A37
+	lda.w !st_ram_disableinter,x
+org $039A44
+	sta.w !st_ram_disableinter,x
+org $03A441
+	lda.w !st_ram_disableinter,x
+org $03A47E
+	sta.w !st_ram_disableinter,x
+org $03ABDD
+	sta.w !st_ram_disableinter,x
+org $03AC06
+	lda.w !st_ram_disableinter,x
+org $03ACB5
+	sta.w !st_ram_disableinter,x
+org $03ACBB
+	lda.w !st_ram_disableinter,x
+org $03AE48
+	sta.w !st_ram_disableinter,x
+org $03B08E
+	lda.w !st_ram_disableinter,x
+org $03B0D8
+	sta.w !st_ram_disableinter,x
+org $03C307
+	sta.w !st_ram_disableinter,x
+org $03C322
+	sta.w !st_ram_disableinter,x
+org $07F742
+	stz.w !st_ram_disableinter,x
+
+!st__1558 = $104E
+org $0180FE
+	lda.w !st__1558,x
+org $018103
+	dec.w !st__1558,x
+org $018A9B
+	lda.w !st__1558,x
+org $018AD1
+	sta.w !st__1558,y
+org $018B9D
+	ora.w !st__1558,x
+org $018F99
+	lda.w !st__1558,x
+org $018FA7
+	lda.w !st__1558,x
+org $019337
+	sta.w !st__1558,x
+org $01965F
+	ora.w !st__1558,x
+org $019664
+	lda.w !st__1558,x
+org $019834
+	lda.w !st__1558,x
+org $019A2C
+	sta.w !st__1558,x
+org $019A3D
+	stz.w !st__1558,x
+org $019A7B
+	lda.w !st__1558,x
+org $01A54D
+	lda.w !st__1558,x
+org $01A550
+	ora.w !st__1558,y
+org $01A6EE
+	lda.w !st__1558,y
+org $01A6F1
+	ora.w !st__1558,x
+org $01A71B
+	sta.w !st__1558,x
+org $01A759
+	sta.w !st__1558,x
+org $01A76C
+	sta.w !st__1558,x
+org $01AE01
+	lda.w !st__1558,x
+org $01B4EF
+	sta.w !st__1558,x
+org $01C47E
+	lda.w !st__1558,x
+org $01CED4
+	sta.w !st__1558,x
+org $01CF44
+	lda.w !st__1558,x
+org $01E13E
+	lda.w !st__1558,x
+org $01E14C
+	sta.w !st__1558,x
+org $01E3DA
+	lda.w !st__1558,x
+org $01E3E1
+	sta.w !st__1558,x
+org $01EA10
+	sta.w !st__1558,y
+org $01F12E
+	lda.w !st__1558,x
+org $01F251
+	sta.w !st__1558,x
+org $01F32A
+	sta.w !st__1558,x
+org $01F332
+	lda.w !st__1558,x
+org $01F606
+	sta.w !st__1558,x
+org $01F956
+	sta.w !st__1558,x
+org $01FCC0
+	lda.w !st__1558,x
+org $01FCC7
+	sta.w !st__1558,x
+org $029423
+	sta.w !st__1558,x
+org $029448
+	stz.w !st__1558,x
+org $02B7D6
+	lda.w !st__1558,x
+org $02B818
+	sta.w !st__1558,x
+org $02BCEB
+	sta.w !st__1558,x
+org $02BD3B
+	sta.w !st__1558,x
+org $02BF0C
+	ldy.w !st__1558,x
+org $02BF7F
+	lda.w !st__1558,x
+org $02C13A
+	lda.w !st__1558,x
+org $02C17A
+	sta.w !st__1558,x
+org $02C436
+	sta.w !st__1558,x
+org $02C466
+	lda.w !st__1558,x
+org $02DBE4
+	lda.w !st__1558,x
+org $02DC46
+	lda.w !st__1558,x
+org $02DD0E
+	lda.w !st__1558,x
+org $02DD2C
+	sta.w !st__1558,x
+org $0383AE
+	ldy.w !st__1558,x
+org $038437
+	lda.w !st__1558,x
+org $03896B
+	lda.w !st__1558,x
+org $03899F
+	ora.w !st__1558,x
+org $0389DF
+	sta.w !st__1558,x
+org $038D76
+	lda.w !st__1558,x
+org $038D82
+	stz.w !st__1558,x
+org $038D93
+	lda.w !st__1558,x
+org $039525
+	lda.w !st__1558,x
+org $0395BD
+	sta.w !st__1558,x
+org $03964C
+	lda.w !st__1558,x
+org $03971D
+	sta.w !st__1558,x
+org $039793
+	lda.w !st__1558,x
+org $039A0D
+	sta.w !st__1558,x
+org $039A19
+	ora.w !st__1558,x
+org $039A95
+	lda.w !st__1558,x
+org $039AC0
+	stz.w !st__1558,x
+org $03A302
+	sta.w !st__1558,x
+org $03A312
+	lda.w !st__1558,x
+org $03ACDE
+	lda.w !st__1558,x
+org $03AE57
+	sta.w !st__1558,x
+org $03C200
+	lda.w !st__1558,x
+org $03C22B
+	lda.w !st__1558,x
+org $07F745
+	stz.w !st__1558,x
+
+!st__1564 = $105A
+org $018106
+	lda.w !st__1564,x
+org $01810B
+	dec.w !st__1564,x
+org $0183DC
+	sta.w !st__1564,x
+org $0183DC
+	sta.w !st__1564,x
+org $0189A5
+	sta.w !st__1564,y
+org $01971A
+	sta.w !st__1564,y
+org $01A429
+	ora.w !st__1564,x
+org $01A42C
+	ora.w !st__1564,y
+org $01A720
+	sta.w !st__1564,x
+org $01A752
+	sta.w !st__1564,y
+org $01B4E4
+	sta.w !st__1564,x
+org $01E0FE
+	sta.w !st__1564,x
+org $01E115
+	lda.w !st__1564,x
+org $01E75B
+	lda.w !st__1564,x
+org $01EFFD
+	lda.w !st__1564,x
+org $01F00F
+	lda.w !st__1564,x
+org $01F1C0
+	sta.w !st__1564,x
+org $01F1DB
+	stz.w !st__1564,x
+org $01F37A
+	sta.w !st__1564,x
+org $01FB17
+	sta.w !st__1564,x
+org $01FB82
+	ora.w !st__1564,x
+org $01FC2A
+	lda.w !st__1564,x
+org $02BCF6
+	lda.w !st__1564,x
+org $02BDD1
+	sta.w !st__1564,x
+org $02BE1A
+	sta.w !st__1564,x
+org $02C79D
+	lda.w !st__1564,x
+org $02C7CF
+	sta.w !st__1564,x
+org $02D0D4
+	lda.w !st__1564,x
+org $02D1DE
+	sta.w !st__1564,x
+org $039A5F
+	sta.w !st__1564,x
+org $039AB4
+	lda.w !st__1564,x
+org $039BF7
+	lda.w !st__1564,x
+org $03A2AD
+	lda.w !st__1564,x
+org $03A3E5
+	lda.w !st__1564,x
+org $03ABF8
+	lda.w !st__1564,x
+org $03ABFF
+	sta.w !st__1564,x
+org $03C796
+	lda.w !st__1564,x
+org $03C812
+	sta.w !st__1564,x
+org $03C837
+	sta.w !st__1564,x
+org $03C845
+	lda.w !st__1564,x
+org $07F748
+	stz.w !st__1564,x
+
+!st__1570 = $1066
+org $00FBF0
+	inc.w !st__1570,x
+org $018331
+	sta.w !st__1570,x
+org $018579
+	sta.w !st__1570,x
+org $018331
+	sta.w !st__1570,x
+org $018579
+	sta.w !st__1570,x
+org $0189E6
+	stz.w !st__1570,x
+org $018A62
+	stz.w !st__1570,x
+org $018B61
+	lda.w !st__1570,x
+org $018B90
+	stz.w !st__1570,x
+org $018C7C
+	lda.w !st__1570,x
+org $018CEC
+	lda.w !st__1570,x
+org $018D59
+	inc.w !st__1570,x
+org $018D5C
+	inc.w !st__1570,x
+org $018D5F
+	inc.w !st__1570,x
+org $018D7F
+	stz.w !st__1570,x
+org $018DEC
+	lda.w !st__1570,x
+org $018E5F
+	inc.w !st__1570,x
+org $018E62
+	lda.w !st__1570,x
+org $019EC8
+	lda.w !st__1570,x
+org $01A2F4
+	inc.w !st__1570,x
+org $01A2F7
+	lda.w !st__1570,x
+org $01ADF5
+	inc.w !st__1570,x
+org $01B1EA
+	inc.w !st__1570,x
+org $01B1ED
+	inc.w !st__1570,x
+org $01BA3B
+	inc.w !st__1570,x
+org $01BA57
+	lda.w !st__1570,x
+org $01BE51
+	stz.w !st__1570,x
+org $01BFED
+	dec.w !st__1570,x
+org $01BFF0
+	lda.w !st__1570,x
+org $01C00E
+	inc.w !st__1570,x
+org $01C011
+	lda.w !st__1570,x
+org $01C028
+	lda.w !st__1570,x
+org $01C252
+	inc.w !st__1570,x
+org $01C3BF
+	inc.w !st__1570,x
+org $01D529
+	lda.w !st__1570,x
+org $01D530
+	sta.w !st__1570,x
+org $01D53D
+	ldy.w !st__1570,x
+org $01D5E5
+	ldy.w !st__1570,x
+org $01D604
+	ldy.w !st__1570,x
+org $01D6A8
+	sta.w !st__1570,x
+org $01D78A
+	cmp.w !st__1570,x
+org $01D792
+	ldy.w !st__1570,x
+org $01D799
+	dec.w !st__1570,x
+org $01D7A8
+	dec.w !st__1570,x
+org $01D8DD
+	sta.w !st__1570,x
+org $01DDE9
+	sta.w !st__1570,x
+org $01DE4B
+	inc.w !st__1570,x
+org $01DE4E
+	lda.w !st__1570,x
+org $01DE55
+	stz.w !st__1570,x
+org $01DE7E
+	ldy.w !st__1570,x
+org $01DE84
+	sta.w !st__1570,x
+org $01DF6C
+	lda.w !st__1570,x
+org $01E00D
+	lda.w !st__1570,y
+org $01E557
+	lda.w !st__1570,x
+org $01E563
+	stz.w !st__1570,x
+org $01E5A7
+	lda.w !st__1570,x
+org $01EABB
+	dec.w !st__1570,x
+org $01EAC3
+	sta.w !st__1570,x
+org $01EADF
+	stz.w !st__1570,x
+org $01F888
+	sta.w !st__1570,x
+org $01F94C
+	inc.w !st__1570,x
+org $01F94F
+	lda.w !st__1570,x
+org $01F989
+	stz.w !st__1570,x
+org $01FBF0
+	inc.w !st__1570,x
+org $01FBF7
+	inc.w !st__1570,x
+org $01FBFA
+	lda.w !st__1570,x
+org $028099
+	inc.w !st__1570,x
+org $02B36F
+	sta.w !st__1570,x
+org $02B6BE
+	inc.w !st__1570,x
+org $02B6C1
+	lda.w !st__1570,x
+org $02C006
+	inc.w !st__1570,x
+org $02C07D
+	lda.w !st__1570,x
+org $02C0BD
+	lda.w !st__1570,x
+org $02C14D
+	stz.w !st__1570,x
+org $02C163
+	sta.w !st__1570,x
+org $02C181
+	ldy.w !st__1570,x
+org $02C74A
+	ldy.w !st__1570,x
+org $02C752
+	inc.w !st__1570,x
+org $02C804
+	stz.w !st__1570,x
+org $02CC02
+	inc.w !st__1570,x
+org $02CCF2
+	lda.w !st__1570,x
+org $02CE3A
+	inc.w !st__1570,x
+org $02CE3D
+	lda.w !st__1570,x
+org $02CFFA
+	stz.w !st__1570,x
+org $02DA86
+	inc.w !st__1570,x
+org $02DA89
+	lda.w !st__1570,x
+org $02DA97
+	lda.w !st__1570,x
+org $02DD20
+	inc.w !st__1570,x
+org $02DD23
+	lda.w !st__1570,x
+org $02DD2F
+	lda.w !st__1570,x
+org $02DD36
+	stz.w !st__1570,x
+org $02DF11
+	inc.w !st__1570,x
+org $02DF14
+	lda.w !st__1570,x
+org $02DF1E
+	inc.w !st__1570,x
+org $02DF4D
+	lda.w !st__1570,x
+org $02E0D8
+	lda.w !st__1570,x
+org $02E166
+	inc.w !st__1570,x
+org $02E17F
+	inc.w !st__1570,x
+org $02E1AA
+	stz.w !st__1570,x
+org $02E347
+	inc.w !st__1570,x
+org $02E3AD
+	lda.w !st__1570,x
+org $02E42F
+	inc.w !st__1570,x
+org $02E432
+	lda.w !st__1570,x
+org $02E43B
+	lda.w !st__1570,x
+org $02E5C3
+	inc.w !st__1570,x
+org $02E5C8
+	lda.w !st__1570,x
+org $02E75E
+	inc.w !st__1570,x
+org $02E761
+	ldy.w !st__1570,x
+org $02E7AC
+	stz.w !st__1570,x
+org $02E890
+	inc.w !st__1570,x
+org $02E893
+	lda.w !st__1570,x
+org $02E89B
+	stz.w !st__1570,x
+org $02EEC8
+	lda.w !st__1570,x
+org $02EECF
+	inc.w !st__1570,x
+org $02EEF9
+	lda.w !st__1570,x
+org $02EFAA
+	lda.w !st__1570,x
+org $02F06A
+	inc.w !st__1570,x
+org $02F072
+	inc.w !st__1570,x
+org $02F113
+	lda.w !st__1570,x
+org $02F368
+	lda.w !st__1570,x
+org $02F36D
+	dec.w !st__1570,x
+org $02F37D
+	sta.w !st__1570,x
+org $02F3A3
+	lda.w !st__1570,x
+org $02F3A8
+	dec.w !st__1570,x
+org $02F3D7
+	sta.w !st__1570,x
+org $02F434
+	inc.w !st__1570,x
+org $02F439
+	lda.w !st__1570,x
+org $0380C3
+	inc.w !st__1570,x
+org $0380C6
+	lda.w !st__1570,x
+org $03810F
+	sta.w !st__1570,x
+org $038DCF
+	lda.w !st__1570,x
+org $038DD4
+	dec.w !st__1570,x
+org $038DD7
+	lda.w !st__1570,x
+org $038E15
+	lda.w !st__1570,x
+org $0392F1
+	dec.w !st__1570,x
+org $039316
+	sta.w !st__1570,x
+org $039537
+	inc.w !st__1570,x
+org $03953A
+	lda.w !st__1570,x
+org $03972F
+	inc.w !st__1570,x
+org $039732
+	lda.w !st__1570,x
+org $039882
+	sta.w !st__1570,x
+org $0399FE
+	inc.w !st__1570,x
+org $039A01
+	lda.w !st__1570,x
+org $039A08
+	stz.w !st__1570,x
+org $039DEF
+	inc.w !st__1570,x
+org $039DF2
+	lda.w !st__1570,x
+org $03A285
+	lda.w !st__1570,x
+org $03A44D
+	sta.w !st__1570,x
+org $03A478
+	sta.w !st__1570,x
+org $03A4E7
+	sta.w !st__1570,x
+org $03A5C3
+	sta.w !st__1570,x
+org $03A5E8
+	sta.w !st__1570,x
+org $03A6B7
+	sta.w !st__1570,x
+org $03A70E
+	sta.w !st__1570,x
+org $03A899
+	sta.w !st__1570,x
+org $03B1CB
+	dec.w !st__1570,x
+org $03B1CE
+	dec.w !st__1570,x
+org $03B1D1
+	inc.w !st__1570,x
+org $03B264
+	lda.w !st__1570,x
+org $03B2F9
+	inc.w !st__1570,x
+org $03B2FC
+	lda.w !st__1570,x
+org $03B404
+	lda.w !st__1570,x
+org $03C09B
+	inc.w !st__1570,x
+org $03C09E
+	lda.w !st__1570,x
+org $03C8B4
+	lda.w !st__1570,x
+org $03C8BB
+	sta.w !st__1570,x
+org $03C8DD
+	sta.w !st__1570,x
+org $03C9EE
+	lda.w !st__1570,x
+org $03CC8F
+	lda.w !st__1570,x
+org $03CCA0
+	ora.w !st__1570,x
+org $03CCBC
+	ldy.w !st__1570,x
+org $03CCFC
+	sta.w !st__1570,y
+org $03CDF4
+	lda.w !st__1570,x
+org $03CE2A
+	ldy.w !st__1570,x
+org $03CEC6
+	lda.w !st__1570,x
+org $03CEE2
+	ldy.w !st__1570,x
+org $07F751
+	stz.w !st__1570,x
+
+!st_ram_spritedir = $1072
+org $00FC6A
+	sta.w !st_ram_spritedir,y
+org $00FCDE
+	sta.w !st_ram_spritedir,x
+org $018314
+	inc.w !st_ram_spritedir,x
+org $0183E3
+	inc.w !st_ram_spritedir,x
+org $018515
+	sta.w !st_ram_spritedir,x
+org $018580
+	sta.w !st_ram_spritedir,x
+org $018314
+	inc.w !st_ram_spritedir,x
+org $0183E3
+	inc.w !st_ram_spritedir,x
+org $018515
+	sta.w !st_ram_spritedir,x
+org $018580
+	sta.w !st_ram_spritedir,x
+org $0188DC
+	lda.w !st_ram_spritedir,y
+org $0188DF
+	cmp.w !st_ram_spritedir,x
+org $01898C
+	ldy.w !st_ram_spritedir,x
+org $018B15
+	ldy.w !st_ram_spritedir,x
+org $018B2E
+	ldy.w !st_ram_spritedir,x
+org $018B68
+	lda.w !st_ram_spritedir,x
+org $018B70
+	cmp.w !st_ram_spritedir,x
+org $018BC3
+	lda.w !st_ram_spritedir,x
+org $018BD8
+	eor.w !st_ram_spritedir,x
+org $018BDB
+	sta.w !st_ram_spritedir,x
+org $018C14
+	sta.w !st_ram_spritedir,x
+org $018C51
+	ldy.w !st_ram_spritedir,x
+org $018CCA
+	lda.w !st_ram_spritedir,x
+org $018CD2
+	cmp.w !st_ram_spritedir,x
+org $018DBD
+	ldy.w !st_ram_spritedir,x
+org $018DFC
+	lda.w !st_ram_spritedir,x
+org $018FE9
+	sta.w !st_ram_spritedir,x
+org $019089
+	lda.w !st_ram_spritedir,x
+org $0190A9
+	lda.w !st_ram_spritedir,x
+org $0190AE
+	sta.w !st_ram_spritedir,x
+org $019715
+	sta.w !st_ram_spritedir,y
+org $01973A
+	sta.w !st_ram_spritedir,y
+org $019758
+	sta.w !st_ram_spritedir,y
+org $0197A4
+	sta.w !st_ram_spritedir,y
+org $0198BF
+	ldy.w !st_ram_spritedir,x
+org $019A1E
+	sta.w !st_ram_spritedir,x
+org $019D73
+	lda.w !st_ram_spritedir,x
+org $019DB1
+	lda.w !st_ram_spritedir,x
+org $019DDC
+	lda.w !st_ram_spritedir,x
+org $019E4D
+	lda.w !st_ram_spritedir,x
+org $019EC1
+	lda.w !st_ram_spritedir,x
+org $019EC5
+	stz.w !st_ram_spritedir,x
+org $019EEC
+	inc.w !st_ram_spritedir,x
+org $019EF3
+	sta.w !st_ram_spritedir,x
+org $019F12
+	lda.w !st_ram_spritedir,x
+org $019F37
+	lda.w !st_ram_spritedir,x
+org $01A174
+	sta.w !st_ram_spritedir,x
+org $01A21A
+	sta.w !st_ram_spritedir,x
+org $01A324
+	ldy.w !st_ram_spritedir,x
+org $01A588
+	lda.w !st_ram_spritedir,y
+org $01A58E
+	sta.w !st_ram_spritedir,y
+org $01A592
+	cmp.w !st_ram_spritedir,y
+org $01A5A8
+	lda.w !st_ram_spritedir,x
+org $01A5B0
+	sta.w !st_ram_spritedir,x
+org $01A5B4
+	cmp.w !st_ram_spritedir,x
+org $01A709
+	lda.w !st_ram_spritedir,x
+org $01A787
+	lda.w !st_ram_spritedir,x
+org $01A78A
+	cmp.w !st_ram_spritedir,y
+org $01A90E
+	sta.w !st_ram_spritedir,x
+org $01AD64
+	inc.w !st_ram_spritedir,x
+org $01AED1
+	sta.w !st_ram_spritedir,x
+org $01B219
+	ldy.w !st_ram_spritedir,x
+org $01BA53
+	lda.w !st_ram_spritedir,x
+org $01BA5F
+	sta.w !st_ram_spritedir,x
+org $01BA7B
+	sta.w !st_ram_spritedir,x
+org $01BE5B
+	sta.w !st_ram_spritedir,x
+org $01BE78
+	sta.w !st_ram_spritedir,x
+org $01BED5
+	ldy.w !st_ram_spritedir,x
+org $01BEF2
+	lda.w !st_ram_spritedir,x
+org $01C25D
+	sta.w !st_ram_spritedir,x
+org $01C350
+	sta.w !st_ram_spritedir,x
+org $01C6BD
+	lda.w !st_ram_spritedir,x
+org $01CD60
+	sta.w !st_ram_spritedir,x
+org $01CDBA
+	ldy.w !st_ram_spritedir,x
+org $01CDF5
+	lda.w !st_ram_spritedir,x
+org $01CDFD
+	sta.w !st_ram_spritedir,x
+org $01CE01
+	cmp.w !st_ram_spritedir,x
+org $01D08C
+	lda.w !st_ram_spritedir,x
+org $01D0AA
+	lda.w !st_ram_spritedir,x
+org $01D0AD
+	sta.w !st_ram_spritedir,y
+org $01D1B5
+	lda.w !st_ram_spritedir,x
+org $01D1FA
+	ldy.w !st_ram_spritedir,x
+org $01D215
+	ldy.w !st_ram_spritedir,x
+org $01D224
+	ldy.w !st_ram_spritedir,x
+org $01D24F
+	sta.w !st_ram_spritedir,x
+org $01D490
+	lda.w !st_ram_spritedir,x
+org $01D5F1
+	sta.w !st_ram_spritedir,x
+org $01D63F
+	adc.w !st_ram_spritedir,x
+org $01D707
+	inc.w !st_ram_spritedir,x
+org $01D76C
+	lda.w !st_ram_spritedir,x
+org $01D874
+	lda.w !st_ram_spritedir,x
+org $01D8EC
+	stz.w !st_ram_spritedir,x
+org $01D90D
+	inc.w !st_ram_spritedir,x
+org $01DB7B
+	ldy.w !st_ram_spritedir,x
+org $01DDE0
+	sta.w !st_ram_spritedir,x
+org $01DE8C
+	ldy.w !st_ram_spritedir,x
+org $01DED7
+	lda.w !st_ram_spritedir,x
+org $01DEDE
+	sta.w !st_ram_spritedir,x
+org $01E3D2
+	ldy.w !st_ram_spritedir,x
+org $01E46D
+	lda.w !st_ram_spritedir,x
+org $01E4CA
+	ldy.w !st_ram_spritedir,x
+org $01E998
+	sta.w !st_ram_spritedir,y
+org $01EB4E
+	ldy.w !st_ram_spritedir,x
+org $01EB90
+	lda.w !st_ram_spritedir,x
+org $01EC97
+	ldy.w !st_ram_spritedir,x
+org $01ECA6
+	ldy.w !st_ram_spritedir,x
+org $01ED80
+	cmp.w !st_ram_spritedir,x
+org $01EE73
+	lda.w !st_ram_spritedir,x
+org $01EE7A
+	sta.w !st_ram_spritedir,x
+org $01EF39
+	ldy.w !st_ram_spritedir,x
+org $01F04C
+	ldy.w !st_ram_spritedir,x
+org $01F1F9
+	ldy.w !st_ram_spritedir,x
+org $01F206
+	ldy.w !st_ram_spritedir,x
+org $01F238
+	lda.w !st_ram_spritedir,x
+org $01F23B
+	sta.w !st_ram_spritedir,y
+org $01F2B9
+	lda.w !st_ram_spritedir,x
+org $01F41A
+	lda.w !st_ram_spritedir,x
+org $01F433
+	lda.w !st_ram_spritedir,x
+org $01F454
+	lda.w !st_ram_spritedir,x
+org $01F923
+	cmp.w !st_ram_spritedir,x
+org $01F976
+	lda.w !st_ram_spritedir,x
+org $01F97B
+	sta.w !st_ram_spritedir,x
+org $01FA5B
+	ldy.w !st_ram_spritedir,x
+org $01FA81
+	ldy.w !st_ram_spritedir,x
+org $01FB87
+	lda.w !st_ram_spritedir,x
+org $01FB8F
+	cmp.w !st_ram_spritedir,x
+org $01FC13
+	lda.w !st_ram_spritedir,x
+org $01FC22
+	sta.w !st_ram_spritedir,x
+org $01FC4A
+	sta.w !st_ram_spritedir,x
+org $01FDC9
+	lda.w !st_ram_spritedir,x
+org $01FDCC
+	sta.w !st_ram_spritedir,y
+org $01FEC8
+	lda.w !st_ram_spritedir,x
+org $0289C9
+	inc.w !st_ram_spritedir,x
+org $02941E
+	stz.w !st_ram_spritedir,x
+org $0294BD
+	sta.w !st_ram_spritedir,x
+org $02A140
+	sta.w !st_ram_spritedir,x
+org $02B078
+	inc.w !st_ram_spritedir,x
+org $02B203
+	sta.w !st_ram_spritedir,x
+org $02B24A
+	sta.w !st_ram_spritedir,x
+org $02B417
+	sta.w !st_ram_spritedir,x
+org $02B6CC
+	sta.w !st_ram_spritedir,x
+org $02B6CF
+	ldy.w !st_ram_spritedir,x
+org $02B6FC
+	lda.w !st_ram_spritedir,x
+org $02B701
+	sta.w !st_ram_spritedir,x
+org $02B8C2
+	ldy.w !st_ram_spritedir,x
+org $02B90A
+	lda.w !st_ram_spritedir,x
+org $02B973
+	lda.w !st_ram_spritedir,x
+org $02BB3A
+	lda.w !st_ram_spritedir,x
+org $02BC06
+	sta.w !st_ram_spritedir,x
+org $02C0D1
+	ldy.w !st_ram_spritedir,x
+org $02C12E
+	sta.w !st_ram_spritedir,x
+org $02C18A
+	ldy.w !st_ram_spritedir,x
+org $02C1AA
+	lda.w !st_ram_spritedir,x
+org $02C498
+	lda.w !st_ram_spritedir,x
+org $02C55A
+	sta.w !st_ram_spritedir,x
+org $02C606
+	sta.w !st_ram_spritedir,x
+org $02C66D
+	lda.w !st_ram_spritedir,x
+org $02C672
+	sta.w !st_ram_spritedir,x
+org $02C6CA
+	cmp.w !st_ram_spritedir,x
+org $02C6EC
+	ldy.w !st_ram_spritedir,x
+org $02C8B6
+	lda.w !st_ram_spritedir,x
+org $02CAFE
+	lda.w !st_ram_spritedir,x
+org $02CB56
+	ldy.w !st_ram_spritedir,x
+org $02CBC6
+	ora.w !st_ram_spritedir,x
+org $02CE1C
+	sta.w !st_ram_spritedir,x
+org $02CE51
+	lda.w !st_ram_spritedir,x
+org $02CE6C
+	inc.w !st_ram_spritedir,x
+org $02CE82
+	inc.w !st_ram_spritedir,x
+org $02D102
+	ldy.w !st_ram_spritedir,x
+org $02D163
+	ldy.w !st_ram_spritedir,x
+org $02D934
+	ldy.w !st_ram_spritedir,x
+org $02D99D
+	sta.w !st_ram_spritedir,x
+org $02DA5A
+	stz.w !st_ram_spritedir,x
+org $02DA94
+	sta.w !st_ram_spritedir,x
+org $02DAAF
+	lda.w !st_ram_spritedir,x
+org $02DB00
+	lda.w !st_ram_spritedir,x
+org $02DD13
+	ldy.w !st_ram_spritedir,x
+org $02DD81
+	lda.w !st_ram_spritedir,x
+org $02DD86
+	sta.w !st_ram_spritedir,x
+org $02DE41
+	lda.w !st_ram_spritedir,x
+org $02E31F
+	ldy.w !st_ram_spritedir,x
+org $02E473
+	sta.w !st_ram_spritedir,x
+org $02E74E
+	ldy.w !st_ram_spritedir,x
+org $02E768
+	lda.w !st_ram_spritedir,x
+org $02E76D
+	sta.w !st_ram_spritedir,x
+org $02E98F
+	sta.w !st_ram_spritedir,x
+org $02E9B0
+	sta.w !st_ram_spritedir,x
+org $02EA14
+	lda.w !st_ram_spritedir,x
+org $02EABA
+	stz.w !st_ram_spritedir,x
+org $02EACA
+	inc.w !st_ram_spritedir,x
+org $02EB60
+	ldy.w !st_ram_spritedir,x
+org $02EB95
+	ldy.w !st_ram_spritedir,x
+org $02EBE7
+	ldy.w !st_ram_spritedir,x
+org $02ECE1
+	lda.w !st_ram_spritedir,x
+org $02EFA5
+	inc.w !st_ram_spritedir,x
+org $02F00C
+	sta.w !st_ram_spritedir,x
+org $02F083
+	sta.w !st_ram_spritedir,x
+org $02F086
+	ldy.w !st_ram_spritedir,x
+org $02F0B3
+	lda.w !st_ram_spritedir,x
+org $02F0B8
+	sta.w !st_ram_spritedir,x
+org $02F0D3
+	ora.w !st_ram_spritedir,x
+org $02F1A8
+	lda.w !st_ram_spritedir,x
+org $02F1CB
+	lda.w !st_ram_spritedir,x
+org $02F342
+	ldy.w !st_ram_spritedir,x
+org $02F3C1
+	lda.w !st_ram_spritedir,x
+org $02F3C6
+	sta.w !st_ram_spritedir,x
+org $02F3F1
+	ldy.w !st_ram_spritedir,x
+org $038128
+	cmp.w !st_ram_spritedir,x
+org $038137
+	lda.w !st_ram_spritedir,x
+org $03813C
+	sta.w !st_ram_spritedir,x
+org $0383D4
+	lda.w !st_ram_spritedir,x
+org $038516
+	ldy.w !st_ram_spritedir,x
+org $038548
+	sta.w !st_ram_spritedir,x
+org $0385AC
+	lda.w !st_ram_spritedir,x
+org $03861B
+	inc.w !st_ram_spritedir,x
+org $03861E
+	lda.w !st_ram_spritedir,x
+org $03877D
+	ldy.w !st_ram_spritedir,x
+org $0387C5
+	lda.w !st_ram_spritedir,x
+org $0387CA
+	sta.w !st_ram_spritedir,x
+org $0387D1
+	lda.w !st_ram_spritedir,x
+org $0388F8
+	sta.w !st_ram_spritedir,x
+org $03891B
+	ldy.w !st_ram_spritedir,x
+org $038961
+	sta.w !st_ram_spritedir,x
+org $038972
+	lda.w !st_ram_spritedir,x
+org $03897F
+	sta.w !st_ram_spritedir,x
+org $038A91
+	lda.w !st_ram_spritedir,x
+org $038A96
+	sta.w !st_ram_spritedir,x
+org $038AB6
+	sta.w !st_ram_spritedir,x
+org $038AF3
+	lda.w !st_ram_spritedir,x
+org $038B1E
+	lda.w !st_ram_spritedir,x
+org $038B21
+	sta.w !st_ram_spritedir,y
+org $038B4F
+	lda.w !st_ram_spritedir,x
+org $038EFA
+	ldy.w !st_ram_spritedir,x
+org $038F1E
+	lda.w !st_ram_spritedir,x
+org $038F81
+	sta.w !st_ram_spritedir,x
+org $039083
+	sta.w !st_ram_spritedir,x
+org $0390F3
+	lda.w !st_ram_spritedir,x
+org $039188
+	lda.w !st_ram_spritedir,x
+org $0392BD
+	ldy.w !st_ram_spritedir,x
+org $03931C
+	sta.w !st_ram_spritedir,x
+org $039383
+	sta.w !st_ram_spritedir,x
+org $03955B
+	ldy.w !st_ram_spritedir,x
+org $039579
+	lda.w !st_ram_spritedir,x
+org $03957E
+	sta.w !st_ram_spritedir,x
+org $0395D6
+	sta.w !st_ram_spritedir,x
+org $03969B
+	lda.w !st_ram_spritedir,x
+org $039745
+	ldy.w !st_ram_spritedir,x
+org $0397A4
+	lda.w !st_ram_spritedir,x
+org $039A21
+	lda.w !st_ram_spritedir,x
+org $039A29
+	sta.w !st_ram_spritedir,x
+org $039A2D
+	cmp.w !st_ram_spritedir,x
+org $039A7E
+	lda.w !st_ram_spritedir,x
+org $039A8D
+	sta.w !st_ram_spritedir,x
+org $039AAA
+	sta.w !st_ram_spritedir,x
+org $039B84
+	lda.w !st_ram_spritedir,x
+org $039C81
+	lda.w !st_ram_spritedir,x
+org $039C86
+	sta.w !st_ram_spritedir,x
+org $039CD7
+	sta.w !st_ram_spritedir,x
+org $039CDE
+	ldy.w !st_ram_spritedir,x
+org $039DBD
+	lda.w !st_ram_spritedir,x
+org $039E4C
+	lda.w !st_ram_spritedir,x
+org $039FB9
+	lda.w !st_ram_spritedir,x
+org $039FC4
+	sta.w !st_ram_spritedir,x
+org $039FDB
+	ldy.w !st_ram_spritedir,x
+org $03A0A7
+	lda.w !st_ram_spritedir,x
+org $03A28B
+	ora.w !st_ram_spritedir,x
+org $03A4F9
+	sta.w !st_ram_spritedir,x
+org $03A91C
+	stz.w !st_ram_spritedir,x
+org $03A927
+	inc.w !st_ram_spritedir,x
+org $03ACC1
+	lda.w !st_ram_spritedir,x
+org $03ADC6
+	sta.w !st_ram_spritedir,x
+org $03AE0A
+	sta.w !st_ram_spritedir,x
+org $03AE18
+	sta.w !st_ram_spritedir,x
+org $03AF5C
+	lda.w !st_ram_spritedir,x
+org $03B2CC
+	ldy.w !st_ram_spritedir,x
+org $03B2E0
+	sta.w !st_ram_spritedir,x
+org $03B2F1
+	lda.w !st_ram_spritedir,x
+org $03B2F6
+	sta.w !st_ram_spritedir,x
+org $03B393
+	lda.w !st_ram_spritedir,x
+org $03B40D
+	lda.w !st_ram_spritedir,x
+org $03C33B
+	sta.w !st_ram_spritedir,x
+org $03C358
+	sta.w !st_ram_spritedir,x
+org $03C393
+	lda.w !st_ram_spritedir,x
+org $03C3A2
+	sta.w !st_ram_spritedir,x
+org $03C3A9
+	sta.w !st_ram_spritedir,x
+org $03C3E8
+	lda.w !st_ram_spritedir,x
+org $03C3EC
+	adc.w !st_ram_spritedir,x
+org $03C481
+	lda.w !st_ram_spritedir,x
+org $03CBDF
+	lda.w !st_ram_spritedir,x
+org $07F733
+	stz.w !st_ram_spritedir,x
+org $0CA793
+	sta.w !st_ram_spritedir
+
+!st_ram_sprobjstatus = $107E
+org $00FF93
+	lda.w !st_ram_sprobjstatus,x
+org $01800E
+	lda.w !st_ram_sprobjstatus,x
+org $018014
+	lda.w !st_ram_sprobjstatus,x
+org $01804E
+	lda.w !st_ram_sprobjstatus,x
+org $018B33
+	and.w !st_ram_sprobjstatus,x
+org $018C68
+	and.w !st_ram_sprobjstatus,x
+org $019085
+	stz.w !st_ram_sprobjstatus,x
+org $01908D
+	and.w !st_ram_sprobjstatus,x
+org $019143
+	stz.w !st_ram_sprobjstatus,x
+org $01919E
+	lda.w !st_ram_sprobjstatus,x
+org $0191C3
+	lda.w !st_ram_sprobjstatus,x
+org $0191E5
+	lda.w !st_ram_sprobjstatus,x
+org $0191EA
+	sta.w !st_ram_sprobjstatus,x
+org $0192B2
+	lda.w !st_ram_sprobjstatus,x
+org $0192B7
+	sta.w !st_ram_sprobjstatus,x
+org $019307
+	lda.w !st_ram_sprobjstatus,x
+org $01930C
+	sta.w !st_ram_sprobjstatus,x
+org $01941C
+	lda.w !st_ram_sprobjstatus,x
+org $019421
+	sta.w !st_ram_sprobjstatus,x
+org $019437
+	lda.w !st_ram_sprobjstatus,x
+org $01943D
+	sta.w !st_ram_sprobjstatus,x
+org $0195BF
+	lda.w !st_ram_sprobjstatus,x
+org $0197FE
+	ldy.w !st_ram_sprobjstatus,x
+org $0199B7
+	lda.w !st_ram_sprobjstatus,x
+org $019A04
+	lda.w !st_ram_sprobjstatus,x
+org $01A4E2
+	lda.w !st_ram_sprobjstatus,y
+org $01A6E0
+	lda.w !st_ram_sprobjstatus,y
+org $01A73A
+	lda.w !st_ram_sprobjstatus,y
+org $01B0B3
+	lda.w !st_ram_sprobjstatus,x
+org $01B56A
+	lda.w !st_ram_sprobjstatus,x
+org $01BA04
+	lda.w !st_ram_sprobjstatus,x
+org $01C0B1
+	inc.w !st_ram_sprobjstatus,x
+org $01C0B4
+	lda.w !st_ram_sprobjstatus,x
+org $01C1BE
+	lda.w !st_ram_sprobjstatus,x
+org $01C3EA
+	lda.w !st_ram_sprobjstatus,x
+org $01C3FF
+	stz.w !st_ram_sprobjstatus,x
+org $01C413
+	lda.w !st_ram_sprobjstatus,x
+org $01C418
+	sta.w !st_ram_sprobjstatus,x
+org $01C463
+	ldy.w !st_ram_sprobjstatus,x
+org $01C6F8
+	lda.w !st_ram_sprobjstatus,x
+org $01E135
+	lda.w !st_ram_sprobjstatus,x
+org $01E4E6
+	and.w !st_ram_sprobjstatus,x
+org $0294D5
+	lda.w !st_ram_sprobjstatus,x
+org $02B6EC
+	lda.w !st_ram_sprobjstatus,x
+org $02B6F5
+	lda.w !st_ram_sprobjstatus,x
+org $02BD8A
+	lda.w !st_ram_sprobjstatus,x
+org $02BDC8
+	lda.w !st_ram_sprobjstatus,x
+org $02BE10
+	lda.w !st_ram_sprobjstatus,x
+org $02C009
+	lda.w !st_ram_sprobjstatus,x
+org $02C012
+	lda.w !st_ram_sprobjstatus,x
+org $02C044
+	lda.w !st_ram_sprobjstatus,x
+org $02C23D
+	lda.w !st_ram_sprobjstatus,x
+org $02C269
+	lda.w !st_ram_sprobjstatus,x
+org $02C274
+	lda.w !st_ram_sprobjstatus,x
+org $02C294
+	lda.w !st_ram_sprobjstatus,x
+org $02C2A6
+	lda.w !st_ram_sprobjstatus,x
+org $02C2E4
+	lda.w !st_ram_sprobjstatus,x
+org $02C2F7
+	lda.w !st_ram_sprobjstatus,x
+org $02C507
+	lda.w !st_ram_sprobjstatus,x
+org $02C541
+	lda.w !st_ram_sprobjstatus,x
+org $02C56E
+	lda.w !st_ram_sprobjstatus,x
+org $02C6A7
+	lda.w !st_ram_sprobjstatus,x
+org $02C6F5
+	lda.w !st_ram_sprobjstatus,x
+org $02D958
+	lda.w !st_ram_sprobjstatus,x
+org $02DCD0
+	lda.w !st_ram_sprobjstatus,x
+org $02DEC5
+	lda.w !st_ram_sprobjstatus,x
+org $02DFB3
+	lda.w !st_ram_sprobjstatus,x
+org $02E195
+	lda.w !st_ram_sprobjstatus,x
+org $02E7EF
+	lda.w !st_ram_sprobjstatus,x
+org $02E7FD
+	lda.w !st_ram_sprobjstatus,x
+org $02E808
+	lda.w !st_ram_sprobjstatus,x
+org $02EE2D
+	lda.w !st_ram_sprobjstatus,y
+org $02EE4C
+	lda.w !st_ram_sprobjstatus,x
+org $02F09B
+	lda.w !st_ram_sprobjstatus,x
+org $02F0A2
+	lda.w !st_ram_sprobjstatus,x
+org $02FFD1
+	lda.w !st_ram_sprobjstatus,x
+org $038031
+	lda.w !st_ram_sprobjstatus,x
+org $03803F
+	lda.w !st_ram_sprobjstatus,x
+org $038048
+	lda.w !st_ram_sprobjstatus,x
+org $038789
+	lda.w !st_ram_sprobjstatus,x
+org $038797
+	lda.w !st_ram_sprobjstatus,x
+org $0387B5
+	lda.w !st_ram_sprobjstatus,x
+org $0389A8
+	lda.w !st_ram_sprobjstatus,x
+org $038A5F
+	lda.w !st_ram_sprobjstatus,x
+org $038A83
+	lda.w !st_ram_sprobjstatus,x
+org $038A99
+	lda.w !st_ram_sprobjstatus,x
+org $038FCE
+	lda.w !st_ram_sprobjstatus,x
+org $038FDC
+	lda.w !st_ram_sprobjstatus,x
+org $03933B
+	lda.w !st_ram_sprobjstatus,x
+org $03937A
+	ora.w !st_ram_sprobjstatus,x
+org $039550
+	lda.w !st_ram_sprobjstatus,x
+org $039572
+	lda.w !st_ram_sprobjstatus,x
+org $039C7A
+	lda.w !st_ram_sprobjstatus,x
+org $039C8C
+	lda.w !st_ram_sprobjstatus,x
+org $039CA8
+	lda.w !st_ram_sprobjstatus,x
+org $039CF1
+	lda.w !st_ram_sprobjstatus,x
+org $03B2C3
+	lda.w !st_ram_sprobjstatus,x
+org $03B2E3
+	lda.w !st_ram_sprobjstatus,x
+org $03B80F
+	ldy.w !st_ram_sprobjstatus,x
+org $03C366
+	lda.w !st_ram_sprobjstatus,x
+org $07F736
+	stz.w !st_ram_sprobjstatus,x
+
+!st__1594 = $108A
+org $00FB66
+	sta.w !st__1594,y
+org $018AA2
+	ldy.w !st__1594,x
+org $018ACC
+	ldy.w !st__1594,x
+org $018E6E
+	lda.w !st__1594,x
+org $018EA4
+	lda.w !st__1594,x
+org $018EDC
+	sta.w !st__1594,x
+org $018EE1
+	stz.w !st__1594,x
+org $01966D
+	ldy.w !st__1594,x
+org $01A770
+	sta.w !st__1594,y
+org $01A774
+	sta.w !st__1594,x
+org $01ADA1
+	lda.w !st__1594,x
+org $01ADB4
+	inc.w !st__1594,x
+org $01C117
+	sta.w !st__1594,x
+org $01C601
+	adc.w !st__1594,x
+org $01D19A
+	ldy.w !st__1594,x
+org $01D1C3
+	ldy.w !st__1594,x
+org $01D1E3
+	adc.w !st__1594,x
+org $01D1F7
+	lda.w !st__1594,x
+org $01D218
+	lda.w !st__1594,x
+org $01D221
+	sta.w !st__1594,x
+org $01D255
+	sta.w !st__1594,x
+org $01D2EC
+	lda.w !st__1594,x
+org $01EFDB
+	lda.w !st__1594,x
+org $01F0C4
+	lda.w !st__1594,x
+org $01F133
+	stz.w !st__1594,x
+org $01F1D0
+	inc.w !st__1594,x
+org $01F256
+	sta.w !st__1594,x
+org $01F32D
+	inc.w !st__1594,x
+org $01F347
+	stz.w !st__1594,x
+org $01F601
+	sta.w !st__1594,x
+org $01F737
+	stz.w !st__1594,x
+org $02C683
+	lda.w !st__1594,x
+org $02C68E
+	sta.w !st__1594,x
+org $02C691
+	ldy.w !st__1594,x
+org $02DB61
+	sta.w !st__1594,x
+org $02DB7A
+	sta.w !st__1594,x
+org $02DBF8
+	ldy.w !st__1594,x
+org $039F82
+	sta.w !st__1594,x
+org $03A02E
+	lda.w !st__1594,x
+org $03A2B5
+	lda.w !st__1594,x
+org $03A2D2
+	stz.w !st__1594,x
+org $03A8BA
+	sta.w !st__1594,x
+org $07F1D1
+	lda.w !st__1594,x
+org $07F253
+	lda.w !st__1594,x
+org $07F77C
+	stz.w !st__1594,x
+
+!st_ram_offscreenhorz = $1096
+org $00FAAA
+	lda.w !st_ram_offscreenhorz,y
+org $0180CB
+	lda.w !st_ram_offscreenhorz,x
+org $018F07
+	lda.w !st_ram_offscreenhorz,x
+org $0199A6
+	lda.w !st_ram_offscreenhorz,x
+org $019DCC
+	ora.w !st_ram_offscreenhorz,x
+org $019F51
+	ora.w !st_ram_offscreenhorz,x
+org $01A368
+	stz.w !st_ram_offscreenhorz,x
+org $01A376
+	inc.w !st_ram_offscreenhorz,x
+org $01A7F0
+	ora.w !st_ram_offscreenhorz,x
+org $01AEC8
+	lda.w !st_ram_offscreenhorz,x
+org $01BC5A
+	lda.w !st_ram_offscreenhorz,x
+org $01BDDB
+	lda.w !st_ram_offscreenhorz,x
+org $01BE8D
+	ora.w !st_ram_offscreenhorz,x
+org $01BF0F
+	ora.w !st_ram_offscreenhorz,x
+org $01D015
+	lda.w !st_ram_offscreenhorz,x
+org $01DE11
+	stz.w !st_ram_offscreenhorz,x
+org $01E2EC
+	lda.w !st_ram_offscreenhorz,x
+org $01E95E
+	lda.w !st_ram_offscreenhorz,x
+org $01F3FE
+	lda.w !st_ram_offscreenhorz,x
+org $01FB1A
+	stz.w !st_ram_offscreenhorz,x
+org $01FCED
+	stz.w !st_ram_offscreenhorz,x
+org $02849F
+	lda.w !st_ram_offscreenhorz,x
+org $028953
+	inc.w !st_ram_offscreenhorz,x
+org $02A9CF
+	sta.w !st_ram_offscreenhorz,x
+org $02C0DC
+	lda.w !st_ram_offscreenhorz,x
+org $02C27B
+	lda.w !st_ram_offscreenhorz,x
+org $02CF5C
+	ora.w !st_ram_offscreenhorz,x
+org $02D0C9
+	lda.w !st_ram_offscreenhorz,x
+org $02D37B
+	stz.w !st_ram_offscreenhorz,x
+org $02D389
+	inc.w !st_ram_offscreenhorz,x
+org $02DA9D
+	ora.w !st_ram_offscreenhorz,x
+org $02DD57
+	lda.w !st_ram_offscreenhorz,x
+org $02DED6
+	lda.w !st_ram_offscreenhorz,x
+org $02E079
+	lda.w !st_ram_offscreenhorz,x
+org $02E1B1
+	lda.w !st_ram_offscreenhorz,x
+org $02E459
+	ldy.w !st_ram_offscreenhorz,x
+org $02E6C2
+	lda.w !st_ram_offscreenhorz,x
+org $02E87A
+	ora.w !st_ram_offscreenhorz,x
+org $0388E4
+	lda.w !st_ram_offscreenhorz,x
+org $039F57
+	lda.w !st_ram_offscreenhorz,x
+org $03A0F5
+	stz.w !st_ram_offscreenhorz,x
+org $03B0E6
+	lda.w !st_ram_offscreenhorz,y
+org $03B763
+	stz.w !st_ram_offscreenhorz,x
+org $03B771
+	inc.w !st_ram_offscreenhorz,x
+org $03B8FB
+	lda.w !st_ram_offscreenhorz,x
+org $03C44E
+	lda.w !st_ram_offscreenhorz,x
+org $07F787
+	sta.w !st_ram_offscreenhorz,x
+
+!st__15ac = $10A2
+org $018116
+	lda.w !st__15ac,x
+org $01811B
+	dec.w !st__15ac,x
+org $018B77
+	sta.w !st__15ac,x
+org $018BC7
+	ldy.w !st__15ac,x
+org $018CD9
+	sta.w !st__15ac,x
+org $019098
+	lda.w !st__15ac,x
+org $01909F
+	sta.w !st__15ac,x
+org $019279
+	ora.w !st__15ac,x
+org $01A597
+	lda.w !st__15ac,y
+org $01A59E
+	sta.w !st__15ac,y
+org $01A5B9
+	lda.w !st__15ac,x
+org $01A5C0
+	sta.w !st__15ac,x
+org $01CDB5
+	lda.w !st__15ac,x
+org $01CE08
+	sta.w !st__15ac,x
+org $01CE89
+	ldy.w !st__15ac,x
+org $01D157
+	ldy.w !st__15ac,x
+org $01D25A
+	sta.w !st__15ac,x
+org $01EAF0
+	lda.w !st__15ac,x
+org $01ED85
+	lda.w !st__15ac,x
+org $01ED92
+	sta.w !st__15ac,x
+org $01EE65
+	ldy.w !st__15ac,x
+org $01EF59
+	lda.w !st__15ac,x
+org $01F91D
+	lda.w !st__15ac,x
+org $01F92A
+	sta.w !st__15ac,x
+org $01FB96
+	sta.w !st__15ac,x
+org $01FC17
+	ldy.w !st__15ac,x
+org $028A26
+	sta.w !st__15ac,x
+org $02C233
+	lda.w !st__15ac,x
+org $02C62A
+	sta.w !st__15ac,x
+org $02F0AE
+	lda.w !st__15ac,x
+org $02F0C0
+	sta.w !st__15ac,x
+org $02F317
+	lda.w !st__15ac,x
+org $02F3CB
+	sta.w !st__15ac,x
+org $03811F
+	lda.w !st__15ac,x
+org $03812F
+	sta.w !st__15ac,x
+org $0387B2
+	ldy.w !st__15ac,x
+org $0387C2
+	sta.w !st__15ac,x
+org $039076
+	lda.w !st__15ac,x
+org $03908F
+	ora.w !st__15ac,x
+org $039096
+	sta.w !st__15ac,x
+org $0399F9
+	ora.w !st__15ac,x
+org $039A1C
+	ora.w !st__15ac,x
+org $039A34
+	sta.w !st__15ac,x
+org $039A82
+	ldy.w !st__15ac,x
+org $03C397
+	ldy.w !st__15ac,x
+org $03C3E3
+	lda.w !st__15ac,x
+org $03C87D
+	sta.w !st__15ac,x
+org $03C88D
+	lda.w !st__15ac,x
+
+!st__15b8 = $10AE
+org $018B1F
+	eor.w !st__15b8,x
+org $018B29
+	adc.w !st__15b8,x
+org $018C57
+	eor.w !st__15b8,x
+org $018C61
+	adc.w !st__15b8,x
+org $019146
+	stz.w !st__15b8,x
+org $01936A
+	sta.w !st__15b8,x
+org $019949
+	lda.w !st__15b8,x
+org $01995A
+	cmp.w !st__15b8,x
+org $019A0B
+	ldy.w !st__15b8,x
+org $01E4D0
+	eor.w !st__15b8,x
+org $01E4DA
+	adc.w !st__15b8,x
+org $02E81D
+	ldy.w !st__15b8,x
+org $02FFD8
+	ldy.w !st__15b8,x
+org $038068
+	ldy.w !st__15b8,x
+org $0389BF
+	lda.w !st__15b8,x
+org $0389D4
+	lda.w !st__15b8,x
+org $03C1CF
+	lda.w !st__15b8,x
+
+!st__15c4 = $10BA
+org $01A390
+	sta.w !st__15c4,x
+org $01B852
+	lda.w !st__15c4,x
+org $01CA06
+	sta.w !st__15c4,x
+org $02D3A3
+	sta.w !st__15c4,x
+org $02D78B
+	lda.w !st__15c4,x
+org $03B78B
+	sta.w !st__15c4,x
+org $07F739
+	stz.w !st__15c4,x
+
+!st__15d0 = $10C6
+org $018E7E
+	lda.w !st__15d0,x
+org $0191CB
+	lda.w !st__15d0,x
+org $019405
+	lda.w !st__15d0,x
+org $019670
+	lda.w !st__15d0,y
+org $01A42F
+	ora.w !st__15d0,x
+org $01BDD8
+	sta.w !st__15d0,x
+org $01BE6E
+	stz.w !st__15d0,x
+org $01C31C
+	lda.w !st__15d0,x
+org $01E07B
+	stz.w !st__15d0,x
+org $01E09B
+	sta.w !st__15d0,x
+org $01E30C
+	ora.w !st__15d0,x
+org $01F223
+	sta.w !st__15d0,y
+org $01F520
+	sta.w !st__15d0,y
+org $01F656
+	ora.w !st__15d0,y
+org $0293C3
+	ora.w !st__15d0,x
+org $0294E1
+	ora.w !st__15d0,x
+org $02A0C9
+	ora.w !st__15d0,x
+org $02F277
+	ora.w !st__15d0,x
+org $038821
+	ora.w !st__15d0,x
+org $03952A
+	sta.w !st__15d0,x
+org $07F761
+	stz.w !st__15d0,x
+
+!st__15dc = $10D2
+org $01907C
+	lda.w !st__15dc,x
+org $02E60C
+	lda.w !st__15dc,y
+org $02E629
+	sta.w !st__15dc,y
+org $02E630
+	sta.w !st__15dc,y
+org $07F75E
+	stz.w !st__15dc,x
+
+!st_ram_sproamindex = $10DE
+org $00FBE4
+	ldy.w !st_ram_sproamindex,x
+org $0180E2
+	sta.w !st_ram_sproamindex,x
+org $0189F6
+	ldy.w !st_ram_sproamindex,x
+org $018DAF
+	lda.w !st_ram_sproamindex,x
+org $018DB5
+	sta.w !st_ram_sproamindex,x
+org $018E01
+	ldy.w !st_ram_sproamindex,x
+org $018E8A
+	ldy.w !st_ram_sproamindex,x
+org $018FAC
+	ldy.w !st_ram_sproamindex,x
+org $019808
+	ldy.w !st_ram_sproamindex,x
+org $019812
+	lda.w !st_ram_sproamindex,x
+org $01981B
+	sta.w !st_ram_sproamindex,x
+org $019822
+	sta.w !st_ram_sproamindex,x
+org $019831
+	ldy.w !st_ram_sproamindex,x
+org $019A44
+	ldy.w !st_ram_sproamindex,x
+org $019A5A
+	ldy.w !st_ram_sproamindex,x
+org $019B07
+	ldy.w !st_ram_sproamindex,x
+org $019D17
+	ldy.w !st_ram_sproamindex,x
+org $019E49
+	ldy.w !st_ram_sproamindex,x
+org $019EB7
+	lda.w !st_ram_sproamindex,x
+org $019EBE
+	sta.w !st_ram_sproamindex,x
+org $019EE3
+	lda.w !st_ram_sproamindex,x
+org $019EE9
+	sta.w !st_ram_sproamindex,x
+org $019EF7
+	sta.w !st_ram_sproamindex,x
+org $019F20
+	ldy.w !st_ram_sproamindex,x
+org $019F83
+	stz.w !st_ram_sproamindex,x
+org $019FD7
+	ldy.w !st_ram_sproamindex,x
+org $01A1C7
+	ldy.w !st_ram_sproamindex,x
+org $01A20C
+	ldy.w !st_ram_sproamindex,x
+org $01A222
+	ldy.w !st_ram_sproamindex,x
+org $01A27E
+	stz.w !st_ram_sproamindex,x
+org $01A3CD
+	ldy.w !st_ram_sproamindex,x
+org $01AD73
+	stz.w !st_ram_sproamindex,x
+org $01AD7D
+	sta.w !st_ram_sproamindex,x
+org $01AD83
+	ldy.w !st_ram_sproamindex,x
+org $01AE65
+	ldy.w !st_ram_sproamindex,x
+org $01B421
+	ldy.w !st_ram_sproamindex,x
+org $01B72A
+	ldy.w !st_ram_sproamindex,x
+org $01B7BF
+	ldy.w !st_ram_sproamindex,x
+org $01BB35
+	sta.w !st_ram_sproamindex,x
+org $01BEBC
+	lda.w !st_ram_sproamindex,x
+org $01BEE1
+	ldy.w !st_ram_sproamindex,x
+org $01C194
+	ldy.w !st_ram_sproamindex,x
+org $01C35B
+	ldy.w !st_ram_sproamindex,x
+org $01C632
+	sta.w !st_ram_sproamindex,x
+org $01C7CE
+	ldy.w !st_ram_sproamindex,x
+org $01C84D
+	ldy.w !st_ram_sproamindex,x
+org $01C927
+	ldy.w !st_ram_sproamindex,x
+org $01C9A4
+	ldy.w !st_ram_sproamindex,x
+org $01D499
+	sta.w !st_ram_sproamindex,x
+org $01D5FB
+	lda.w !st_ram_sproamindex,x
+org $01D601
+	sta.w !st_ram_sproamindex,x
+org $01DBD7
+	ldy.w !st_ram_sproamindex,x
+org $01DC80
+	ldy.w !st_ram_sproamindex,x
+org $01DF23
+	ldy.w !st_ram_sproamindex,x
+org $01E170
+	ldy.w !st_ram_sproamindex,x
+org $01E45F
+	ldy.w !st_ram_sproamindex,x
+org $01E469
+	sta.w !st_ram_sproamindex,x
+org $01E947
+	sta.w !st_ram_sproamindex,x
+org $01E954
+	sta.w !st_ram_sproamindex,x
+org $01EE9B
+	ldy.w !st_ram_sproamindex,x
+org $01EF55
+	lda.w !st_ram_sproamindex,x
+org $01EF63
+	sta.w !st_ram_sproamindex,x
+org $01EF66
+	lda.w !st_ram_sproamindex,x
+org $01EF6F
+	ldy.w !st_ram_sproamindex,x
+org $01EF84
+	sta.w !st_ram_sproamindex,x
+org $01F090
+	ldy.w !st_ram_sproamindex,x
+org $01F790
+	ldy.w !st_ram_sproamindex,x
+org $01F7AD
+	ldy.w !st_ram_sproamindex,x
+org $01FA1F
+	ldy.w !st_ram_sproamindex,x
+org $01FA63
+	ldy.w !st_ram_sproamindex,x
+org $01FEC5
+	ldy.w !st_ram_sproamindex,x
+org $028105
+	adc.w !st_ram_sproamindex,x
+org $02B685
+	ldy.w !st_ram_sproamindex,x
+org $02B745
+	ldy.w !st_ram_sproamindex,x
+org $02BE58
+	ldy.w !st_ram_sproamindex,x
+org $02BEBC
+	sta.w !st_ram_sproamindex,x
+org $02BF15
+	lda.w !st_ram_sproamindex,x
+org $02BF1B
+	sta.w !st_ram_sproamindex,x
+org $02C8C2
+	lda.w !st_ram_sproamindex,x
+org $02CBBB
+	lda.w !st_ram_sproamindex,x
+org $02CCCB
+	ldy.w !st_ram_sproamindex,x
+org $02CEF9
+	ldy.w !st_ram_sproamindex,x
+org $02D3D5
+	ldy.w !st_ram_sproamindex,x
+org $02D790
+	lda.w !st_ram_sproamindex,x
+org $02D8BB
+	lda.w !st_ram_sproamindex,x
+org $02D8C1
+	sta.w !st_ram_sproamindex,x
+org $02D8CB
+	ldy.w !st_ram_sproamindex,x
+org $02D9E6
+	lda.w !st_ram_sproamindex,x
+org $02D9EC
+	sta.w !st_ram_sproamindex,x
+org $02DC50
+	ldy.w !st_ram_sproamindex,x
+org $02DE4D
+	ldy.w !st_ram_sproamindex,x
+org $02DEF0
+	ldy.w !st_ram_sproamindex,x
+org $02E00E
+	ldy.w !st_ram_sproamindex,x
+org $02E061
+	lda.w !st_ram_sproamindex,x
+org $02E067
+	sta.w !st_ram_sproamindex,x
+org $02E0E8
+	lda.w !st_ram_sproamindex,x
+org $02E0EE
+	sta.w !st_ram_sproamindex,x
+org $02E249
+	ldy.w !st_ram_sproamindex,x
+org $02E3C0
+	ldy.w !st_ram_sproamindex,x
+org $02E495
+	lda.w !st_ram_sproamindex,x
+org $02E4A1
+	sta.w !st_ram_sproamindex,x
+org $02E4EB
+	lda.w !st_ram_sproamindex,x
+org $02E4F1
+	sta.w !st_ram_sproamindex,x
+org $02E681
+	sta.w !st_ram_sproamindex,x
+org $02E6C7
+	ldy.w !st_ram_sproamindex,x
+org $02E6EE
+	sta.w !st_ram_sproamindex,x
+org $02EA25
+	ldy.w !st_ram_sproamindex,x
+org $02EDFA
+	ldy.w !st_ram_sproamindex,x
+org $02EE66
+	lda.w !st_ram_sproamindex,x
+org $02EF1C
+	lda.w !st_ram_sproamindex,x
+org $02EF23
+	sta.w !st_ram_sproamindex,x
+org $02EF2A
+	ldy.w !st_ram_sproamindex,x
+org $02EF3F
+	sta.w !st_ram_sproamindex,x
+org $02F1A5
+	ldy.w !st_ram_sproamindex,x
+org $02F1C8
+	ldy.w !st_ram_sproamindex,x
+org $02F228
+	ldy.w !st_ram_sproamindex,x
+org $02F48D
+	ldy.w !st_ram_sproamindex,x
+org $02F4EB
+	lda.w !st_ram_sproamindex,x
+org $02F946
+	sta.w !st_ram_sproamindex
+org $03843C
+	ldy.w !st_ram_sproamindex,x
+org $0384CE
+	ldy.w !st_ram_sproamindex,x
+org $0386AB
+	ldy.w !st_ram_sproamindex,x
+org $0388A7
+	ldy.w !st_ram_sproamindex,x
+org $038968
+	ldy.w !st_ram_sproamindex,x
+org $038DAC
+	ldy.w !st_ram_sproamindex,x
+org $038F88
+	ldy.w !st_ram_sproamindex,x
+org $03900D
+	ldy.w !st_ram_sproamindex,x
+org $039218
+	ldy.w !st_ram_sproamindex,x
+org $039288
+	ldy.w !st_ram_sproamindex,x
+org $039790
+	ldy.w !st_ram_sproamindex,x
+org $0397B0
+	lda.w !st_ram_sproamindex,x
+org $0397B6
+	sta.w !st_ram_sproamindex,x
+org $039BE3
+	lda.w !st_ram_sproamindex,x
+org $039BF1
+	sta.w !st_ram_sproamindex,x
+org $03A071
+	ldy.w !st_ram_sproamindex,x
+org $03A3F3
+	sta.w !st_ram_sproamindex,x
+org $03ACCF
+	sta.w !st_ram_sproamindex,x
+org $03AF6B
+	sta.w !st_ram_sproamindex,x
+org $03AFE0
+	ldy.w !st_ram_sproamindex,x
+org $03B223
+	sta.w !st_ram_sproamindex,x
+org $03B261
+	ldy.w !st_ram_sproamindex,x
+org $03B3EF
+	lda.w !st_ram_sproamindex,x
+org $03B3FD
+	sta.w !st_ram_sproamindex,x
+org $03B7BD
+	ldy.w !st_ram_sproamindex,x
+org $03C244
+	ldy.w !st_ram_sproamindex,x
+org $03C4A5
+	ldy.w !st_ram_sproamindex,x
+org $0CA014
+	sta.w !st_ram_sproamindex
+org $0CA288
+	sta.w !st_ram_sproamindex
+
+!st_ram_spritepal = $10EA
+org $00FBD8
+	sta.w !st_ram_spritepal,x
+org $00FC3B
+	lda.w !st_ram_spritepal,y
+org $00FC42
+	sta.w !st_ram_spritepal,y
+org $00FCC8
+	sta.w !st_ram_spritepal,x
+org $00FCD2
+	sta.w !st_ram_spritepal,x
+org $018322
+	sta.w !st_ram_spritepal,x
+org $018345
+	sta.w !st_ram_spritepal,x
+org $01845D
+	sta.w !st_ram_spritepal,x
+org $01859A
+	asl.w !st_ram_spritepal,x
+org $01859E
+	ror.w !st_ram_spritepal,x
+org $018322
+	sta.w !st_ram_spritepal,x
+org $018345
+	sta.w !st_ram_spritepal,x
+org $01845D
+	sta.w !st_ram_spritepal,x
+org $01859A
+	asl.w !st_ram_spritepal,x
+org $01859E
+	ror.w !st_ram_spritepal,x
+org $018FF5
+	sta.w !st_ram_spritepal,x
+org $019655
+	eor.w !st_ram_spritepal,x
+org $019658
+	sta.w !st_ram_spritepal,x
+org $01967C
+	asl.w !st_ram_spritepal,x
+org $01967F
+	lsr.w !st_ram_spritepal,x
+org $0196D0
+	asl.w !st_ram_spritepal,x
+org $0196D3
+	lsr.w !st_ram_spritepal,x
+org $019858
+	lda.w !st_ram_spritepal,x
+org $019903
+	lda.w !st_ram_spritepal,x
+org $01990A
+	sta.w !st_ram_spritepal,x
+org $019B44
+	lda.w !st_ram_spritepal,x
+org $019B49
+	sta.w !st_ram_spritepal,x
+org $019D10
+	lda.w !st_ram_spritepal,x
+org $019D67
+	lda.w !st_ram_spritepal,x
+org $019DB7
+	ora.w !st_ram_spritepal,x
+org $019F3D
+	ora.w !st_ram_spritepal,x
+org $01A17B
+	lda.w !st_ram_spritepal,x
+org $01A180
+	sta.w !st_ram_spritepal,x
+org $01A1DE
+	lda.w !st_ram_spritepal,x
+org $01A1E5
+	sta.w !st_ram_spritepal,x
+org $01A2D8
+	lda.w !st_ram_spritepal,x
+org $01A2E3
+	sta.w !st_ram_spritepal,x
+org $01A741
+	lda.w !st_ram_spritepal,y
+org $01A748
+	sta.w !st_ram_spritepal,y
+org $01A99D
+	lda.w !st_ram_spritepal,x
+org $01A9A8
+	lda.w !st_ram_spritepal,x
+org $01A9AF
+	sta.w !st_ram_spritepal,x
+org $01AB11
+	lsr.w !st_ram_spritepal,x
+org $01AB14
+	asl.w !st_ram_spritepal,x
+org $01B086
+	lda.w !st_ram_spritepal,x
+org $01B08B
+	sta.w !st_ram_spritepal,x
+org $01B0AD
+	asl.w !st_ram_spritepal,x
+org $01B0B0
+	lsr.w !st_ram_spritepal,x
+org $01B112
+	lda.w !st_ram_spritepal,x
+org $01B119
+	sta.w !st_ram_spritepal,x
+org $01B122
+	lsr.w !st_ram_spritepal,x
+org $01B126
+	rol.w !st_ram_spritepal,x
+org $01B35B
+	ora.w !st_ram_spritepal,x
+org $01B3E0
+	lda.w !st_ram_spritepal,x
+org $01B95D
+	lda.w !st_ram_spritepal,x
+org $01B9E1
+	lda.w !st_ram_spritepal,x
+org $01B9E9
+	sta.w !st_ram_spritepal,x
+org $01B9F0
+	sta.w !st_ram_spritepal,x
+org $01BCCA
+	sta.w !st_ram_spritepal,x
+org $01BD74
+	lda.w !st_ram_spritepal,x
+org $01BEFE
+	ora.w !st_ram_spritepal,x
+org $01C276
+	eor.w !st_ram_spritepal,x
+org $01C279
+	sta.w !st_ram_spritepal,x
+org $01C4D3
+	lda.w !st_ram_spritepal,x
+org $01C657
+	lda.w !st_ram_spritepal,x
+org $01C6C9
+	ora.w !st_ram_spritepal,x
+org $01D5DA
+	lda.w !st_ram_spritepal,x
+org $01D5E2
+	sta.w !st_ram_spritepal,x
+org $01D5F8
+	sta.w !st_ram_spritepal,x
+org $01E0B7
+	lda.w !st_ram_spritepal,x
+org $01E0C8
+	sta.w !st_ram_spritepal,x
+org $01E36B
+	sta.w !st_ram_spritepal,x
+org $01E376
+	lda.w !st_ram_spritepal,x
+org $01E37B
+	sta.w !st_ram_spritepal,x
+org $01E432
+	asl.w !st_ram_spritepal,x
+org $01E436
+	ror.w !st_ram_spritepal,x
+org $01E743
+	ora.w !st_ram_spritepal,x
+org $01EA6A
+	sta.w !st_ram_spritepal,x
+org $01EB8A
+	lda.w !st_ram_spritepal,x
+org $01F175
+	lda.w !st_ram_spritepal,x
+org $01F185
+	lda.w !st_ram_spritepal,y
+org $01F26A
+	lda.w !st_ram_spritepal,y
+org $01F273
+	lda.w !st_ram_spritepal,x
+org $01F84F
+	lda.w !st_ram_spritepal,x
+org $01F85C
+	lda.w !st_ram_spritepal,x
+org $01F863
+	sta.w !st_ram_spritepal,x
+org $028A39
+	sta.w !st_ram_spritepal,x
+org $029485
+	asl.w !st_ram_spritepal,x
+org $029489
+	ror.w !st_ram_spritepal,x
+org $02A9BD
+	lda.w !st_ram_spritepal,x
+org $02A9C4
+	sta.w !st_ram_spritepal,x
+org $02AC3A
+	lda.w !st_ram_spritepal,x
+org $02AC45
+	sta.w !st_ram_spritepal
+org $02B903
+	lda.w !st_ram_spritepal,x
+org $02B9E9
+	lda.w !st_ram_spritepal,x
+org $02B9F0
+	sta.w !st_ram_spritepal,x
+org $02BC75
+	lda.w !st_ram_spritepal,x
+org $02BD12
+	lda.w !st_ram_spritepal,x
+org $02BD1A
+	sta.w !st_ram_spritepal,x
+org $02C8BB
+	lda.w !st_ram_spritepal,x
+org $02E10F
+	sta.w !st_ram_spritepal,x
+org $02E5A0
+	lda.w !st_ram_spritepal,x
+org $02E923
+	lda.w !st_ram_spritepal,x
+org $02ECE6
+	lda.w !st_ram_spritepal,x
+org $02F054
+	lda.w !st_ram_spritepal,x
+org $02F05B
+	sta.w !st_ram_spritepal,x
+org $02F118
+	lda.w !st_ram_spritepal,x
+org $038054
+	lda.w !st_ram_spritepal,x
+org $038059
+	sta.w !st_ram_spritepal,x
+org $0381B0
+	eor.w !st_ram_spritepal,x
+org $0381B3
+	sta.w !st_ram_spritepal,x
+org $0383D9
+	lda.w !st_ram_spritepal,x
+org $038B4A
+	lda.w !st_ram_spritepal,x
+org $03B357
+	sta.w !st_ram_spritepal,x
+org $03B37C
+	sta.w !st_ram_spritepal,x
+org $03B382
+	lda.w !st_ram_spritepal,x
+org $03C07F
+	lda.w !st_ram_spritepal,x
+org $03C08A
+	sta.w !st_ram_spritepal,x
+org $07F797
+	sta.w !st_ram_spritepal,x
+
+!st__1602 = $10F6
+org $0183D6
+	sta.w !st__1602,x
+org $0183D6
+	sta.w !st__1602,x
+org $018916
+	lda.w !st__1602,x
+org $01891C
+	sta.w !st__1602,x
+org $018A96
+	sta.w !st__1602,x
+org $018BCE
+	sta.w !st__1602,x
+org $018BEC
+	lda.w !st__1602,x
+org $018D48
+	sta.w !st__1602,x
+org $018DF4
+	adc.w !st__1602,x
+org $018E6A
+	sta.w !st__1602,x
+org $018F11
+	inc.w !st__1602,x
+org $018FA1
+	sta.w !st__1602,x
+org $018FFB
+	sta.w !st__1602,x
+org $01980F
+	sta.w !st__1602,x
+org $01982A
+	lda.w !st__1602,x
+org $019B1D
+	stz.w !st__1602,x
+org $019B3F
+	sta.w !st__1602,x
+org $019B61
+	sta.w !st__1602,x
+org $019D06
+	lda.w !st__1602,x
+org $019D85
+	lda.w !st__1602,x
+org $019DE9
+	lda.w !st__1602,x
+org $019E2F
+	lda.w !st__1602,x
+org $019F19
+	lda.w !st__1602,x
+org $01A13D
+	sta.w !st__1602,x
+org $01A278
+	sta.w !st__1602,x
+org $01A2E8
+	sta.w !st__1602,x
+org $01A314
+	sta.w !st__1602,x
+org $01B09C
+	lda.w !st__1602,x
+org $01B0A2
+	sta.w !st__1602,x
+org $01B10A
+	lda.w !st__1602,x
+org $01B22B
+	inc.w !st__1602,x
+org $01B25E
+	inc.w !st__1602,x
+org $01B2E2
+	lda.w !st__1602,x
+org $01B9D9
+	sta.w !st__1602,x
+org $01BA68
+	sta.w !st__1602,x
+org $01BE62
+	stz.w !st__1602,x
+org $01BEA9
+	sta.w !st__1602,x
+org $01BEAF
+	lda.w !st__1602,x
+org $01BECE
+	lda.w !st__1602,x
+org $01C09F
+	lda.w !st__1602,x
+org $01C101
+	inc.w !st__1602,x
+org $01C77E
+	ora.w !st__1602,x
+org $01CA0E
+	stz.w !st__1602,x
+org $01CA39
+	sta.w !st__1602,x
+org $01CDAE
+	lda.w !st__1602,x
+org $01CDCB
+	ldy.w !st__1602,x
+org $01CE90
+	sta.w !st__1602,x
+org $01CEF9
+	sta.w !st__1602,x
+org $01CF79
+	sta.w !st__1602,x
+org $01CF9A
+	sta.w !st__1602,x
+org $01CFB3
+	sta.w !st__1602,x
+org $01D15E
+	sta.w !st__1602,x
+org $01D260
+	sta.w !st__1602,x
+org $01D2D8
+	lda.w !st__1602,x
+org $01D302
+	lda.w !st__1602,x
+org $01D421
+	lda.w !st__1602,x
+org $01D48A
+	lda.w !st__1602,x
+org $01D5EB
+	sta.w !st__1602,x
+org $01D634
+	lda.w !st__1602,x
+org $01D642
+	sta.w !st__1602,x
+org $01D64A
+	stz.w !st__1602,x
+org $01D64D
+	ldy.w !st__1602,x
+org $01D6D8
+	sta.w !st__1602,x
+org $01DAA4
+	lda.w !st__1602,x
+org $01DAF6
+	lda.w !st__1602,x
+org $01E0C0
+	inc.w !st__1602,x
+org $01E0C3
+	inc.w !st__1602,x
+org $01E355
+	sta.w !st__1602,x
+org $01E370
+	sta.w !st__1602,x
+org $01E384
+	sta.w !st__1602,x
+org $01E3EB
+	sta.w !st__1602,x
+org $01E519
+	sta.w !st__1602,x
+org $01E53C
+	sta.w !st__1602,x
+org $01E669
+	sta.w !st__1602,x
+org $01E6DF
+	stz.w !st__1602,x
+org $01E6F0
+	ldy.w !st__1602,x
+org $01EB45
+	sta.w !st__1602,x
+org $01EB61
+	ldy.w !st__1602,x
+org $01EB7A
+	ldy.w !st__1602,x
+org $01EC48
+	sta.w !st__1602,x
+org $01EDE2
+	lda.w !st__1602,x
+org $01EE87
+	sta.w !st__1602,x
+org $01EED9
+	sta.w !st__1602,x
+org $01EF18
+	ldy.w !st__1602,x
+org $01EF21
+	sta.w !st__1602,x
+org $01EF94
+	sta.w !st__1602,x
+org $01F054
+	ldy.w !st__1602,x
+org $01F3D3
+	sta.w !st__1602,x
+org $01F409
+	ldy.w !st__1602,x
+org $01F92F
+	stz.w !st__1602,x
+org $01F938
+	sta.w !st__1602,x
+org $01F986
+	sta.w !st__1602,x
+org $01FA16
+	sta.w !st__1602,x
+org $01FA1C
+	lda.w !st__1602,x
+org $01FC05
+	sta.w !st__1602,x
+org $01FC27
+	sta.w !st__1602,x
+org $01FC37
+	sta.w !st__1602,x
+org $01FC54
+	sta.w !st__1602,x
+org $01FED4
+	lda.w !st__1602,x
+org $02AF70
+	sta.w !st__1602,x
+org $02BD0F
+	sta.w !st__1602,x
+org $02BF72
+	sta.w !st__1602,x
+org $02BF7A
+	lda.w !st__1602,x
+org $02C086
+	sta.w !st__1602,x
+org $02C0C6
+	sta.w !st__1602,x
+org $02C187
+	sta.w !st__1602,x
+org $02C23A
+	sta.w !st__1602,x
+org $02C250
+	sta.w !st__1602,x
+org $02C358
+	sta.w !st__1602,x
+org $02C391
+	sta.w !st__1602,x
+org $02C415
+	sta.w !st__1602,x
+org $02C425
+	sta.w !st__1602,x
+org $02C450
+	sta.w !st__1602,x
+org $02C4BD
+	stz.w !st__1602,x
+org $02C4DF
+	sta.w !st__1602,x
+org $02C504
+	sta.w !st__1602,x
+org $02C513
+	sta.w !st__1602,x
+org $02C53E
+	sta.w !st__1602,x
+org $02C566
+	sta.w !st__1602,x
+org $02C5FE
+	sta.w !st__1602,x
+org $02C61A
+	sta.w !st__1602,x
+org $02C63D
+	sta.w !st__1602,x
+org $02C722
+	sta.w !st__1602,x
+org $02C728
+	sta.w !st__1602,x
+org $02C763
+	sta.w !st__1602,x
+org $02C88E
+	ldy.w !st__1602,x
+org $02CBA7
+	lda.w !st__1602,x
+org $02D1D9
+	sta.w !st__1602,x
+org $02D644
+	adc.w !st__1602,x
+org $02D647
+	sta.w !st__1602,x
+org $02D658
+	lda.w !st__1602,x
+org $02DCEC
+	sta.w !st__1602,x
+org $02DCF4
+	stz.w !st__1602,x
+org $02DD04
+	inc.w !st__1602,x
+org $02DD47
+	sta.w !st__1602,x
+org $02DD7D
+	sta.w !st__1602,x
+org $02DE50
+	lda.w !st__1602,x
+org $02DFDB
+	sta.w !st__1602,x
+org $02E004
+	sta.w !st__1602,x
+org $02E041
+	lda.w !st__1602,x
+org $02E0E1
+	sta.w !st__1602,x
+org $02E0F9
+	sta.w !st__1602,x
+org $02E155
+	stz.w !st__1602,x
+org $02E4C8
+	lda.w !st__1602,x
+org $02E946
+	sta.w !st__1602,x
+org $02E953
+	stz.w !st__1602,x
+org $02E9D1
+	inc.w !st__1602,x
+org $02EA03
+	lda.w !st__1602,x
+org $02EB45
+	sta.w !st__1602,x
+org $02EBC6
+	sta.w !st__1602,x
+org $02EBE3
+	inc.w !st__1602,x
+org $02EC02
+	sta.w !st__1602,x
+org $02ECED
+	lda.w !st__1602,x
+org $02F0BB
+	stz.w !st__1602,x
+org $02F0C6
+	lda.w !st__1602,x
+org $02F0C9
+	inc.w !st__1602,x
+org $02F31E
+	sta.w !st__1602,x
+org $02F34A
+	stz.w !st__1602,x
+org $02F393
+	stz.w !st__1602,x
+org $02F39F
+	inc.w !st__1602,x
+org $02F412
+	lda.w !st__1602,x
+org $0380C0
+	sta.w !st__1602,x
+org $038114
+	sta.w !st__1602,x
+org $038119
+	stz.w !st__1602,x
+org $038147
+	sta.w !st__1602,x
+org $0381B8
+	sta.w !st__1602,x
+org $0383BA
+	sta.w !st__1602,x
+org $0383C5
+	lda.w !st__1602,x
+org $038430
+	lda.w !st__1602,x
+org $03860C
+	dec.w !st__1602,x
+org $03860F
+	lda.w !st__1602,x
+org $038618
+	sta.w !st__1602,x
+org $03865B
+	sta.w !st__1602,x
+org $038672
+	sta.w !st__1602,y
+org $0388AB
+	lda.w !st__1602,x
+org $038932
+	sta.w !st__1602,x
+org $038A73
+	stz.w !st__1602,x
+org $038A7C
+	inc.w !st__1602,x
+org $038B40
+	lda.w !st__1602,x
+org $039073
+	stz.w !st__1602,x
+org $03907B
+	inc.w !st__1602,x
+org $0390F7
+	adc.w !st__1602,x
+org $039183
+	lda.w !st__1602,x
+org $03930E
+	sta.w !st__1602,x
+org $039324
+	lda.w !st__1602,x
+org $03954D
+	sta.w !st__1602,x
+org $039685
+	sta.w !st__1602,x
+org $03968F
+	sta.w !st__1602,x
+org $039695
+	lda.w !st__1602,x
+org $039739
+	sta.w !st__1602,x
+org $03975E
+	stz.w !st__1602,x
+org $0397AA
+	lda.w !st__1602,x
+org $039A7B
+	stz.w !st__1602,x
+org $039A92
+	sta.w !st__1602,x
+org $039AA3
+	sta.w !st__1602,x
+org $039B7D
+	lda.w !st__1602,x
+org $039C89
+	stz.w !st__1602,x
+org $039D6D
+	sta.w !st__1602,x
+org $039D9E
+	lda.w !st__1602,x
+org $039DFA
+	sta.w !st__1602,x
+org $039E51
+	lda.w !st__1602,x
+org $039EAE
+	lda.w !st__1602,x
+org $039FEF
+	stz.w !st__1602,x
+org $03A041
+	inc.w !st__1602,x
+org $03A09D
+	lda.w !st__1602,x
+org $03A0A2
+	adc.w !st__1602,x
+org $03ACB8
+	ldy.w !st__1602,x
+org $03AD1E
+	sta.w !st__1602,x
+org $03AD39
+	sta.w !st__1602,x
+org $03ADE5
+	sta.w !st__1602,x
+org $03AE4D
+	sta.w !st__1602,x
+org $03B303
+	sta.w !st__1602,x
+org $03B36C
+	sta.w !st__1602,x
+org $03B38C
+	lda.w !st__1602,x
+org $03C08F
+	sta.w !st__1602,x
+org $03C38C
+	sta.w !st__1602,x
+org $03C3F2
+	lda.w !st__1602,x
+org $03C3F7
+	adc.w !st__1602,x
+org $03C8ED
+	sta.w !st__1602,x
+org $03C962
+	sta.w !st__1602,x
+org $03C9F3
+	lda.w !st__1602,x
+org $03CCDC
+	sta.w !st__1602,x
+org $03CDEB
+	sta.w !st__1602,x
+org $03CE3E
+	sta.w !st__1602,x
+org $03CE52
+	sta.w !st__1602,x
+org $03D487
+	lda.w !st__1602,x
+org $03D48C
+	adc.w !st__1602,x
+org $03D48F
+	adc.w !st__1602,x
+org $03D49B
+	lda.w !st__1602,x
+org $03D4E0
+	lda.w !st__1602,x
+org $07F73C
+	stz.w !st__1602,x
+org $0CA01A
+	ldx.w !st__1602
+org $0CA781
+	lda.w !st__1602
+org $0CA78A
+	sta.w !st__1602
+org $0CA7A1
+	lda.w !st__1602
+org $0CA7A5
+	sta.w !st__1602
+org $0CA7AC
+	stz.w !st__1602
+
+!st__160e = $1102
+org $00FCE1
+	dec.w !st__160e,x
+org $0183E0
+	dec.w !st__160e,x
+org $018572
+	sta.w !st__160e,x
+org $0183E0
+	dec.w !st__160e,x
+org $018572
+	sta.w !st__160e,x
+org $01896F
+	ldy.w !st__160e,x
+org $018992
+	ldy.w !st__160e,x
+org $018A1A
+	ldy.w !st__160e,x
+org $018AD6
+	sta.w !st__160e,y
+org $018CA5
+	ldy.w !st__160e,x
+org $019682
+	ldy.w !st__160e,x
+org $01A25A
+	sta.w !st__160e,x
+org $01A288
+	ldy.w !st__160e,x
+org $01A295
+	lda.w !st__160e,y
+org $01A2EB
+	dec.w !st__160e,x
+org $01A32E
+	ldy.w !st__160e,x
+org $01A724
+	sta.w !st__160e,x
+org $01A7B8
+	sta.w !st__160e,x
+org $01C10E
+	inc.w !st__160e,x
+org $01C12D
+	lda.w !st__160e,x
+org $01C353
+	lda.w !st__160e,x
+org $01C9DA
+	lda.w !st__160e,x
+org $01C9DF
+	stz.w !st__160e,x
+org $01CA15
+	sta.w !st__160e,x
+org $01CD8E
+	sta.w !st__160e,x
+org $01CECA
+	sta.w !st__160e,x
+org $01CF05
+	lda.w !st__160e,x
+org $01D179
+	dec.w !st__160e,x
+org $01D187
+	lda.w !st__160e,x
+org $01D1AE
+	cmp.w !st__160e,x
+org $01D871
+	ldy.w !st__160e,x
+org $01D89F
+	ldy.w !st__160e,x
+org $01D8E4
+	sta.w !st__160e,x
+org $01E7EC
+	sta.w !st__160e,x
+org $01E995
+	ldy.w !st__160e,x
+org $01E9A6
+	lda.w !st__160e,x
+org $01EA02
+	ldy.w !st__160e,x
+org $01F15A
+	ldy.w !st__160e,x
+org $01F1B2
+	ldy.w !st__160e,x
+org $01F1BB
+	sta.w !st__160e,x
+org $01F1D8
+	sta.w !st__160e,x
+org $01F1F4
+	ldy.w !st__160e,x
+org $01F25B
+	sta.w !st__160e,x
+org $01F34A
+	ldy.w !st__160e,x
+org $01F37F
+	sta.w !st__160e,x
+org $01F4B2
+	lda.w !st__160e,x
+org $01F4D6
+	ldy.w !st__160e,x
+org $01F4E1
+	ldy.w !st__160e,x
+org $01F570
+	lda.w !st__160e,x
+org $01F5FC
+	sta.w !st__160e,x
+org $01F636
+	cmp.w !st__160e,x
+org $01FB41
+	lda.w !st__160e,x
+org $01FC68
+	lda.w !st__160e,x
+org $01FC81
+	inc.w !st__160e,x
+org $02BAEC
+	inc.w !st__160e,x
+org $02C4EE
+	ldy.w !st__160e,x
+org $02C50E
+	stz.w !st__160e,x
+org $02C533
+	inc.w !st__160e,x
+org $02D0D9
+	lda.w !st__160e,x
+org $02D726
+	sta.w !st__160e,x
+org $02D73D
+	lda.w !st__160e,x
+org $02D742
+	stz.w !st__160e,x
+org $02EA51
+	cmp.w !st__160e,x
+org $02EAB7
+	sta.w !st__160e,x
+org $03C02F
+	ldy.w !st__160e,x
+org $03C03C
+	lda.w !st__160e,y
+org $03C092
+	dec.w !st__160e,x
+org $03CC9A
+	sta.w !st__160e,x
+org $03CC9D
+	lda.w !st__160e,x
+org $03CD04
+	lda.w !st__160e,x
+org $03CD07
+	sta.w !st__160e,y
+org $07F779
+	stz.w !st__160e,x
+
+!st_ram_sprindexinlvl = $110E
+org $018153
+	sta.w !st_ram_sprindexinlvl,x
+org $01AC95
+	ldy.w !st_ram_sprindexinlvl,x
+org $01AE2A
+	sta.w !st_ram_sprindexinlvl,x
+org $02A99B
+	sta.w !st_ram_sprindexinlvl,x
+org $02AC02
+	sta.w !st_ram_sprindexinlvl,x
+org $02AF7F
+	sta.w !st_ram_sprindexinlvl,x
+org $02AFEE
+	sta.w !st_ram_sprindexinlvl,x
+org $02D081
+	ldy.w !st_ram_sprindexinlvl,x
+org $03870F
+	ldy.w !st_ram_sprindexinlvl,x
+org $03B8B3
+	ldy.w !st_ram_sprindexinlvl,x
+
+!st__1626 = $111A
+org $01A015
+	stz.w !st__1626,x
+org $01A601
+	inc.w !st__1626,x
+org $01A604
+	ldy.w !st__1626,x
+org $01A64B
+	lda.w !st__1626,y
+org $01A64F
+	sta.w !st__1626,y
+org $01A652
+	ldx.w !st__1626,y
+org $01AA04
+	stz.w !st__1626,x
+org $01AB4B
+	adc.w !st__1626,x
+org $01CFC6
+	inc.w !st__1626,x
+org $01CFC9
+	lda.w !st__1626,x
+org $01D149
+	ldy.w !st__1626,x
+org $01D1D8
+	lda.w !st__1626,x
+org $01D3F8
+	inc.w !st__1626,x
+org $01D3FB
+	lda.w !st__1626,x
+org $01D6E9
+	inc.w !st__1626,x
+org $01D73E
+	ora.w !st__1626,x
+org $01D757
+	ora.w !st__1626,x
+org $01DA84
+	lda.w !st__1626,x
+org $01DA89
+	stz.w !st__1626,x
+org $01DB26
+	lda.w !st__1626,x
+org $01DB2B
+	stz.w !st__1626,x
+org $01F226
+	sta.w !st__1626,y
+org $03962D
+	adc.w !st__1626,x
+org $07F74E
+	stz.w !st__1626,x
+
+!st_ram_sprbehindscrn = $1126
+org $019A9F
+	sta.w !st_ram_sprbehindscrn,x
+org $019B3A
+	sta.w !st_ram_sprbehindscrn,x
+org $019B4F
+	ldy.w !st_ram_sprbehindscrn,x
+org $019B71
+	ldy.w !st_ram_sprbehindscrn,x
+org $01A432
+	ora.w !st_ram_sprbehindscrn,x
+org $01A435
+	eor.w !st_ram_sprbehindscrn,y
+org $01A81F
+	eor.w !st_ram_sprbehindscrn,x
+org $01B95A
+	sta.w !st_ram_sprbehindscrn,x
+org $01B992
+	lda.w !st_ram_sprbehindscrn,x
+org $01B997
+	sta.w !st_ram_sprbehindscrn,x
+org $01B9C6
+	lda.w !st_ram_sprbehindscrn,x
+org $01BA65
+	lda.w !st_ram_sprbehindscrn,x
+org $01BA6B
+	lda.w !st_ram_sprbehindscrn,x
+org $01C49C
+	lda.w !st_ram_sprbehindscrn,x
+org $01F57C
+	lda.w !st_ram_sprbehindscrn,y
+org $01F659
+	ora.w !st_ram_sprbehindscrn,y
+org $0293CE
+	lda.w !st_ram_sprbehindscrn,x
+org $02A0CC
+	ora.w !st_ram_sprbehindscrn,x
+org $02EAB1
+	sta.w !st_ram_sprbehindscrn,y
+org $07F725
+	stz.w !st_ram_sprbehindscrn,x
+
+!st__163e = $1132
+org $01811E
+	lda.w !st__163e,x
+org $018123
+	dec.w !st__163e,x
+org $0188E8
+	stz.w !st__163e,x
+org $018908
+	lda.w !st__163e,x
+org $018952
+	lda.w !st__163e,x
+org $018968
+	stz.w !st__163e,x
+org $018A0C
+	sta.w !st__163e,x
+org $01993E
+	ora.w !st__163e,x
+org $01A1FD
+	ldy.w !st__163e,x
+org $01A254
+	lda.w !st__163e,x
+org $01A30A
+	lda.w !st__163e,x
+org $01A319
+	lda.w !st__163e,x
+org $01A718
+	sta.w !st__163e,x
+org $01AAB2
+	lda.w !st__163e,x
+org $01AB0E
+	sta.w !st__163e,x
+org $01AD68
+	lda.w !st__163e,x
+org $01AE13
+	sta.w !st__163e,x
+org $01CDF0
+	lda.w !st__163e,x
+org $01CE9E
+	sta.w !st__163e,x
+org $01D9FE
+	lda.w !st__163e,x
+org $01DA03
+	stz.w !st__163e,x
+org $01DA19
+	sta.w !st__163e,x
+org $01E4C2
+	ora.w !st__163e,x
+org $01ED6A
+	sta.w !st__163e,x
+org $01F622
+	lda.w !st__163e,x
+org $01F690
+	lda.w !st__163e,y
+org $01F715
+	sta.w !st__163e,x
+org $01FB1D
+	lda.w !st__163e,x
+org $01FB67
+	sta.w !st__163e,x
+org $02BF5C
+	lda.w !st__163e,x
+org $02BF66
+	sta.w !st__163e,x
+org $02C207
+	lda.w !st__163e,x
+org $02C20E
+	sta.w !st__163e,x
+org $02C6AE
+	lda.w !st__163e,x
+org $02C7DF
+	stz.w !st__163e,x
+org $02EA9B
+	lda.w !st__163e,x
+org $02EAAB
+	sta.w !st__163e,x
+org $02EACE
+	stz.w !st__163e,x
+org $0398D6
+	lda.w !st__163e,x
+org $0398FF
+	sta.w !st__163e,x
+org $07F764
+	stz.w !st__163e,x
+
+!st__164a = $113E
+org $0183FF
+	stz.w !st__164a,x
+org $018431
+	inc.w !st__164a,x
+org $0183FF
+	stz.w !st__164a,x
+org $018431
+	inc.w !st__164a,x
+org $019037
+	lda.w !st__164a,x
+org $019060
+	ldy.w !st__164a,x
+org $01914C
+	lda.w !st__164a,x
+org $019152
+	stz.w !st__164a,x
+org $0191ED
+	lda.w !st__164a,x
+org $01923B
+	lda.w !st__164a,x
+org $019258
+	sta.w !st__164a,x
+org $01971D
+	lda.w !st__164a,x
+org $019720
+	sta.w !st__164a,y
+org $019955
+	ldy.w !st__164a,x
+org $01A761
+	lda.w !st__164a,x
+org $01B044
+	lda.w !st__164a,x
+org $01B0F2
+	lda.w !st__164a,x
+org $01B1B8
+	lda.w !st__164a,x
+org $01B1C1
+	lda.w !st__164a,x
+org $01B1D9
+	stz.w !st__164a,x
+org $01B23E
+	lda.w !st__164a,x
+org $01B588
+	lda.w !st__164a,x
+org $01CFC2
+	sta.w !st__164a,x
+org $01D161
+	lda.w !st__164a,x
+org $01D170
+	dec.w !st__164a,x
+org $01E06D
+	lda.w !st__164a,x
+org $01E0CE
+	lda.w !st__164a,x
+org $01F69E
+	lda.w !st__164a,y
+org $02BBC5
+	lda.w !st__164a,x
+org $02C01B
+	lda.w !st__164a,x
+org $02C304
+	ldy.w !st__164a,x
+org $02C35B
+	lda.w !st__164a,x
+org $038579
+	lda.w !st__164a,x
+org $03AC4D
+	lda.w !st__164a,x
+org $03AC57
+	inc.w !st__164a,x
+org $07F26C
+	stz.w !st__164a,x
+
+!st_ram_tweaker1656 = $114A
+org $018539
+	sta.w !st_ram_tweaker1656,x
+org $018539
+	sta.w !st_ram_tweaker1656,x
+org $019443
+	lda.w !st_ram_tweaker1656,x
+org $019AC4
+	lda.w !st_ram_tweaker1656,x
+org $01A6E7
+	lda.w !st_ram_tweaker1656,x
+org $01A8C9
+	lda.w !st_ram_tweaker1656,x
+org $01A9CC
+	lda.w !st_ram_tweaker1656,x
+org $01AA4E
+	lda.w !st_ram_tweaker1656,x
+org $02808A
+	stz.w !st_ram_tweaker1656,x
+org $029472
+	lda.w !st_ram_tweaker1656,x
+org $029479
+	lda.w !st_ram_tweaker1656,x
+org $07F767
+	stz.w !st_ram_tweaker1656,x
+org $07F7A9
+	sta.w !st_ram_tweaker1656,y
+
+!st_ram_tweaker1662 = $1156
+org $01853E
+	sta.w !st_ram_tweaker1662,x
+org $01853E
+	sta.w !st_ram_tweaker1662,x
+org $019B27
+	lda.w !st_ram_tweaker1662,x
+org $01A464
+	lda.w !st_ram_tweaker1662,x
+org $01A480
+	lda.w !st_ram_tweaker1662,y
+org $01A9E2
+	lda.w !st_ram_tweaker1662,x
+org $01D6CD
+	inc.w !st_ram_tweaker1662,x
+org $01D6DD
+	inc.w !st_ram_tweaker1662,x
+org $01F4EB
+	lda.w !st_ram_tweaker1662,y
+org $01F9E2
+	lda.w !st_ram_tweaker1662,x
+org $01F9F1
+	sta.w !st_ram_tweaker1662,x
+org $01F9FC
+	sta.w !st_ram_tweaker1662,x
+org $02808F
+	sta.w !st_ram_tweaker1662,x
+org $02946B
+	lda.w !st_ram_tweaker1662,x
+org $02B64E
+	sta.w !st_ram_tweaker1662,x
+org $02BAEF
+	lda.w !st_ram_tweaker1662,x
+org $02BAF6
+	sta.w !st_ram_tweaker1662,x
+org $02D3AA
+	lda.w !st_ram_tweaker1662,x
+org $0395C6
+	stz.w !st_ram_tweaker1662,x
+org $039A5A
+	sta.w !st_ram_tweaker1662,x
+org $03A82F
+	sta.w !st_ram_tweaker1662,x
+org $03B095
+	sta.w !st_ram_tweaker1662,x
+org $03B0BD
+	inc.w !st_ram_tweaker1662,x
+org $03B0C9
+	inc.w !st_ram_tweaker1662,x
+org $03B0FC
+	sta.w !st_ram_tweaker1662,x
+org $03B109
+	inc.w !st_ram_tweaker1662,x
+org $03B6A2
+	lda.w !st_ram_tweaker1662,x
+org $03B6E8
+	lda.w !st_ram_tweaker1662,x
+org $03B792
+	lda.w !st_ram_tweaker1662,x
+org $03CC0C
+	stz.w !st_ram_tweaker1662,x
+org $07F76A
+	stz.w !st_ram_tweaker1662,x
+org $07F7B0
+	sta.w !st_ram_tweaker1662,y
+
+!st_ram_tweaker166e = $1162
+org $0191F6
+	lda.w !st_ram_tweaker166e,x
+org $01926A
+	lda.w !st_ram_tweaker166e,x
+org $01968E
+	lda.w !st_ram_tweaker166e,x
+org $019693
+	sta.w !st_ram_tweaker166e,x
+org $0293BE
+	lda.w !st_ram_tweaker166e,x
+org $0294DC
+	lda.w !st_ram_tweaker166e,x
+org $02A0EE
+	lda.w !st_ram_tweaker166e,x
+org $07F76D
+	stz.w !st_ram_tweaker166e,x
+org $07F7B7
+	sta.w !st_ram_tweaker166e,y
+
+!st_ram_tweaker167a = $116E
+org $01893C
+	asl.w !st_ram_tweaker167a,x
+org $018940
+	ror.w !st_ram_tweaker167a,x
+org $01894B
+	asl.w !st_ram_tweaker167a,x
+org $01894E
+	lsr.w !st_ram_tweaker167a,x
+org $0189A8
+	lda.w !st_ram_tweaker167a,y
+org $01924B
+	lda.w !st_ram_tweaker167a,x
+org $019329
+	lda.w !st_ram_tweaker167a,x
+org $01991B
+	lda.w !st_ram_tweaker167a,x
+org $019B13
+	lda.w !st_ram_tweaker167a,x
+org $01A187
+	lda.w !st_ram_tweaker167a,x
+org $01A7E4
+	lda.w !st_ram_tweaker167a,x
+org $01A832
+	lda.w !st_ram_tweaker167a,x
+org $01A840
+	lda.w !st_ram_tweaker167a,x
+org $01AAF7
+	asl.w !st_ram_tweaker167a,x
+org $01AAFA
+	lsr.w !st_ram_tweaker167a,x
+org $01AC4C
+	lda.w !st_ram_tweaker167a,x
+org $01ACA5
+	lda.w !st_ram_tweaker167a,x
+org $01C2C5
+	lda.w !st_ram_tweaker167a,x
+org $01C2CA
+	sta.w !st_ram_tweaker167a,x
+org $01F397
+	lda.w !st_ram_tweaker167a,y
+org $01F39C
+	sta.w !st_ram_tweaker167a,y
+org $01F3BD
+	lda.w !st_ram_tweaker167a,y
+org $01F651
+	lda.w !st_ram_tweaker167a,y
+org $01F9E6
+	lda.w !st_ram_tweaker167a,x
+org $01F9EC
+	sta.w !st_ram_tweaker167a,x
+org $01F9F8
+	sta.w !st_ram_tweaker167a,x
+org $028161
+	lda.w !st_ram_tweaker167a,y
+org $02942B
+	lda.w !st_ram_tweaker167a,x
+org $02A0C4
+	lda.w !st_ram_tweaker167a,x
+org $02A92A
+	lda.w !st_ram_tweaker167a,x
+org $02BAF9
+	lda.w !st_ram_tweaker167a,x
+org $02BAFE
+	sta.w !st_ram_tweaker167a,x
+org $02D046
+	lda.w !st_ram_tweaker167a,x
+org $02D091
+	lda.w !st_ram_tweaker167a,x
+org $038A69
+	asl.w !st_ram_tweaker167a,x
+org $038A6C
+	lsr.w !st_ram_tweaker167a,x
+org $03B878
+	lda.w !st_ram_tweaker167a,x
+org $03B8C3
+	lda.w !st_ram_tweaker167a,x
+org $07F770
+	stz.w !st_ram_tweaker167a,x
+org $07F7BE
+	sta.w !st_ram_tweaker167a,y
+
+!st_ram_tweaker1686 = $117A
+org $00FAB2
+	lda.w !st_ram_tweaker1686,y
+org $018543
+	sta.w !st_ram_tweaker1686,x
+org $018543
+	sta.w !st_ram_tweaker1686,x
+org $01925B
+	lda.w !st_ram_tweaker1686,x
+org $0193B8
+	lda.w !st_ram_tweaker1686,x
+org $019645
+	lda.w !st_ram_tweaker1686,x
+org $01964A
+	sta.w !st_ram_tweaker1686,x
+org $01A421
+	lda.w !st_ram_tweaker1686,x
+org $01A424
+	ora.w !st_ram_tweaker1686,y
+org $01A57E
+	lda.w !st_ram_tweaker1686,y
+org $01A5A1
+	lda.w !st_ram_tweaker1686,x
+org $01A903
+	lda.w !st_ram_tweaker1686,x
+org $01A962
+	lda.w !st_ram_tweaker1686,x
+org $01C125
+	stz.w !st_ram_tweaker1686,x
+org $01F2E4
+	lda.w !st_ram_tweaker1686,y
+org $01F34F
+	lda.w !st_ram_tweaker1686,y
+org $01F59B
+	lda.w !st_ram_tweaker1686,y
+org $02948C
+	lda.w !st_ram_tweaker1686,x
+org $02EA79
+	lda.w !st_ram_tweaker1686,y
+org $03A827
+	asl.w !st_ram_tweaker1686,x
+org $03A82A
+	lsr.w !st_ram_tweaker1686,x
+org $07F773
+	stz.w !st_ram_tweaker1686,x
+org $07F7C5
+	sta.w !st_ram_tweaker1686,y
+
+!st_ram_offscreenvert = $1186
+org $00FAAD
+	ora.w !st_ram_offscreenvert,y
+org $0180CE
+	ora.w !st_ram_offscreenvert,x
+org $019E37
+	lda.w !st_ram_offscreenvert,x
+org $01A35A
+	stz.w !st_ram_offscreenvert,x
+org $01A3BD
+	lda.w !st_ram_offscreenvert,x
+org $01A3C3
+	sta.w !st_ram_offscreenvert,x
+org $01A3DF
+	lda.w !st_ram_offscreenvert,x
+org $01AEC3
+	lda.w !st_ram_offscreenvert,x
+org $01B152
+	ora.w !st_ram_offscreenvert,x
+org $01E8CD
+	lda.w !st_ram_offscreenvert,x
+org $01F401
+	ora.w !st_ram_offscreenvert,x
+org $0284A2
+	ora.w !st_ram_offscreenvert,x
+org $02852B
+	lda.w !st_ram_offscreenvert,x
+org $02C0DF
+	ora.w !st_ram_offscreenvert,x
+org $02C27E
+	ora.w !st_ram_offscreenvert,x
+org $02C469
+	ora.w !st_ram_offscreenvert,x
+org $02CF5F
+	ora.w !st_ram_offscreenvert,x
+org $02D0CC
+	ora.w !st_ram_offscreenvert,x
+org $02D374
+	stz.w !st_ram_offscreenvert,x
+org $02D3C9
+	lda.w !st_ram_offscreenvert,x
+org $02D3CF
+	sta.w !st_ram_offscreenvert,x
+org $02DAA0
+	ora.w !st_ram_offscreenvert,x
+org $02DD5A
+	ora.w !st_ram_offscreenvert,x
+org $02DED9
+	ora.w !st_ram_offscreenvert,x
+org $02E07C
+	ora.w !st_ram_offscreenvert,x
+org $02E1B4
+	ora.w !st_ram_offscreenvert,x
+org $038FB4
+	ora.w !st_ram_offscreenvert,x
+org $03B75C
+	stz.w !st_ram_offscreenvert,x
+org $03B7B1
+	lda.w !st_ram_offscreenvert,x
+org $03B7B7
+	sta.w !st_ram_offscreenvert,x
+org $03B8FE
+	ora.w !st_ram_offscreenvert,x
+org $03C451
+	ora.w !st_ram_offscreenvert,x
+
+!st__187b = $1192
+org $018348
+	inc.w !st__187b,x
+org $01839C
+	sta.w !st__187b,x
+org $0184F5
+	sta.w !st__187b,x
+org $018348
+	inc.w !st__187b,x
+org $01839C
+	sta.w !st__187b,x
+org $0184F5
+	sta.w !st__187b,x
+org $01968B
+	inc.w !st__187b,x
+org $019910
+	lda.w !st__187b,x
+org $01A782
+	lda.w !st__187b,y
+org $01A94A
+	lda.w !st__187b,x
+org $01C08C
+	sta.w !st__187b,x
+org $01C0E7
+	lda.w !st__187b,x
+org $01C321
+	inc.w !st__187b,x
+org $01C324
+	lda.w !st__187b,x
+org $01CD72
+	sta.w !st__187b,x
+org $01CDE9
+	lda.w !st__187b,x
+org $01CE1E
+	lda.w !st__187b,x
+org $01D2AF
+	lda.w !st__187b,x
+org $01D6ED
+	inc.w !st__187b,x
+org $01D77A
+	lda.w !st__187b,x
+org $01D79E
+	lda.w !st__187b,x
+org $01F16C
+	lda.w !st__187b,y
+org $01F265
+	lda.w !st__187b,y
+org $01F3A6
+	lda.w !st__187b,y
+org $01F75C
+	lda.w !st__187b,x
+org $01F77A
+	stz.w !st__187b,x
+org $02C1F8
+	lda.w !st__187b,x
+org $02C202
+	cmp.w !st__187b,x
+org $02C283
+	lda.w !st__187b,x
+org $02C403
+	ldy.w !st__187b,x
+org $02C640
+	stz.w !st__187b,x
+org $02C659
+	inc.w !st__187b,x
+org $02C6D4
+	sta.w !st__187b,x
+org $02C6FC
+	lda.w !st__187b,x
+org $02C715
+	ldy.w !st__187b,x
+org $02C78E
+	inc.w !st__187b,x
+org $02D68E
+	lda.w !st__187b,x
+org $02D6B1
+	lda.w !st__187b,x
+org $02D87C
+	lda.w !st__187b,x
+org $03A10C
+	sta.w !st__187b,x
+org $03A676
+	dec.w !st__187b,x
+org $03A684
+	sta.w !st__187b,x
+org $03B135
+	lda.w !st__187b,x
+org $07F776
+	stz.w !st__187b,x
+
+!st_ram_tweaker190f = $119E
+org $00FAC5
+	lda.w !st_ram_tweaker190f,y
+org $0191BE
+	lda.w !st_ram_tweaker190f,x
+org $019272
+	lda.w !st_ram_tweaker190f,x
+org $019A84
+	asl.w !st_ram_tweaker190f,x
+org $019A87
+	lsr.w !st_ram_tweaker190f,x
+org $019B20
+	lda.w !st_ram_tweaker190f,x
+org $01A39E
+	lda.w !st_ram_tweaker190f,x
+org $01A8B4
+	lda.w !st_ram_tweaker190f,x
+org $01A8EB
+	lda.w !st_ram_tweaker190f,x
+org $01B4B4
+	lda.w !st_ram_tweaker190f,x
+org $01F4F2
+	lda.w !st_ram_tweaker190f,y
+org $028A1F
+	lda.w !st_ram_tweaker190f,x
+org $02A0F5
+	lda.w !st_ram_tweaker190f,x
+org $02B9CB
+	lda.w !st_ram_tweaker190f,y
+org $07F7CC
+	sta.w !st_ram_tweaker190f,y
+
+!st__1fd6 = $11AA
+org $07F782
+	stz.w !st__1fd6,x
+
+!st__1fe2 = $11B6
+org $00FCC2
+	sta.w !st__1fe2,x
+org $01810E
+	lda.w !st__1fe2,x
+org $018113
+	dec.w !st__1fe2,x
+org $0191FB
+	ora.w !st__1fe2,x
+org $0195D8
+	sta.w !st__1fe2,x
+org $0199CF
+	sta.w !st__1fe2,x
+org $01D2CA
+	lda.w !st__1fe2,x
+org $01D2D1
+	sta.w !st__1fe2,x
+org $01EDA0
+	sta.w !st__1fe2,x
+org $0293C9
+	ora.w !st__1fe2,x
+org $02A9D4
+	sta.w !st__1fe2,x
+org $02C4F3
+	lda.w !st__1fe2,x
+org $02C4FF
+	sta.w !st__1fe2,x
+org $02DDC1
+	sta.w !st__1fe2,x
+org $02DEBC
+	lda.w !st__1fe2,x
+org $039569
+	lda.w !st__1fe2,x
+org $0395C3
+	sta.w !st__1fe2,x
+org $039688
+	lda.w !st__1fe2,x
+org $07F74B
+	stz.w !st__1fe2,x
+
