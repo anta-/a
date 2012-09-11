@@ -1,1 +1,7 @@
 *.smc
+*.lnk
+SMWDisC.txt
+timeit.dat
+*.o
+*.hi
+*.exe
