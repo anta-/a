@@ -82,10 +82,15 @@ smwDisCMap f =
         (\a-> (fst. head$ readHex a, x)) <$> regex1 x "^[^\\s]*([0-9A-F]{6}):"
         ) f
 
+regexb s r = let (_,t,_) = s =~ r :: (String,String,String) in
+    not. null$ t
+
 longAdressing :: String -> String
 longAdressing s =
-    if regex1 s "(,y)" /= Nothing
+    if regexb s ",y"
     then "PHX : TYX : " ++ (replace ",y" ",x". f) s ++ " : PLX"
+    else if regexb s "stz"
+    then "PHA : TDC : " ++ (replace "stz" "sta". f) s ++ " : PLA"
     else f s
     where
         f = replace "\\.w" ".l". replace "\\.b" ".l"
