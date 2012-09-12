@@ -1,4 +1,4 @@
-{-# LANGUAGE ViewPatterns #-}
+ï»¿{-# LANGUAGE ViewPatterns #-}
 
 module Main where
 
@@ -88,7 +88,7 @@ branchMod q a [b,x] =
     where
         t = a + 2 + neg80 x
 
--- JSL ExecutePtr ‚ª‚ ‚Á‚ÄAˆÀ‘S‚È‚Æ‚±‚ë‚ÉJML‚µ‚¿‚á‚¤
+-- JSL ExecutePtr ãŒã‚ã£ã¦ã€å®‰å…¨ãªã¨ã“ã‚ã«JMLã—ã¡ã‚ƒã†
 executePtr :: Int -> String
 executePtr a = printf "jml $%06X" (
     [ 0x009325::Int, 0x01BDE6, 0x028B94, 0x039434
@@ -214,7 +214,7 @@ spriteTables = do
 
 writeFie2 (x,y) = writeFile "a1.log" x >> writeFile "a2.log" y
 
--- “Áê‚È‚à‚Ì‚Ì‚½‚ßA©•ª‚Å‘‚­‚½‚ß‚ÉAl‚¦‚È‚¢‚à‚Ì
+-- ç‰¹æ®Šãªã‚‚ã®ã®ãŸã‚ã€è‡ªåˆ†ã§æ›¸ããŸã‚ã«ã€è€ƒãˆãªã„ã‚‚ã®
 excludeAddresses = Map.fromList. flip zip (repeat undefined)$
     []
 
