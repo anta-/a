@@ -1,4 +1,4 @@
-﻿header
+header
 lorom
 ;##############################
 ; 複数のオフセットで使われてる奴は面倒だからやめよう
@@ -11,7 +11,7 @@ lorom
 ; アドレスだけ変えるもの
 
 !st_start = $0FBE
-!st_size = $10
+!st_size = $C
 
 incsrc st.asm
 
@@ -22,6 +22,12 @@ incsrc st.asm
 ; > $7E:0FBE 1024Bytes(400) 16x用16bitポインタ？
 ; 大きな空きが確保できてバグらないから利用
 !pointer_16x = $7EC100
+org $00C102
+	jml HIJACK_00C102
+org $00C120
+	jml HIJACK_00C120
+org $00C1E6
+	jml HIJACK_00C1E6
 org $00C17C
 	jml HIJACK_00C17C
 org $00C25E
@@ -42,12 +48,22 @@ org $0582B7
 	jml HIJACK_0582B7
 org $0587BB
 	jml HIJACK_0587BB
+org $058A43
+	jml HIJACK_058A43
 org $058A66
 	jml HIJACK_058A66
+org $058B1F
+	jml HIJACK_058B1F
 org $058B46
 	jml HIJACK_058B46
+org $058C11
+	jml HIJACK_058C11
 org $058C34
 	jml HIJACK_058C34
+org $058D04
+	jml HIJACK_058D04
+org $058D8D
+	jml HIJACK_058D8D
 org $058D2B
 	jml HIJACK_058D2B
 org $0C94AD
@@ -74,12 +90,24 @@ db "Hello!"
 
 ;==============================
 ; 
+HIJACK_00C102:
+	db $D0, $04 : jml $00C106
+	db $46, $00
+	jml $00c106
+HIJACK_00C120:
+	db $D0, $04 : jml $00C124
+	db $90, $04 : jml $00C13E
+	jml $00c124
+HIJACK_00C1E6:
+	db $D0, $04 : jml $00C1EA
+	db $46, $00
+	jml $00c1ea
 HIJACK_00C17C:
-	PHX : TYX : lda.l !pointer_16x,x : PLX
+	stx !itizi_ram : tyx : lda.l !pointer_16x,x : php : ldx !itizi_ram : plp
 	db $85, $04
 	jml $00c181
 HIJACK_00C25E:
-	PHX : TYX : lda.l !pointer_16x,x : PLX
+	stx !itizi_ram : tyx : lda.l !pointer_16x,x : php : ldx !itizi_ram : plp
 	db $85, $04
 	jml $00c263
 HIJACK_04DC44:
@@ -87,7 +115,7 @@ HIJACK_04DC44:
 	db $A5, $00
 	jml $04dc49
 HIJACK_0580EC:
-	PHX : TYX : sta.l !pointer_16x,x : PLX
+	stx !itizi_ram : tyx : sta.l !pointer_16x,x : php : ldx !itizi_ram : plp
 	db $C8
 	jml $0580f0
 HIJACK_0581A7:
@@ -103,31 +131,51 @@ HIJACK_058257:
 	db $A5, $00
 	jml $05825c
 HIJACK_05829F:
-	PHX : TYX : sta.l !pointer_16x,x : PLX
+	stx !itizi_ram : tyx : sta.l !pointer_16x,x : php : ldx !itizi_ram : plp
 	db $18
 	jml $0582a3
 HIJACK_0582B7:
-	PHX : TYX : sta.l !pointer_16x,x : PLX
+	stx !itizi_ram : tyx : sta.l !pointer_16x,x : php : ldx !itizi_ram : plp
 	db $18
 	jml $0582bb
 HIJACK_0587BB:
-	PHX : TYX : sta.l !pointer_16x,x : PLX
+	stx !itizi_ram : tyx : sta.l !pointer_16x,x : php : ldx !itizi_ram : plp
 	db $C8
 	jml $0587bf
+HIJACK_058A43:
+	db $10, $04 : jml $058A47
+	db $A0, $05
+	jml $058a47
 HIJACK_058A66:
-	PHX : TYX : lda.l !pointer_16x,x : PLX
+	stx !itizi_ram : tyx : lda.l !pointer_16x,x : php : ldx !itizi_ram : plp
 	db $85, $0A
 	jml $058a6b
+HIJACK_058B1F:
+	db $10, $04 : jml $058B23
+	db $A0, $05
+	jml $058b23
 HIJACK_058B46:
-	PHX : TYX : lda.l !pointer_16x,x : PLX
+	stx !itizi_ram : tyx : lda.l !pointer_16x,x : php : ldx !itizi_ram : plp
 	db $85, $0A
 	jml $058b4b
+HIJACK_058C11:
+	db $10, $04 : jml $058C15
+	db $A0, $05
+	jml $058c15
 HIJACK_058C34:
-	PHX : TYX : lda.l !pointer_16x,x : PLX
+	stx !itizi_ram : tyx : lda.l !pointer_16x,x : php : ldx !itizi_ram : plp
 	db $85, $0A
 	jml $058c39
+HIJACK_058D04:
+	db $10, $04 : jml $058D08
+	db $A0, $05
+	jml $058d08
+HIJACK_058D8D:
+	db $D0, $04 : jml $058D91
+	db $A0, $34
+	jml $058d91
 HIJACK_058D2B:
-	PHX : TYX : lda.l !pointer_16x,x : PLX
+	stx !itizi_ram : tyx : lda.l !pointer_16x,x : php : ldx !itizi_ram : plp
 	db $85, $0A
 	jml $058d30
 HIJACK_0C94AD:
@@ -138,8 +186,6 @@ HIJACK_0C94FD:
 	lda.l !pointer_16x,x
 	db $85, $68
 	jml $0c9502
-
-
 
 ;==============================
 ; 

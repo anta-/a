@@ -64,15 +64,17 @@ createHonkeCode q s addr0 size = createHonkeCode' q addr0 size True addr0 0
             else createHonkeCode' q (addr+1) 0 b a1 (a2+1)
         createHonkeCode' q addr size b a1 a2 =
             if Map.member addr s
-            then let ((t, a1', a2'), q') = createHonkeCode' (Map.insert addr (printf"HIJACK_%06X+$%X"addr0(addr-addr0)) q) (addr+1) (size-1) False a1 (a2+1) in
-                (((addr, honkeCodeTrans q' addr (s Map.! addr)) : t, a1', a2'), q')
+            then
+                let label = printf "HIJACK_%06X_%06X" addr0 addr in
+                let ((t, a1', a2'), q') = createHonkeCode' (Map.insert addr label q) (addr+1) (size-1) False a1 (a2+1) in
+                (((addr, label ++ ":\t" ++ honkeCodeTrans q' addr (s Map.! addr)) : t, a1', a2'), q')
             else if b
                 then createHonkeCode' q (addr-1) (size+1) True (a1-1) (a2+1)
                 else createHonkeCode' q (addr+1) (size-1) False a1 (a2+1)
 
 honkeCodeTrans q a x
     | isBranch t = branchMod q a t
-    | i == 0x4C = printf "jml $%06X" (a`div`0x10000 + t!!2*0x100 + t!!1) -- jmp
+    | i == 0x4C = printf "jml $%06X" (a`div`0x10000*0x10000 + t!!2*0x100 + t!!1) -- jmp
     | i == 0x60 = jumpToRts a -- rts
     | t == [0x22, 0xDF, 0x86, 0x00] = executePtr a
     | otherwise = ("db "++). concat. intersperse ", ". map (printf"$%02X")$ t
@@ -121,7 +123,7 @@ createHijack (code, hjAddr, hjSize) =
     let label = printf "HIJACK_%06X" hjAddr :: String in
     (
     printf "org $%06X\n\tjml %s" hjAddr label,
-    printf "%s:\n%s\tjml $%06x" label (unlines$ map ("\t"++) code) (hjAddr + hjSize)
+    printf "%s:\n%s\tjml $%06x" label (unlines$ code) (hjAddr + hjSize)
     ) :: (String, String)
 
 regex1 s r = let (_,_,_,t) = s =~ r :: (String,String,String,[String]) in
@@ -170,7 +172,7 @@ findAndCreateHijacking f s aa mm = do
     let storeCodes = map (readHex' *** (longAdressing mm. formatSMWDisCtoXkas. substAddr aa mm)) (findSMWDisC f aa)
     unzip$ h (Map.empty) s storeCodes
     where
-        g a t (xs,p,q) = (map (\(b,c)-> if b == a then t else c) xs, p, q)
+        g a t (xs,p,q) = (map (\(b,c)-> if b == a then replace ":\t.*$" ":\t" c ++ t else c) xs, p, q)
         h q _ [] = []
         h q s ((a,c):xs) =
             let (z, q') = createHonkeCode q s a 4 in
@@ -187,7 +189,7 @@ branchMods q s (c, a, z) = --trace (printf "branchMods %06X %X" a z) () `seq`
             Just x -> let bs@(~[b,y]) = instBytes x in
                 if isBranch bs
                 then if (let t = a+2+neg80 y in a<t && t<a+z)
-                    then
+                    then trace (printf "branch %06X -> %06X (%06X)" a' a (a+2+neg80 y)) () `seq`
                         let ((c_, a_, z_), q') = createHonkeCode q s a' 4 in
                         let (zs, s', q'') = branchMods q' s$ (c_, a_, z_) in
                         let (zs', s'', q''') = f q'' (deletes s' a_ z_) aa in
