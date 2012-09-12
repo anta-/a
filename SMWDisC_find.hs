@@ -56,23 +56,23 @@ createRelocate a m f = unlines.
         map (orgCode. second (formatSMWDisCtoXkas. substAddr a m))$
         findSMWDisC f a
 
-createHonkeCode :: Map.IntMap String -> Int -> Int -> ([(Int, String)], Int, Int)
-createHonkeCode s addr size = createHonkeCode' addr size True addr 0
+createHonkeCode :: Map.IntMap String -> Map.IntMap String -> Int -> Int -> (([(Int, String)], Int, Int), Map.IntMap String)
+createHonkeCode q s addr0 size = createHonkeCode' q addr0 size True addr0 0
     where
-        createHonkeCode' addr 0 b a1 a2 = if Map.member addr s
-            then ([], a1, a2)
-            else createHonkeCode' (addr+1) 0 b a1 (a2+1)
-        createHonkeCode' addr size b a1 a2 =
+        createHonkeCode' q addr 0 b a1 a2 = if Map.member addr s
+            then (([], a1, a2), q)
+            else createHonkeCode' q (addr+1) 0 b a1 (a2+1)
+        createHonkeCode' q addr size b a1 a2 =
             if Map.member addr s
-            then let (t, a1', a2') = createHonkeCode' (addr+1) (size-1) False a1 (a2+1) in
-                ((addr, honkeCodeTrans addr (s Map.! addr)) : t, a1', a2')
+            then let ((t, a1', a2'), q') = createHonkeCode' (Map.insert addr (printf"HIJACK_%06X+$%X"addr0(addr-addr0)) q) (addr+1) (size-1) False a1 (a2+1) in
+                (((addr, honkeCodeTrans q' addr (s Map.! addr)) : t, a1', a2'), q')
             else if b
-                then createHonkeCode' (addr-1) (size+1) True (a1-1) (a2+1)
-                else createHonkeCode' (addr+1) (size-1) False a1 (a2+1)
+                then createHonkeCode' q (addr-1) (size+1) True (a1-1) (a2+1)
+                else createHonkeCode' q (addr+1) (size-1) False a1 (a2+1)
 
-honkeCodeTrans a x
-    | isBranch t = branchMod a t
-    | i == 0x4C = printf "jml $%02X%02X%02X" (a`div`0x10000) (t!!2) (t!!1) -- jmp
+honkeCodeTrans q a x
+    | isBranch t = branchMod q a t
+    | i == 0x4C = printf "jml $%06X" (a`div`0x10000 + t!!2*0x100 + t!!1) -- jmp
     | i == 0x60 = jumpToRts a -- rts
     | t == [0x22, 0xDF, 0x86, 0x00] = executePtr a
     | otherwise = ("db "++). concat. intersperse ", ". map (printf"$%02X")$ t
@@ -82,8 +82,11 @@ honkeCodeTrans a x
 isBranch :: [Int] -> Bool
 isBranch = flip elem [0x10, 0x30, 0x50, 0x70, 0x90, 0xB0, 0xD0, 0xF0]. head
 
-branchMod :: Int -> [Int] -> String
-branchMod a [b,x] = printf "db $%02X, $04 : jml $%06X" (negBranch b) (a + 2 + neg80 x)
+branchMod :: Map.IntMap String -> Int -> [Int] -> String
+branchMod q a [b,x] = 
+    printf "db $%02X, $04 : jml %s" (negBranch b) (fromMaybe (printf"$%06X"t) (t `Map.lookup` q))
+    where
+        t = a + 2 + neg80 x
 
 -- JSL ExecutePtr ‚ª‚ ‚Á‚ÄAˆÀ‘S‚È‚Æ‚±‚ë‚ÉJML‚µ‚¿‚á‚¤
 executePtr :: Int -> String
@@ -92,6 +95,13 @@ executePtr a = printf "jml $%06X" (
     , 0x04DAF4, 0x05BCEC, undefined, undefined
     , undefined, undefined, undefined, undefined
     , 0x0CC9D2, undefined, undefined, undefined]!!(a`div`0x10000))
+
+jumpToRts :: Int -> String
+jumpToRts a = printf "jml $%06X" (
+    [ 0x0080E7::Int, 0x01800D, 0x028BB8, 0x03818A
+    , 0x048430, 0x058339, 0x06801F, 0x078101
+    , 0x08800A, 0x098002, 0x0A8293, 0x0B805E
+    , 0x0C9F5B, 0x0DA53C, 0x0E8056, 0x0F868A]!!(a`div`0x10000))
 
 negBranch :: Int -> Int
 negBranch 0x10 = 0x30
@@ -158,30 +168,32 @@ longAdressing m (replace "\\.b" ".w" -> s) =
 
 findAndCreateHijacking f s aa mm = do
     let storeCodes = map (readHex' *** (longAdressing mm. formatSMWDisCtoXkas. substAddr aa mm)) (findSMWDisC f aa)
-    unzip$ h s storeCodes
+    unzip$ h (Map.empty) s storeCodes
     where
         g a t (xs,p,q) = (map (\(b,c)-> if b == a then t else c) xs, p, q)
-        h _ [] = []
-        h s ((a,c):xs) = let (y, s') = branchMods s$ createHonkeCode s a 4 in
-            map (createHijack. g a c) y ++ h s' xs
+        h q _ [] = []
+        h q s ((a,c):xs) =
+            let (z, q') = createHonkeCode q s a 4 in
+            let (y, s', q'') = branchMods q' s z in
+            map (createHijack. g a c) y ++ h q'' s' xs
 
-branchMods :: Map.IntMap String -> ([(Int, String)], Int, Int) -> ([([(Int, String)], Int, Int)], Map.IntMap String)
-branchMods s (c, a, z) = --trace (printf "branchMods %06X %X" a z) () `seq`
-    (f (deletes s a z)$ map (a+) [-0x80..0x7F+z])
+branchMods :: Map.IntMap String -> Map.IntMap String -> ([(Int, String)], Int, Int) -> ([([(Int, String)], Int, Int)], Map.IntMap String, Map.IntMap String)
+branchMods q s (c, a, z) = --trace (printf "branchMods %06X %X" a z) () `seq`
+    (f q (deletes s a z)$ map (a+) [-0x80..0x7F+z])
     where
-        f s [] = ([(c, a, z)], s)
-        f s (a':aa) = case a' `Map.lookup` s of
-            Nothing -> f s aa
+        f q s [] = ([(c, a, z)], s, q)
+        f q s (a':aa) = case a' `Map.lookup` s of
+            Nothing -> f q s aa
             Just x -> let bs@(~[b,y]) = instBytes x in
                 if isBranch bs
                 then if (let t = a+2+neg80 y in a<t && t<a+z)
                     then
-                        let (c_, a_, z_) = createHonkeCode s a' 4 in
-                        let (zs, s') = branchMods s$ (c_, a_, z_) in
-                        let (zs', s'') = f (deletes s' a_ z_) aa in
-                        (zs ++ zs', s'')
-                    else f s aa
-                else f s aa
+                        let ((c_, a_, z_), q') = createHonkeCode q s a' 4 in
+                        let (zs, s', q'') = branchMods q' s$ (c_, a_, z_) in
+                        let (zs', s'', q''') = f q'' (deletes s' a_ z_) aa in
+                        (zs ++ zs', s'', q''')
+                    else f q s aa
+                else f q s aa
         deletes s a z = foldl (flip Map.delete) s [a..a+z-1]
 
 instBytes :: String -> [Int]
