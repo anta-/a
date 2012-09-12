@@ -1,4 +1,4 @@
-!st__14c8 = $0FBE
+!st__14c8 = $0*!st_size+!st_start
 org $00FA12
 	stz.w !st__14c8,x
 org $00FA53
@@ -547,7 +547,7 @@ org $03CDF9
 	stz.w !st__14c8,x
 org $03CE8E
 	stz.w !st__14c8,x
-!st_ram_spriteaction = $0FBE
+!st_ram_spriteaction = $0*!st_size+!st_start
 org $019FF0
 	sta.w !st_ram_spriteaction,x
 org $019FF4
@@ -565,7 +565,7 @@ org $028038
 org $028044
 	sta.w !st_ram_spriteaction,x
 
-!st_ram_spriteyhi = $0FCA
+!st_ram_spriteyhi = $1*!st_size+!st_start
 org $00FA70
 	sta.w !st_ram_spriteyhi,y
 org $00FC60
@@ -1171,7 +1171,7 @@ org $0CA00F
 org $0CA283
 	sta.w !st_ram_spriteyhi
 
-!st_ram_spritexhi = $0FD6
+!st_ram_spritexhi = $2*!st_size+!st_start
 org $00FA5F
 	sta.w !st_ram_spritexhi,y
 org $00FBC2
@@ -1707,7 +1707,7 @@ org $0CA008
 org $0CA27A
 	sta.w !st_ram_spritexhi
 
-!st__14ec = $0FE2
+!st__14ec = $3*!st_size+!st_start
 org $01ABE1
 	adc.w !st__14ec,x
 org $01ABE4
@@ -1719,11 +1719,11 @@ org $02D29E
 org $07F75B
 	stz.w !st__14ec,x
 
-!st__14f8 = $0FEE
+!st__14f8 = $4*!st_size+!st_start
 org $07F756
 	stz.w !st__14f8,x
 
-!st__1504 = $0FFA
+!st__1504 = $5*!st_size+!st_start
 org $01C785
 	ldy.w !st__1504,x
 org $01C78F
@@ -1741,13 +1741,13 @@ org $01CD01
 org $07F77F
 	stz.w !st__1504,x
 
-!st__1510 = $1006
+!st__1510 = $6*!st_size+!st_start
 org $01CCF8
 	adc.w !st__1510,x
 org $01CCFB
 	sta.w !st__1510,x
 
-!st__151c = $1012
+!st__151c = $7*!st_size+!st_start
 org $0183BD
 	sta.w !st__151c,x
 org $01840E
@@ -2183,7 +2183,7 @@ org $03CEDD
 org $07F72A
 	stz.w !st__151c,x
 
-!st__1528 = $101E
+!st__1528 = $8*!st_size+!st_start
 org $0189B4
 	lda.w !st__1528,x
 org $018A0F
@@ -2363,7 +2363,7 @@ org $03CDDE
 org $07F72D
 	stz.w !st__1528,x
 
-!st__1534 = $102A
+!st__1534 = $9*!st_size+!st_start
 org $018383
 	sta.w !st__1534,x
 org $0183B7
@@ -2579,7 +2579,7 @@ org $03CED0
 org $07F730
 	stz.w !st__1534,x
 
-!st__1540 = $1036
+!st__1540 = $A*!st_size+!st_start
 org $00FA7C
 	sta.w !st__1540,y
 org $00FABB
@@ -3285,7 +3285,7 @@ org $07F1CA
 org $07F73F
 	stz.w !st__1540,x
 
-!st_ram_disableinter = $1042
+!st_ram_disableinter = $B*!st_size+!st_start
 org $00FB7A
 	sta.w !st_ram_disableinter,y
 org $0180F6
@@ -3411,7 +3411,7 @@ org $03C322
 org $07F742
 	stz.w !st_ram_disableinter,x
 
-!st__1558 = $104E
+!st__1558 = $C*!st_size+!st_start
 org $0180FE
 	lda.w !st__1558,x
 org $018103
@@ -3571,7 +3571,7 @@ org $03C22B
 org $07F745
 	stz.w !st__1558,x
 
-!st__1564 = $105A
+!st__1564 = $D*!st_size+!st_start
 org $018106
 	lda.w !st__1564,x
 org $01810B
@@ -3655,7 +3655,7 @@ org $03C845
 org $07F748
 	stz.w !st__1564,x
 
-!st__1570 = $1066
+!st__1570 = $E*!st_size+!st_start
 org $00FBF0
 	inc.w !st__1570,x
 org $018331
@@ -4011,7 +4011,7 @@ org $03CEE2
 org $07F751
 	stz.w !st__1570,x
 
-!st_ram_spritedir = $1072
+!st_ram_spritedir = $F*!st_size+!st_start
 org $00FC6A
 	sta.w !st_ram_spritedir,y
 org $00FCDE
@@ -4595,7 +4595,7 @@ org $07F733
 org $0CA793
 	sta.w !st_ram_spritedir
 
-!st_ram_sprobjstatus = $107E
+!st_ram_sprobjstatus = $10*!st_size+!st_start
 org $018008
 	lda.w !st_ram_sprobjstatus,x
 org $01800E
@@ -4799,7 +4799,7 @@ org $03C366
 org $07F736
 	stz.w !st_ram_sprobjstatus,x
 
-!st__1594 = $108A
+!st__1594 = $11*!st_size+!st_start
 org $00FB66
 	sta.w !st__1594,y
 org $018AA2
@@ -4891,7 +4891,7 @@ org $07F253
 org $07F77C
 	stz.w !st__1594,x
 
-!st_ram_offscreenhorz = $1096
+!st_ram_offscreenhorz = $12*!st_size+!st_start
 org $00FAAA
 	lda.w !st_ram_offscreenhorz,y
 org $0180CB
@@ -4987,7 +4987,7 @@ org $03C44E
 org $07F787
 	sta.w !st_ram_offscreenhorz,x
 
-!st__15ac = $10A2
+!st__15ac = $13*!st_size+!st_start
 org $018116
 	lda.w !st__15ac,x
 org $01811B
@@ -5085,7 +5085,7 @@ org $03C87D
 org $03C88D
 	lda.w !st__15ac,x
 
-!st__15b8 = $10AE
+!st__15b8 = $14*!st_size+!st_start
 org $018B1F
 	eor.w !st__15b8,x
 org $018B29
@@ -5121,7 +5121,7 @@ org $0389D4
 org $03C1CF
 	lda.w !st__15b8,x
 
-!st__15c4 = $10BA
+!st__15c4 = $15*!st_size+!st_start
 org $01A390
 	sta.w !st__15c4,x
 org $01B852
@@ -5137,7 +5137,7 @@ org $03B78B
 org $07F739
 	stz.w !st__15c4,x
 
-!st__15d0 = $10C6
+!st__15d0 = $16*!st_size+!st_start
 org $018E7E
 	lda.w !st__15d0,x
 org $0191CB
@@ -5181,7 +5181,7 @@ org $03952A
 org $07F761
 	stz.w !st__15d0,x
 
-!st__15dc = $10D2
+!st__15dc = $17*!st_size+!st_start
 org $01907C
 	lda.w !st__15dc,x
 org $02E60C
@@ -5193,7 +5193,7 @@ org $02E630
 org $07F75E
 	stz.w !st__15dc,x
 
-!st_ram_sproamindex = $10DE
+!st_ram_sproamindex = $18*!st_size+!st_start
 org $00FBE4
 	ldy.w !st_ram_sproamindex,x
 org $0180E2
@@ -5491,7 +5491,7 @@ org $0CA014
 org $0CA288
 	sta.w !st_ram_sproamindex
 
-!st_ram_spritepal = $10EA
+!st_ram_spritepal = $19*!st_size+!st_start
 org $00FBD8
 	sta.w !st_ram_spritepal,x
 org $00FC3B
@@ -5731,7 +5731,7 @@ org $03C08A
 org $07F797
 	sta.w !st_ram_spritepal,x
 
-!st__1602 = $10F6
+!st__1602 = $1A*!st_size+!st_start
 org $0183D6
 	sta.w !st__1602,x
 org $0183D6
@@ -6207,7 +6207,7 @@ org $0CA7A5
 org $0CA7AC
 	stz.w !st__1602
 
-!st__160e = $1102
+!st__160e = $1B*!st_size+!st_start
 org $00FCE1
 	dec.w !st__160e,x
 org $0183E0
@@ -6353,7 +6353,7 @@ org $03CD07
 org $07F779
 	stz.w !st__160e,x
 
-!st_ram_sprindexinlvl = $110E
+!st_ram_sprindexinlvl = $1C*!st_size+!st_start
 org $018153
 	sta.w !st_ram_sprindexinlvl,x
 org $01AC95
@@ -6375,7 +6375,7 @@ org $03870F
 org $03B8B3
 	ldy.w !st_ram_sprindexinlvl,x
 
-!st__1626 = $111A
+!st__1626 = $1D*!st_size+!st_start
 org $01A015
 	stz.w !st__1626,x
 org $01A601
@@ -6425,7 +6425,7 @@ org $03962D
 org $07F74E
 	stz.w !st__1626,x
 
-!st_ram_sprbehindscrn = $1126
+!st_ram_sprbehindscrn = $1E*!st_size+!st_start
 org $019A9F
 	sta.w !st_ram_sprbehindscrn,x
 org $019B3A
@@ -6467,7 +6467,7 @@ org $02EAB1
 org $07F725
 	stz.w !st_ram_sprbehindscrn,x
 
-!st__163e = $1132
+!st__163e = $1F*!st_size+!st_start
 org $01811E
 	lda.w !st__163e,x
 org $018123
@@ -6551,7 +6551,7 @@ org $0398FF
 org $07F764
 	stz.w !st__163e,x
 
-!st__164a = $113E
+!st__164a = $20*!st_size+!st_start
 org $0183FF
 	stz.w !st__164a,x
 org $018431
@@ -6625,7 +6625,7 @@ org $03AC57
 org $07F722
 	stz.w !st__164a,x
 
-!st_ram_tweaker1656 = $114A
+!st_ram_tweaker1656 = $21*!st_size+!st_start
 org $018539
 	sta.w !st_ram_tweaker1656,x
 org $018539
@@ -6653,7 +6653,7 @@ org $07F767
 org $07F7A9
 	sta.w !st_ram_tweaker1656,y
 
-!st_ram_tweaker1662 = $1156
+!st_ram_tweaker1662 = $22*!st_size+!st_start
 org $01853E
 	sta.w !st_ram_tweaker1662,x
 org $01853E
@@ -6719,7 +6719,7 @@ org $07F76A
 org $07F7B0
 	sta.w !st_ram_tweaker1662,y
 
-!st_ram_tweaker166e = $1162
+!st_ram_tweaker166e = $23*!st_size+!st_start
 org $0191F6
 	lda.w !st_ram_tweaker166e,x
 org $01926A
@@ -6739,7 +6739,7 @@ org $07F76D
 org $07F7B7
 	sta.w !st_ram_tweaker166e,y
 
-!st_ram_tweaker167a = $116E
+!st_ram_tweaker167a = $24*!st_size+!st_start
 org $01893C
 	asl.w !st_ram_tweaker167a,x
 org $018940
@@ -6821,7 +6821,7 @@ org $07F770
 org $07F7BE
 	sta.w !st_ram_tweaker167a,y
 
-!st_ram_tweaker1686 = $117A
+!st_ram_tweaker1686 = $25*!st_size+!st_start
 org $00FAB2
 	lda.w !st_ram_tweaker1686,y
 org $018543
@@ -6869,7 +6869,7 @@ org $07F773
 org $07F7C5
 	sta.w !st_ram_tweaker1686,y
 
-!st_ram_offscreenvert = $1186
+!st_ram_offscreenvert = $26*!st_size+!st_start
 org $00FAAD
 	ora.w !st_ram_offscreenvert,y
 org $0180CE
@@ -6935,7 +6935,7 @@ org $03B8FE
 org $03C451
 	ora.w !st_ram_offscreenvert,x
 
-!st__187b = $1192
+!st__187b = $27*!st_size+!st_start
 org $018348
 	inc.w !st__187b,x
 org $01839C
@@ -7025,7 +7025,7 @@ org $03B135
 org $07F776
 	stz.w !st__187b,x
 
-!st_ram_tweaker190f = $119E
+!st_ram_tweaker190f = $28*!st_size+!st_start
 org $00FAC5
 	lda.w !st_ram_tweaker190f,y
 org $0191BE
@@ -7057,11 +7057,11 @@ org $02B9CB
 org $07F7CC
 	sta.w !st_ram_tweaker190f,y
 
-!st__1fd6 = $11AA
+!st__1fd6 = $29*!st_size+!st_start
 org $07F782
 	stz.w !st__1fd6,x
 
-!st__1fe2 = $11B6
+!st__1fe2 = $2A*!st_size+!st_start
 org $00FCC2
 	sta.w !st__1fe2,x
 org $01810E

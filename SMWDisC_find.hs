@@ -13,6 +13,7 @@ import Data.Char
 import Text.Printf
 import qualified Data.IntMap.Lazy as Map
 import Numeric
+import Control.DeepSeq
 
 findSMWDisC :: [String] -> String -> [(String, String)]
 findSMWDisC ls addr = filterMap f ls
@@ -100,7 +101,7 @@ numberingSMWDisC = map snd. f'. f 0. filter (`regexb` "^[^\\s]*:\\s+[0-9A-F]{2}[
         h n = printf "%02X%04X" (n `div` 0x8000) (n `mod` 0x8000 + 0x8000)
         h' (subtract 0x8000-> n) = (n `div` 0x10000 * 0x8000) + (n `mod` 0x8000)
 
-smwDisCtext = numberingSMWDisC <$> lines <$> readFile "SMWDisC.txt"
+smwDisCtext = (numberingSMWDisC <$> lines <$> )$ (return$!!) =<< readFile "SMWDisC.txt"
 smwDisCMap f =
     Map.fromList$ filterMap (\x->
         (\a-> (fst. head$ readHex a, x)) <$> regex1 x "^[^\\s]*([0-9A-F]{6}):"
@@ -132,18 +133,19 @@ spriteTables = do
             map (orgCode. second (formatSMWDisCtoXkas. substAddr a m))$
             findSMWDisC f a
             where
-                header = printf "%s = $%04X\n" (map toLower m) (0x0FBE+i*0xC) :: String
+                header = printf "%s = $%X*!st_size+!st_start\n" (map toLower m) i :: String
 
 main = do
     ar <- getArgs
     when (length ar == 1 && ar!!0 == "--st") ((writeFile "st.asm" =<< spriteTables) >> fail "end")
     when (length ar < 2) (putStrLn "SMWDisC_find [find string] [variable name] [-h hijack(long addressing)]\nexample: SMWDisC_find $0FBE !pointer_of_16x" >> fail "end")
-    let a = map toLower$ ar!!0
-    let m = map toLower$ ar!!1
+    let a = ar!!0
+    let m = ar!!1
+    let m' = map toLower m
     f <- smwDisCtext
     let s = smwDisCMap f
     if length ar >= 3 && ar!!2 == "-h"
-    then putStrLn ((headerCode a m++)$ (\(x,y)-> unlines x ++ "\n\n\n;"++replicate 30 '='++"\n; \n" ++ unlines y)$ findAndCreateHijacking f s a m)
+    then putStrLn ((headerCode a m'++)$ (\(x,y)-> unlines x ++ "\n\n\n;"++replicate 30 '='++"\n; \n" ++ unlines y)$ findAndCreateHijacking f s a m)
     else putStrLn (createRelocate a m f)
 
 
