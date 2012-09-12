@@ -152,9 +152,9 @@ longAdressing :: String -> String -> String
 longAdressing m (replace "\\.b" ".w" -> s) =
     if s `regexb` "lda|sta|ora|and|eor|adc|cmp|sbc"
     then if s `regexb` ",y"
-        then printf "stx !itizi_ram : TYX : %s : ldx !itizi_ram" (replace ",y" ",x"$ replace "\\.w" ".l" s)
+        then printf "stx !itizi_ram : tyx : %s : php : ldx !itizi_ram : plp" (replace ",y" ",x"$ replace "\\.w" ".l" s)
         else replace "\\.w" ".l" s
-    else printf "PHB : db $F4 : dw %s>>8 : PLB : PLB : %s : PLB" m s
+    else printf "PHB : PHP : db $F4 : dw %s>>8 : PLB : PLB : PLP : %s : PHP : sep #$20 : sta !itizi_ram : PLA : sta !itizi_ram2 : PLB : lda !itizi_ram2 : PHA : lda !itizi_ram : PLP" m s
 
 findAndCreateHijacking f s aa mm = do
     let storeCodes = map (readHex' *** (longAdressing mm. formatSMWDisCtoXkas. substAddr aa mm)) (findSMWDisC f aa)
