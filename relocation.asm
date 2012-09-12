@@ -51,6 +51,8 @@ org $0C94AD
 org $0C94FD
 	jml HIJACK_0C94FD
 
+incsrc a1.log
+
 
 ;##############################
 ; hijack—p‚Ì‹ó‚«—Ìˆæ
@@ -135,6 +137,9 @@ HIJACK_0C94FD:
 
 
 
+;==============================
+; 
+incsrc a2.log
 
 
 
