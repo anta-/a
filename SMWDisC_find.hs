@@ -79,16 +79,24 @@ regex1 s r = let (_,_,_,t) = s =~ r :: (String,String,String,[String]) in
     listToMaybe t
 
 numberingSMWDisC :: [String] -> [String]
-numberingSMWDisC = f 0. filter (`regexb` "^[^\\s]*:\\s+[0-9A-F]{2}[0-9A-F\\s]{0,9}\\s*[^\\s]*\\s?[^\\s]*.*$")
+numberingSMWDisC = map snd. f'. f 0. filter (`regexb` "^[^\\s]*:\\s+[0-9A-F]{2}[0-9A-F\\s]{0,9}\\s*[^\\s]*\\s?[^\\s]*.*$")
     where
+        f' [] = []
+        f' (x:xs) = case x of
+            Left x ->
+                let zs@((a',_):_) = f' xs in
+                let n = length. words. fromJust$ x `regex1` "^[^\\s]*:\\s+([0-9A-F]{2}[0-9A-F\\s]{0,9})\\s*[^\\s]*\\s?[^\\s]*.*$" in
+                let a = a' - n in
+                (a, replace "^[^\\s]*:" (h a++":") x) : zs
+            Right (a, x) -> (a, x) : f' xs
         f _ [] = []
         f n (x:xs) =
             let ns = words$ fromJust$ x `regex1` "^[^\\s]*:\\s+([0-9A-F]{2}[0-9A-F\\s]{0,9})\\s*[^\\s]*\\s?[^\\s]*.*$" in
-            let (y, n') = g (h n) x in
+            let (y, n') = g x in
             y : f ((fromMaybe n n')+length ns) xs
-        g a x = case x `regex1` "^[^\\s]*([0-9A-F]{6}):" of
-            Nothing -> (replace "^[^\\s]*:" (a++":") x, Nothing)
-            Just a' -> (x, Just (h'. fst. head$ readHex a'))
+        g x = case x `regex1` "^[^\\s]*([0-9A-F]{6}):" of
+            Nothing -> (Left x, Nothing)
+            Just a' -> let a'' = h'. fst. head$ readHex a' in (Right (a'', x), Just (a''))
         h n = printf "%02X%04X" (n `div` 0x8000) (n `mod` 0x8000 + 0x8000)
         h' (subtract 0x8000-> n) = (n `div` 0x10000 * 0x8000) + (n `mod` 0x8000)
 
@@ -117,8 +125,8 @@ findAndCreateHijacking f s aa mm = do
 
 spriteTables = do
     f <- smwDisCtext
-    ts <- zip [(0::Int)..]. filter (not. isPrefixOf ";"). lines <$> readFile "sprite_tables.txt"
-    return$ unlines$ map (\(i, x)-> g i f x ("!st_"++map(\x->if x=='$'then '_'else x)x)) ts
+    ts <- zip [(0::Int)..]. map words. filter (not. isPrefixOf ";"). lines <$> readFile "sprite_tables.txt"
+    return$ unlines$ map (\(i, xs)-> concatMap (\x-> g i f x ("!st_"++map(\x->if x=='$'then '_'else x)x))xs) ts
     where
         g i f a m = (header++). unlines.
             map (orgCode. second (formatSMWDisCtoXkas. substAddr a m))$

@@ -145,7 +145,7 @@ org $01AEA6
 	lda.w !st__14c8,x
 org $01AF9F
 	lda.w !st__14c8,x
-org $01B01D
+org $01B033
 	lda.w !st__14c8,x
 org $01B142
 	sta.w !st__14c8,x
@@ -171,7 +171,7 @@ org $01BF2F
 	sta.w !st__14c8,y
 org $01C17F
 	stz.w !st__14c8,x
-org $01C1EE
+org $01C1F2
 	lda.w !st__14c8,x
 org $01C2B9
 	sta.w !st__14c8,x
@@ -199,7 +199,7 @@ org $01D43E
 	stz.w !st__14c8,x
 org $01D484
 	stz.w !st__14c8,x
-org $01D4E7
+org $01D4FB
 	lda.w !st__14c8,x
 org $01DA0A
 	lda.w !st__14c8,x
@@ -215,7 +215,7 @@ org $01E1CA
 	lda.w !st__14c8,y
 org $01E1F3
 	lda.w !st__14c8,y
-org $01E41F
+org $01E42B
 	lda.w !st__14c8,x
 org $01E6DC
 	sta.w !st__14c8,x
@@ -263,7 +263,7 @@ org $01F74E
 	sta.w !st__14c8,x
 org $01F84C
 	sta.w !st__14c8,x
-org $01F88C
+org $01F890
 	lda.w !st__14c8,x
 org $01F8E4
 	lda.w !st__14c8,x
@@ -547,6 +547,23 @@ org $03CDF9
 	stz.w !st__14c8,x
 org $03CE8E
 	stz.w !st__14c8,x
+!st_ram_spriteaction = $0FBE
+org $019FF0
+	sta.w !st_ram_spriteaction,x
+org $019FF4
+	lda.w !st_ram_spriteaction,x
+org $01A02A
+	sta.w !st_ram_spriteaction,x
+org $01A084
+	sta.w !st_ram_spriteaction,x
+org $01A169
+	lda.w !st_ram_spriteaction,x
+org $028019
+	lda.w !st_ram_spriteaction,x
+org $028038
+	lda.w !st_ram_spriteaction,x
+org $028044
+	sta.w !st_ram_spriteaction,x
 
 !st_ram_spriteyhi = $0FCA
 org $00FA70
@@ -2089,7 +2106,7 @@ org $039AAF
 	ora.w !st__151c,x
 org $039AC3
 	inc.w !st__151c,x
-org $039B51
+org $039B75
 	lda.w !st__151c,x
 org $039D75
 	sta.w !st__151c,x
@@ -2427,7 +2444,7 @@ org $01FB0B
 	inc.w !st__1534,x
 org $01FB0E
 	lda.w !st__1534,x
-org $02B653
+org $02B672
 	lda.w !st__1534,x
 org $02B878
 	sta.w !st__1534,y
@@ -2527,7 +2544,7 @@ org $03A74F
 	ldy.w !st__1534,x
 org $03A76A
 	inc.w !st__1534,x
-org $03C4D8
+org $03C4DC
 	lda.w !st__1534,x
 org $03C4FD
 	inc.w !st__1534,x
@@ -2639,7 +2656,7 @@ org $019726
 	stz.w !st__1540,x
 org $019839
 	lda.w !st__1540,x
-org $019A4E
+org $019A52
 	lda.w !st__1540,x
 org $019A5D
 	lda.w !st__1540,x
@@ -2703,7 +2720,7 @@ org $01B6F1
 	lda.w !st__1540,x
 org $01B706
 	sta.w !st__1540,x
-org $01B969
+org $01B97F
 	lda.w !st__1540,x
 org $01BA34
 	sta.w !st__1540,x
@@ -3525,7 +3542,7 @@ org $039525
 	lda.w !st__1558,x
 org $0395BD
 	sta.w !st__1558,x
-org $03964C
+org $03967E
 	lda.w !st__1558,x
 org $03971D
 	sta.w !st__1558,x
@@ -4579,7 +4596,7 @@ org $0CA793
 	sta.w !st_ram_spritedir
 
 !st_ram_sprobjstatus = $107E
-org $00FF93
+org $018008
 	lda.w !st_ram_sprobjstatus,x
 org $01800E
 	lda.w !st_ram_sprobjstatus,x
@@ -4789,7 +4806,7 @@ org $018AA2
 	ldy.w !st__1594,x
 org $018ACC
 	ldy.w !st__1594,x
-org $018E6E
+org $018E76
 	lda.w !st__1594,x
 org $018EA4
 	lda.w !st__1594,x
@@ -4905,7 +4922,7 @@ org $01BF0F
 	ora.w !st_ram_offscreenhorz,x
 org $01D015
 	lda.w !st_ram_offscreenhorz,x
-org $01DE11
+org $01DE2A
 	stz.w !st_ram_offscreenhorz,x
 org $01E2EC
 	lda.w !st_ram_offscreenhorz,x
@@ -5137,7 +5154,7 @@ org $01BE6E
 	stz.w !st__15d0,x
 org $01C31C
 	lda.w !st__15d0,x
-org $01E07B
+org $01E093
 	stz.w !st__15d0,x
 org $01E09B
 	sta.w !st__15d0,x
@@ -5441,7 +5458,7 @@ org $0397B0
 	lda.w !st_ram_sproamindex,x
 org $0397B6
 	sta.w !st_ram_sproamindex,x
-org $039BE3
+org $039BEB
 	lda.w !st_ram_sproamindex,x
 org $039BF1
 	sta.w !st_ram_sproamindex,x
@@ -5459,7 +5476,7 @@ org $03B223
 	sta.w !st_ram_sproamindex,x
 org $03B261
 	ldy.w !st_ram_sproamindex,x
-org $03B3EF
+org $03B3F7
 	lda.w !st_ram_sproamindex,x
 org $03B3FD
 	sta.w !st_ram_sproamindex,x
@@ -5875,7 +5892,7 @@ org $01EB7A
 	ldy.w !st__1602,x
 org $01EC48
 	sta.w !st__1602,x
-org $01EDE2
+org $01EE61
 	lda.w !st__1602,x
 org $01EE87
 	sta.w !st__1602,x
@@ -6111,7 +6128,7 @@ org $039C89
 	stz.w !st__1602,x
 org $039D6D
 	sta.w !st__1602,x
-org $039D9E
+org $039DB6
 	lda.w !st__1602,x
 org $039DFA
 	sta.w !st__1602,x
@@ -6481,7 +6498,7 @@ org $01AAB2
 	lda.w !st__163e,x
 org $01AB0E
 	sta.w !st__163e,x
-org $01AD68
+org $01AD6E
 	lda.w !st__163e,x
 org $01AE13
 	sta.w !st__163e,x
@@ -6605,7 +6622,7 @@ org $03AC4D
 	lda.w !st__164a,x
 org $03AC57
 	inc.w !st__164a,x
-org $07F26C
+org $07F722
 	stz.w !st__164a,x
 
 !st_ram_tweaker1656 = $114A
@@ -6859,7 +6876,7 @@ org $0180CE
 	ora.w !st_ram_offscreenvert,x
 org $019E37
 	lda.w !st_ram_offscreenvert,x
-org $01A35A
+org $01A365
 	stz.w !st_ram_offscreenvert,x
 org $01A3BD
 	lda.w !st_ram_offscreenvert,x
@@ -6889,7 +6906,7 @@ org $02CF5F
 	ora.w !st_ram_offscreenvert,x
 org $02D0CC
 	ora.w !st_ram_offscreenvert,x
-org $02D374
+org $02D378
 	stz.w !st_ram_offscreenvert,x
 org $02D3C9
 	lda.w !st_ram_offscreenvert,x
@@ -6907,7 +6924,7 @@ org $02E1B4
 	ora.w !st_ram_offscreenvert,x
 org $038FB4
 	ora.w !st_ram_offscreenvert,x
-org $03B75C
+org $03B760
 	stz.w !st_ram_offscreenvert,x
 org $03B7B1
 	lda.w !st_ram_offscreenvert,x
@@ -6933,7 +6950,7 @@ org $0184F5
 	sta.w !st__187b,x
 org $01968B
 	inc.w !st__187b,x
-org $019910
+org $019913
 	lda.w !st__187b,x
 org $01A782
 	lda.w !st__187b,y
@@ -6967,7 +6984,7 @@ org $01F265
 	lda.w !st__187b,y
 org $01F3A6
 	lda.w !st__187b,y
-org $01F75C
+org $01F764
 	lda.w !st__187b,x
 org $01F77A
 	stz.w !st__187b,x

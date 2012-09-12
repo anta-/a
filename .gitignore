@@ -5,3 +5,4 @@ timeit.dat
 *.o
 *.hi
 *.exe
+*.log

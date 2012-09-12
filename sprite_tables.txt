@@ -4,7 +4,7 @@
 ;RAM_SpriteState
 ;RAM_SpriteYLo
 ;RAM_SpriteXLo
-$14C8
+$14C8 RAM_SpriteAction
 RAM_SpriteYHi
 RAM_SpriteXHi
 $14EC
