@@ -6,6 +6,7 @@ import System.Environment (getArgs)
 import Control.Applicative
 import Control.Monad
 import Control.Arrow
+import Data.Function
 import Data.List
 import Data.Maybe
 import Text.Regex.PCRE
@@ -16,6 +17,9 @@ import qualified Data.IntSet as Set
 import Numeric
 import Control.DeepSeq
 import Debug.Trace
+
+infixl 0 `traceSeq`
+traceSeq s x = trace s () `seq` x
 
 findSMWDisC :: [String] -> String -> [(String, String)]
 findSMWDisC ls addr = filterMap f ls
@@ -62,7 +66,7 @@ createHonkeCode q s addr0 size = createHonkeCode' q addr0 size True addr0 0
         createHonkeCode' q addr 0 b a1 a2 = if Map.member addr s
             then (([], a1, a2), q)
             else createHonkeCode' q (addr+1) 0 b a1 (a2+1)
-        createHonkeCode' q addr size b a1 a2 =
+        createHonkeCode' q addr size b a1 a2 = --(printf "createHonkeCode' _ %06X %X %s %X %X" addr size (show b) a1 a2) `traceSeq`
             if Map.member addr s
             then
                 let label = printf "HIJACK_%06X_%06X" addr0 addr in
@@ -90,13 +94,12 @@ branchMod q a [b,x] =
     where
         t = a + 2 + neg80 x
 
--- JSL ExecutePtr があって、安全なところにJMLしちゃう
+-- 
 executePtr :: Int -> String
-executePtr a = printf "jml $%06X" (
-    [ 0x009325::Int, 0x01BDE6, 0x028B94, 0x039434
-    , 0x04DAF4, 0x05BCEC, undefined, undefined
-    , undefined, undefined, undefined, undefined
-    , 0x0CC9D2, undefined, undefined, undefined]!!(a`div`0x10000))
+executePtr a =
+    let b = a + 3 in
+    printf "sta $00 : lda.b #$%02X : pha : db $F4 : dw $%02X%02X : lda $00 : jml $0086DF"
+        (b `div` 0x10000) (b `div` 0x100 `mod` 0x100) (b `mod` 0x100)
 
 jumpToRts :: Int -> String
 jumpToRts a = printf "jml $%06X" (
@@ -129,8 +132,17 @@ createHijack (code, hjAddr, hjSize) =
 regex1 s r = let (_,_,_,t) = s =~ r :: (String,String,String,[String]) in
     listToMaybe t
 
+uniqBy :: (a -> a -> Bool) -> [a] -> [a]
+uniqBy f (x:y:zs)
+    | f x y = uniqBy f (y:zs)
+    | otherwise = x : uniqBy f (y:zs)
+uniqBy _ [x] = [x]
+uniqBy _ [] = []
+
 numberingSMWDisC :: [String] -> [String]
-numberingSMWDisC = map snd. f'. f 0. filter (`regexb` "^[^\\s]*:\\s+[0-9A-F]{2}[0-9A-F\\s]{0,9}\\s*[^\\s]*\\s?[^\\s]*.*$")
+numberingSMWDisC =
+    map snd. uniqBy ((==)`on`fst). sortBy (compare`on`fst). -- SMWDisCには重複部分がある
+    f'. f 0. filter (`regexb` "^[^\\s]*:\\s+[0-9A-F]{2}[0-9A-F\\s]{0,9}\\s*[^\\s]*\\s?[^\\s]*.*$")
     where
         f' [] = []
         f' (x:xs) = case x of
@@ -175,12 +187,13 @@ findAndCreateHijacking f s aa mm = do
         g a t (xs,p,q) = (map (\(b,c)-> if b == a then replace ":\t.*$" ":\t" c ++ t else c) xs, p, q)
         h q _ [] = []
         h q s ((a,c):xs) =
-            let (z, q') = createHonkeCode q s a 4 in
+            let (z, q') = --(printf "createHonkeCode@findAndCreateHijacking %06X" a) `traceSeq`
+                            createHonkeCode q s a 4 in
             let (y, s', q'') = branchMods q' s z in
             map (createHijack. g a c) y ++ h q'' s' xs
 
 branchMods :: Map.IntMap String -> Map.IntMap String -> ([(Int, String)], Int, Int) -> ([([(Int, String)], Int, Int)], Map.IntMap String, Map.IntMap String)
-branchMods q s (c, a, z) = --trace (printf "branchMods %06X %X" a z) () `seq`
+branchMods q s (c, a, z) = -- (printf "branchMods %06X %X" a z) `traceSeq`
     (f q (deletes s a z)$ map (a+) [-0x80..0x7F+z])
     where
         f q s [] = ([(c, a, z)], s, q)
@@ -189,7 +202,7 @@ branchMods q s (c, a, z) = --trace (printf "branchMods %06X %X" a z) () `seq`
             Just x -> let bs@(~[b,y]) = instBytes x in
                 if isBranch bs
                 then if (let t = a'+2+neg80 y in a<t && t<a+z)
-                    then --trace (printf "branch %06X -> %06X (%06X)" a' a (a'+2+neg80 y)) () `seq`
+                    then --(printf "branch %06X -> %06X (%06X)" a' a (a'+2+neg80 y)) `traceSeq`
                         let ((c_, a_, z_), q') = createHonkeCode q s a' 4 in
                         let (zs, s', q'') = branchMods q' s$ (c_, a_, z_) in
                         let (zs', s'', q''') = f q'' (deletes s' a_ z_) aa in
