@@ -188,8 +188,8 @@ branchMods q s (c, a, z) = --trace (printf "branchMods %06X %X" a z) () `seq`
             Nothing -> f q s aa
             Just x -> let bs@(~[b,y]) = instBytes x in
                 if isBranch bs
-                then if (let t = a+2+neg80 y in a<t && t<a+z)
-                    then trace (printf "branch %06X -> %06X (%06X)" a' a (a+2+neg80 y)) () `seq`
+                then if (let t = a'+2+neg80 y in a<t && t<a+z)
+                    then --trace (printf "branch %06X -> %06X (%06X)" a' a (a'+2+neg80 y)) () `seq`
                         let ((c_, a_, z_), q') = createHonkeCode q s a' 4 in
                         let (zs, s', q'') = branchMods q' s$ (c_, a_, z_) in
                         let (zs', s'', q''') = f q'' (deletes s' a_ z_) aa in
