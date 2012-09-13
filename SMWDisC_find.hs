@@ -173,12 +173,22 @@ regexb s r = let (_,t,_) = s =~ r :: (String,String,String) in
     not. null$ t
 
 longAdressing :: String -> String -> String
-longAdressing m (replace "\\.b" ".w" -> s) =
+longAdressing m s_ =
+    let s = f s_ in
+    let t = replace "\\.w" ".l" s in
     if s `regexb` "lda|sta|ora|and|eor|adc|cmp|sbc"
     then if s `regexb` ",y"
-        then printf "stx !itizi_ram : tyx : %s : php : ldx !itizi_ram : plp" (replace ",y" ",x"$ replace "\\.w" ".l" s)
-        else replace "\\.w" ".l" s
-    else printf "PHB : PHP : db $F4 : dw %s>>8 : PLB : PLB : PLP : %s : PHP : sep #$20 : sta !itizi_ram : PLA : sta !itizi_ram2 : PLB : lda !itizi_ram2 : PHA : lda !itizi_ram : PLP" m s
+        then printf "stx !itizi_ram : php : tyx : plp : %s : php : ldx !itizi_ram : plp" (replace ",y" ",x"$ t)
+        else t
+    else if s `regexb` "sty" && s `regexb` ",x"
+        then printf "sta !itizi_ram : php : tya : plp : %s : php : lda !itizi_ram : plp" (replace "sty" "sta" t)
+        else printf "PHB : PHP : db $F4 : dw %s>>8 : PLB : PLB : PLP : %s : PHP : sep #$20 : sta !itizi_ram : PLA : sta !itizi_ram2 : PLB : lda !itizi_ram2 : PHA : lda !itizi_ram : PLP" m s
+    where
+        -- .Bはつかない
+        f x =
+            if x `regexb` "[^\\.][^wl]\\s"
+                then replace "\\s" ".w " x
+                else x
 
 findAndCreateHijacking f s aa mm = do
     let storeCodes = map (readHex' *** (longAdressing mm. formatSMWDisCtoXkas. substAddr aa mm)) (findSMWDisC f aa)
