@@ -61,12 +61,13 @@ createRelocate a m f = unlines.
         findSMWDisC f a
 
 createHonkeCode :: Map.IntMap String -> Map.IntMap String -> Int -> Int -> (([(Int, String)], Int, Int), Map.IntMap String)
-createHonkeCode q s addr0 size = createHonkeCode' q addr0 size True addr0 0
+createHonkeCode q s addr0 size = printf "*** createHonkeCode _ _ %06X %X" addr0 size `traceSeq`
+    createHonkeCode' q addr0 size True addr0 0
     where
         createHonkeCode' q addr 0 b a1 a2 = if Map.member addr s
             then (([], a1, a2), q)
             else createHonkeCode' q (addr+1) 0 b a1 (a2+1)
-        createHonkeCode' q addr size b a1 a2 = --(printf "createHonkeCode' _ %06X %X %s %X %X" addr size (show b) a1 a2) `traceSeq`
+        createHonkeCode' q addr size b a1 a2 = printf "**** createHonkeCode' _ %06X %X %s %X %X" addr size (show b) a1 a2 `traceSeq`
             if Map.member addr s
             then
                 let label = printf "HIJACK_%06X_%06X" addr0 addr in
@@ -165,7 +166,7 @@ numberingSMWDisC =
 
 smwDisCtext = (numberingSMWDisC <$> lines <$> )$ (return$!!) =<< readFile "SMWDisC.txt"
 smwDisCMap f =
-    (`Map.difference` excludeAddresses). Map.fromList$ filterMap (\x->
+    Map.fromList$ filterMap (\x->
         (\a-> (readHex' a, x)) <$> regex1 x "^[^\\s]*([0-9A-F]{6}):"
         ) f
 
@@ -190,17 +191,19 @@ longAdressing m s_ =
                 then replace "\\s" ".w " x
                 else x
 
-findAndCreateHijacking f s aa mm = do
-    let storeCodes = map (readHex' *** (longAdressing mm. formatSMWDisCtoXkas. substAddr aa mm)) (findSMWDisC f aa)
-    unzip$ h (Map.empty) s storeCodes
+findAndCreateHijacking f s q aa mm =
+    let storeCodes = map (readHex' *** (longAdressing mm. formatSMWDisCtoXkas. substAddr aa mm)) (findSMWDisC f aa) in
+    let (xs, (s', q')) = h q s storeCodes in
+    (unzip xs, (s', q'))
     where
         g a t (xs,p,q) = (map (\(b,c)-> if b == a then replace ":\t.*$" ":\t" c ++ t else c) xs, p, q)
-        h q _ [] = []
-        h q s ((a,c):xs) =
-            let (z, q') = --(printf "createHonkeCode@findAndCreateHijacking %06X" a) `traceSeq`
+        h q s [] = ([], (s, q))
+        h q s ((a,c):xs) = printf "** findAndCreateHijacking@h _ _ ((%06X,_):_)" a `traceSeq`
+            let (z, q') =
                             createHonkeCode q s a 4 in
             let (y, s', q'') = branchMods q' s z in
-            map (createHijack. g a c) y ++ h q'' s' xs
+            let (zs, sq) = h q'' s' xs in
+            (map (createHijack. g a c) y ++ zs, sq)
 
 branchMods :: Map.IntMap String -> Map.IntMap String -> ([(Int, String)], Int, Int) -> ([([(Int, String)], Int, Int)], Map.IntMap String, Map.IntMap String)
 branchMods q s (c, a, z) = -- (printf "branchMods %06X %X" a z) `traceSeq`
@@ -226,26 +229,36 @@ instBytes x = map readHex'. words. fromJust$ x `regex1` "^[^\\s]*:\\s+([0-9A-F]{
 
 readHex' = fst. head. readHex
 
-spriteTables = do
-    f <- smwDisCtext
+spriteTables f = do
+    let s = smwDisCMap f
     ts <- zip [(0::Int)..]. map words. filter (not. isPrefixOf ";"). lines <$> readFile "sprite_tables.txt"
-    return$ unlines$ map (\(i, xs)-> concatMap (\x-> g i f x ("!st_"++map(\x->if x=='$'then '_'else x)x))xs) ts
+    let (x, y) = join(***)unlines$ unzip$ fst$ h ts s Map.empty
+    writeFile "a1.log" x
+    writeFile "a2.log" y
     where
-        g i f a m = (header++). unlines.
-            map (orgCode. second (formatSMWDisCtoXkas. substAddr a m))$
-            findSMWDisC f a
+        h :: [(Int,[String])] -> Map.IntMap String -> Map.IntMap String -> ([(String, String)], (Map.IntMap String, Map.IntMap String))
+        h ((i,xs):ts) s q =
+            let (zs, (s', q')) = h' xs i s q in
+            let (ws, (s'', q'')) = h ts s' q' in
+            (zs : ws, (s'', q''))
+        h [] s q = ([], (s, q))
+        h' (x:xs) i s q =
+            let (zs, (s', q')) = g i f x ("!st_"++map(\x->if x=='$'then '_'else toLower x) x) s q in
+            let (ws, (s'', q'')) = h' xs i s' q' in
+            (zs `app2` ws, (s'', q''))
+            where app2 (x,y) (z,w) = (x++z, y++w)
+        h' [] _ s q = (([], []), (s, q))
+        g i f a m s q = printf "* spriteTables@g %X _ %s _ _" i a `traceSeq`
+            let (z, (s', q')) = findAndCreateHijacking f s q a m in
+            (first (header++)$ join(***)unlines$ z, (s, q))
             where
                 header = printf "%s = $%X*!st_size+!st_start\n" (map toLower m) i :: String
 
 writeFie2 (x,y) = writeFile "a1.log" x >> writeFile "a2.log" y
 
--- 特殊なもののため、自分で書くために、考えないもの
-excludeAddresses = Map.fromList. flip zip (repeat undefined)$
-    []
-
 main = do
     ar <- getArgs
-    when (length ar == 1 && ar!!0 == "--st") ((writeFile "st.asm" =<< spriteTables) >> fail "end")
+    when (length ar == 1 && ar!!0 == "--st") ((spriteTables =<< smwDisCtext) >> fail "end")
     when (length ar < 2) (putStrLn "SMWDisC_find [find string[=$addr]] [variable name] [-h hijack(long addressing)]\nexample: SMWDisC_find $0FBE !pointer_of_16x" >> fail "end")
     let a_ = ar!!0
     let (a, aa) =
@@ -257,7 +270,7 @@ main = do
     f <- smwDisCtext
     let s = smwDisCMap f
     if length ar >= 3 && ar!!2 == "-h"
-    then writeFie2$ (first (headerCode aa m'++)$ join(***)unlines$ findAndCreateHijacking f s a m)
+    then writeFie2$ (first (headerCode aa m'++)$ join(***)unlines$ fst$ findAndCreateHijacking f s (Map.empty) a m)
     else putStrLn ((headerCode aa m'++)$ createRelocate a m f)
 
 

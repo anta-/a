@@ -13,7 +13,7 @@ lorom
 !st_start = $0FBE
 !st_size = $C
 
-incsrc st.asm
+; incsrc st.asm
 
 ;##############################
 ; hijackするもの
