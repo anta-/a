@@ -95,13 +95,7 @@ data NewCodeType = LongAddressing | BrokenJump
 
 type AddressMap = Map.IntMap AddressState
 type AddressOriginArray = Array.Array Int Int
-{-
-data St = St
-    { stAddressMap :: AddressMap
-    , stNewCode :: [NewCode]
-    , stAddressOrigin :: AddressOriginArray
-    } deriving (Show)
--}
+
 type ST = RWS AddressOriginArray [NewCode] AddressMap
 
 type Bytes = BB.ByteString
@@ -274,6 +268,7 @@ unique :: Eq a => [a] -> [a]
 unique (x:y:zs)
     | x == y = unique (y:zs)
     | otherwise = x : unique (y:zs)
+unique xs = xs
 
 infixl 0 `traceSeq`
 traceSeq s x = trace s () `seq` x
