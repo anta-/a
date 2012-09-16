@@ -39,7 +39,7 @@ breakBytes :: Address -> Size -> ST ()
 breakBytes a size = mapM_ breakOriginAddress =<< getAddressOrigins a size
 
 breakOriginAddress :: Address -> ST ()
-breakOriginAddress a = modifyAddressState (\x-> x {asBroken = True}) a
+breakOriginAddress = modifyAddressState (\x-> x {asBroken = True})
 
 getAddrssOrigin :: Address -> ST Address
 getAddrssOrigin a = (Array.! a) <$> ask
@@ -63,7 +63,7 @@ getAddressBroken :: Address -> ST Bool
 getAddressBroken a = asBroken. (Map.! a) <$> getAddressMap
 
 modifyAddressMap :: (AddressMap -> AddressMap) -> ST ()
-modifyAddressMap f = modify f
+modifyAddressMap = modify
 
 addNewCode :: NewCode -> ST ()
 addNewCode c = tell [c]
@@ -73,7 +73,7 @@ initalSt s r = (createAddressOrigin m, m)
     where m = initalAddressMap s r
 
 createAddressOrigin :: AddressMap -> AddressOriginArray
-createAddressOrigin m = Array.array (0, fst (last ts))$ ts
+createAddressOrigin m = Array.array (0, fst (last ts)) ts
     where
         ts = concatMap f (Map.assocs m)
         f (a, AddressState { asInfo = AddressInfo { aiBytes = (BB.length -> l)}}) =
@@ -205,7 +205,7 @@ parseSMWDisCFile = parseSMWDisC. f 1. BS.lines
             -- 抜けてる…
             | n == 112156 = "CODE_0DE000:  E8  INX " : f (n+1) xs
             | n == 113412 = BS.pack ("DATA_0DF001:  "++data_0DF001++
-                "  db "++(concat. intersperse ",". map('$':). words$ data_0DF001)) : f (n+1) xs
+                "  db "++(intercalate ",". map('$':). words$ data_0DF001)) : f (n+1) xs
             | otherwise = x : f (n+1) xs
         -- 明らかにcodeな気がするけどめんどくさいのでデータ扱いで
         data_0DF001 = "A5 00 85 02 8A 49 01 AA 20 7D A9 C6 01 D0 CE 20 08 AA A9 6B D0 05 20 08 AA A9 6C 20 5B A9 C6 00 D0 F4 20 08 AA A9 6D 97 6B 60 A4 57 A5 59 29 0F 85 00 A5 59 4A 4A 4A 4A 85 01 20 B1 A6 A6 00 20 08 AA A9 0F 20 5B A9 CA 10 F5 4C 5B F0 A6 00 20 0D AA A9 EA 20 5B A9 CA 10 F5 20 BA A6 20 7D A9 C6 01 10 E9 60 A2 02 4C CE EC 59 A4 57 A5 59 29 0F 85 00 A5 59 4A 4A 4A 4A AA 20 08 AA BF 6B F0 0D 20 5B A9 C6 00 10 F2 60"
@@ -227,7 +227,7 @@ parseSMWDisCLine = isData <|> isNotData <|> unknownAddress <|> lengthOnly
             spaces
             SMWDisC (Just True) (Just a) <$> (bytesLength <|> dbdw)
         isNotData = do
-            s <- PS.takeWhile (\c-> c /= ' ') -- 先読み
+            s <- PS.takeWhile (/= ' ') -- 先読み
             guard$ BS.length s >= 7   -- 汚い…
             let sa = BS.init$ BS.drop (BS.length s - 7) s
             a <- maybe (fail "aaa") return$ readMaybe readHex$ BS.unpack sa
@@ -235,7 +235,7 @@ parseSMWDisCLine = isData <|> isNotData <|> unknownAddress <|> lengthOnly
             l <- bytesLength
             return (SMWDisC (Just False) (Just a) l)
         unknownAddress = do
-            PS.many1 (PS.satisfy (\c-> not (c == ':') && not (c == ' ')))
+            PS.many1 (PS.satisfy (\c-> c /= ':' && c /= ' '))
             PS.char ':'
             spaces
             SMWDisC Nothing Nothing <$> dbdw <|> (do
@@ -265,7 +265,7 @@ parseSMWDisCLine = isData <|> isNotData <|> unknownAddress <|> lengthOnly
         spaces = PS.many1 PS.space
 
 -- ユーティリティ
-readMaybe :: ReadS a -> (String -> Maybe a)
+readMaybe :: ReadS a -> String -> Maybe a
 readMaybe f x = case f x of
     [(y,"")] -> Just y
     _ -> Nothing
@@ -300,7 +300,7 @@ addressCheck_parseSMWDisC xs = []
 
 test_addressCheck_parseSMWDisC = do
     s <- io_SMWDisC
-    mapM_ (either print$ (>> putStrLn""). mapM_ print). map (g s). map fst. filter (not. snd).
+    mapM_ (either print$ (>> putStrLn""). mapM_ print). map (g s. fst). filter (not. snd).
         addressCheck_parseSMWDisC. map f$ s
     where
         f x = x {sdcAddress = snesAddressToEnum <$> sdcAddress x}
