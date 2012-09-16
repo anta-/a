@@ -2,6 +2,7 @@
 module Main where
 
 import System.Environment (getArgs)
+import Control.Exception (assert)
 import Control.Applicative
 import Control.Monad
 import Control.Monad.RWS
@@ -22,6 +23,17 @@ import qualified Data.ByteString as BB
 import qualified Data.Attoparsec.Char8 as PS
 
 main = undefined
+
+createLongAddressing :: Address -> ST ()
+createLongAddressing a = do
+    breakBytes a 4  -- size of JML
+    addNewCode c
+    where
+        c = NewCode
+            { ncOriginalAddress = a
+            , ncLabel = pack$ printf "LA_%06X" a
+            , ncType = LongAddressing
+            }
 
 breakBytes :: Address -> Size -> ST ()
 breakBytes a size = mapM_ breakOriginAddress =<< getAddressOrigins a size
@@ -53,8 +65,8 @@ getAddressBroken a = asBroken. (Map.! a) <$> getAddressMap
 modifyAddressMap :: (AddressMap -> AddressMap) -> ST ()
 modifyAddressMap f = modify f
 
-writeNewCodeInfo :: NewCode -> ST ()
-writeNewCodeInfo c = tell [c]
+addNewCode :: NewCode -> ST ()
+addNewCode c = tell [c]
 
 initalSt :: BS.ByteString -> Bytes -> (AddressOriginArray, AddressMap)
 initalSt s r = (createAddressOrigin m, m)
@@ -66,7 +78,6 @@ createAddressOrigin m = Array.array (0, fst (last ts))$ ts
         ts = concatMap f (Map.assocs m)
         f (a, AddressState { asInfo = AddressInfo { aiBytes = (BB.length -> l)}}) =
             map (\a'-> (a', a)) [a..a+l-1]
-
 
 initalAddressMap :: BS.ByteString -> Bytes -> AddressMap
 initalAddressMap s r = Map.fromList. map (second f)$ createAddressInfos s r
@@ -253,6 +264,7 @@ parseSMWDisCLine = isData <|> isNotData <|> unknownAddress <|> lengthOnly
         bytesLength = length <$> bytes
         spaces = PS.many1 PS.space
 
+-- ユーティリティ
 readMaybe :: ReadS a -> (String -> Maybe a)
 readMaybe f x = case f x of
     [(y,"")] -> Just y
@@ -310,3 +322,5 @@ io_initalSt = do
     smwDisC <- smwDisCFile
     rom <- romFile
     return (initalSt smwDisC rom)
+
+assert' b = assert b `seq` return ()
