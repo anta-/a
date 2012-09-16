@@ -31,7 +31,7 @@ createLongAddressing a = do
     where
         c = NewCode
             { ncOriginalAddress = a
-            , ncLabel = pack$ printf "LA_%06X" a
+            , ncLabel = BS.pack$ printf "LA_%06X" a
             , ncType = LongAddressing
             }
 
@@ -300,7 +300,7 @@ addressCheck_parseSMWDisC xs = []
 
 test_addressCheck_parseSMWDisC = do
     s <- io_SMWDisC
-    mapM_ (either print $(>>putStrLn""). mapM_ print). map (g s). map fst. filter (not. snd).
+    mapM_ (either print$ (>> putStrLn""). mapM_ print). map (g s). map fst. filter (not. snd).
         addressCheck_parseSMWDisC. map f$ s
     where
         f x = x {sdcAddress = snesAddressToEnum <$> sdcAddress x}
