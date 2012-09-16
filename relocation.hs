@@ -12,6 +12,7 @@ import Data.Maybe
 import Data.Char
 import Text.Printf
 import qualified Data.IntMap as Map
+import qualified Data.Array as Array
 import Numeric
 import Control.DeepSeq
 import Debug.Trace
@@ -20,6 +21,57 @@ import qualified Data.ByteString as BB
 import qualified Data.Attoparsec.Char8 as PS
 
 main = undefined
+
+type Address = Int
+type Size = Int
+
+breakBytes :: Address -> Size -> ST ()
+breakBytes a size = mapM_ breakOriginAddress =<< getAddressOrigins a size
+
+breakOriginAddress :: Address -> ST ()
+breakOriginAddress a = modifyAddressState (\x-> x {asBroken = True}) a
+
+getAddrssOrigin :: Address -> ST Address
+getAddrssOrigin a = (Array.! a). stAddressOrigin <$> get
+
+getAddressOrigins :: Address -> Size -> ST [Address]
+getAddressOrigins a size = unique <$> mapM getAddrssOrigin [a..a+size-1]
+
+modifyAddressState :: (AddressState -> AddressState) -> Address -> ST ()
+modifyAddressState f a = modifyAddressMap$ Map.adjust f a
+
+getAddressMap :: ST AddressMap
+getAddressMap = stAddressMap <$> get
+
+getAddressIsMember :: Address -> ST Bool
+getAddressIsMember a = Map.member a <$> getAddressMap
+
+getAddressInfo :: Address -> ST AddressInfo
+getAddressInfo a = asInfo. (Map.! a) <$> getAddressMap
+
+getAddressBroken :: Address -> ST Bool
+getAddressBroken a = asBroken. (Map.! a) <$> getAddressMap
+
+modifyAddressMap :: (AddressMap -> AddressMap) -> ST ()
+modifyAddressMap f = modify$ \x-> x {stAddressMap = f (stAddressMap x)}
+
+consNewCodeInfo :: NewCode -> ST ()
+consNewCodeInfo c = modify$ \x-> x {stNewCode = c : stNewCode x}
+
+initalSt :: BS.ByteString -> Bytes -> St
+initalSt s r = St
+    { stAddressMap = m
+    , stNewCode = []
+    , stAddressOrigin = createAddressOrigin m
+    }
+    where m = initalAddressMap s r
+
+createAddressOrigin :: AddressMap -> AddressOriginArray
+createAddressOrigin m = Array.array (0, fst (last ts))$ ts
+    where
+        ts = concatMap f (Map.assocs m)
+        f (a, AddressState { asInfo = AddressInfo { aiBytes = (BB.length -> l)}}) =
+            map (\a'-> (a', a)) [a..a+l-1]
 
 initalAddressMap :: BS.ByteString -> Bytes -> AddressMap
 initalAddressMap s r = Map.fromList. map (second f)$ createAddressInfos s r
@@ -44,9 +96,11 @@ data NewCodeType = LongAddressing | BrokenJump
     deriving (Show)
 
 type AddressMap = Map.IntMap AddressState
+type AddressOriginArray = Array.Array Int Int
 data St = St
-    { addressMap :: AddressMap
-    , newCodeInfos :: [NewCode]
+    { stAddressMap :: AddressMap
+    , stNewCode :: [NewCode]
+    , stAddressOrigin :: AddressOriginArray
     } deriving (Show)
 type ST = State St
 
@@ -216,6 +270,11 @@ filterMap f (x:xs) = case f x of
     Nothing -> filterMap f xs
 filterMap _ [] = []
 
+unique :: Eq a => [a] -> [a]
+unique (x:y:zs)
+    | x == y = unique (y:zs)
+    | otherwise = x : unique (y:zs)
+
 infixl 0 `traceSeq`
 traceSeq s x = trace s () `seq` x
 
@@ -251,3 +310,8 @@ io_initalAddressMap = do
     smwDisC <- smwDisCFile
     rom <- romFile
     return (initalAddressMap smwDisC rom)
+
+io_initalSt = do
+    smwDisC <- smwDisCFile
+    rom <- romFile
+    return (initalSt smwDisC rom)
