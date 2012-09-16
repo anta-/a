@@ -4,7 +4,8 @@ module Main where
 import System.Environment (getArgs)
 import Control.Applicative
 import Control.Monad
-import Control.Monad.State
+import Control.Monad.RWS
+import Data.Monoid
 import Control.Arrow
 import Data.Function
 import Data.List
@@ -32,7 +33,7 @@ breakOriginAddress :: Address -> ST ()
 breakOriginAddress a = modifyAddressState (\x-> x {asBroken = True}) a
 
 getAddrssOrigin :: Address -> ST Address
-getAddrssOrigin a = (Array.! a). stAddressOrigin <$> get
+getAddrssOrigin a = (Array.! a) <$> ask
 
 getAddressOrigins :: Address -> Size -> ST [Address]
 getAddressOrigins a size = unique <$> mapM getAddrssOrigin [a..a+size-1]
@@ -41,7 +42,7 @@ modifyAddressState :: (AddressState -> AddressState) -> Address -> ST ()
 modifyAddressState f a = modifyAddressMap$ Map.adjust f a
 
 getAddressMap :: ST AddressMap
-getAddressMap = stAddressMap <$> get
+getAddressMap = get
 
 getAddressIsMember :: Address -> ST Bool
 getAddressIsMember a = Map.member a <$> getAddressMap
@@ -53,17 +54,13 @@ getAddressBroken :: Address -> ST Bool
 getAddressBroken a = asBroken. (Map.! a) <$> getAddressMap
 
 modifyAddressMap :: (AddressMap -> AddressMap) -> ST ()
-modifyAddressMap f = modify$ \x-> x {stAddressMap = f (stAddressMap x)}
+modifyAddressMap f = modify f
 
-consNewCodeInfo :: NewCode -> ST ()
-consNewCodeInfo c = modify$ \x-> x {stNewCode = c : stNewCode x}
+writeNewCodeInfo :: NewCode -> ST ()
+writeNewCodeInfo c = tell [c]
 
-initalSt :: BS.ByteString -> Bytes -> St
-initalSt s r = St
-    { stAddressMap = m
-    , stNewCode = []
-    , stAddressOrigin = createAddressOrigin m
-    }
+initalSt :: BS.ByteString -> Bytes -> (AddressOriginArray, AddressMap)
+initalSt s r = (createAddressOrigin m, m)
     where m = initalAddressMap s r
 
 createAddressOrigin :: AddressMap -> AddressOriginArray
@@ -72,6 +69,7 @@ createAddressOrigin m = Array.array (0, fst (last ts))$ ts
         ts = concatMap f (Map.assocs m)
         f (a, AddressState { asInfo = AddressInfo { aiBytes = (BB.length -> l)}}) =
             map (\a'-> (a', a)) [a..a+l-1]
+
 
 initalAddressMap :: BS.ByteString -> Bytes -> AddressMap
 initalAddressMap s r = Map.fromList. map (second f)$ createAddressInfos s r
@@ -97,12 +95,14 @@ data NewCodeType = LongAddressing | BrokenJump
 
 type AddressMap = Map.IntMap AddressState
 type AddressOriginArray = Array.Array Int Int
+{-
 data St = St
     { stAddressMap :: AddressMap
     , stNewCode :: [NewCode]
     , stAddressOrigin :: AddressOriginArray
     } deriving (Show)
-type ST = State St
+-}
+type ST = RWS AddressOriginArray [NewCode] AddressMap
 
 type Bytes = BB.ByteString
 
