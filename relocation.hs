@@ -43,58 +43,63 @@ breakBytes :: Address -> Size -> ST ()
 breakBytes a size = mapM_ breakOriginAddress =<< getAddressOrigins a size
 
 breakOriginAddress :: Address -> ST ()
-breakOriginAddress = modifyAddressState (\x-> x {asBroken = True})
+breakOriginAddress = modifyAddressState (const True)
 
 getAddrssOrigin :: Address -> ST Address
-getAddrssOrigin a = (Array.! a) <$> ask
+getAddrssOrigin a = (Array.! a). addressOrigin <$> ask
 
 getAddressOrigins :: Address -> Size -> ST [Address]
 getAddressOrigins a size = unique <$> mapM getAddrssOrigin [a..a+size-1]
 
 modifyAddressState :: (AddressState -> AddressState) -> Address -> ST ()
-modifyAddressState f a = modifyAddressMap$ Map.adjust f a
+modifyAddressState f a = modifyAddressStateMap$ Map.adjust f a
 
-getAddressMap :: ST AddressMap
-getAddressMap = get
+getAddressStateMap :: ST AddressStateMap
+getAddressStateMap = get
 
-getAddressIsMember :: Address -> ST Bool
-getAddressIsMember a = Map.member a <$> getAddressMap
+getAddressInfoMap :: ST AddressInfoMap
+getAddressInfoMap = addressInfoMap <$> ask
 
 getAddressInfo :: Address -> ST AddressInfo
-getAddressInfo a = asInfo. (Map.! a) <$> getAddressMap
+getAddressInfo a = (Map.! a) <$> getAddressInfoMap
 
 getAddressBroken :: Address -> ST Bool
-getAddressBroken a = asBroken. (Map.! a) <$> getAddressMap
+getAddressBroken a = (Map.! a) <$> getAddressStateMap
 
-modifyAddressMap :: (AddressMap -> AddressMap) -> ST ()
-modifyAddressMap = modify
+modifyAddressStateMap :: (AddressStateMap -> AddressStateMap) -> ST ()
+modifyAddressStateMap = modify
 
 addNewCode :: NewCode -> ST ()
 addNewCode c = tell [c]
 
-initalSt :: BS.ByteString -> Bytes -> (AddressOriginArray, AddressMap)
-initalSt s r = (createAddressOrigin m, m)
-    where m = initalAddressMap s r
+initalReadState :: BS.ByteString -> Bytes -> ReadState
+initalReadState s r = t
+    where
+        m = initalAddressInfoMap s r
+        t = ReadState
+            { addressOrigin = createAddressOrigin m
+            , addressInfoMap = initalAddressInfoMap s r
+            }
 
-createAddressOrigin :: AddressMap -> AddressOriginArray
+initalSt :: BS.ByteString -> Bytes -> (ReadState, AddressStateMap)
+initalSt s r = (m, Map.map (const False)$ addressInfoMap m)
+    where
+        m = initalReadState s r
+
+createAddressOrigin :: AddressInfoMap -> AddressOrigin
 createAddressOrigin m = Array.array (0, fst (last ts)) ts
     where
         ts = concatMap f (Map.assocs m)
-        f (a, AddressState { asInfo = AddressInfo { aiBytes = (BB.length -> l)}}) =
+        f (a, AddressInfo { aiBytes = (BB.length -> l)}) =
             map (\a'-> (a', a)) [a..a+l-1]
 
-initalAddressMap :: BS.ByteString -> Bytes -> AddressMap
-initalAddressMap s r = Map.fromList. map (second f)$ createAddressInfos s r
-    where
-        f info = AddressState info False
+initalAddressInfoMap :: BS.ByteString -> Bytes -> AddressInfoMap
+initalAddressInfoMap s r = Map.fromList$ createAddressInfos s r
 
 type Address = Int
 type Size = Int
 
-data AddressState = AddressState
-    { asInfo :: AddressInfo
-    , asBroken :: Bool  -- hijackによって一部でも使われるアドレス
-    } deriving (Show)
+type AddressState = Bool
 
 -- 新しいコードは、その他のhijack情報が必要なこともあるので、
 -- 種類だけ覚えておいて、コードは最後に生成する
@@ -108,10 +113,16 @@ data NewCode = NewCode
 data NewCodeType = LongAddressing | BrokenJump
     deriving (Show)
 
-type AddressMap = Map.IntMap AddressState
-type AddressOriginArray = Array.Array Int Int
+type AddressStateMap = Map.IntMap AddressState
+type AddressInfoMap = Map.IntMap AddressInfo
+type AddressOrigin = Array.Array Int Int
 
-type ST = RWS AddressOriginArray [NewCode] AddressMap
+data ReadState = ReadState
+    { addressOrigin :: AddressOrigin
+    , addressInfoMap :: AddressInfoMap
+    } deriving (Show)
+
+type ST = RWS ReadState [NewCode] AddressStateMap
 
 type Bytes = BB.ByteString
 
@@ -317,10 +328,10 @@ io_AddressMap = do
     rom <- romFile
     return (createAddressInfos smwDisC rom)
 
-io_initalAddressMap = do
+io_initalReadState = do
     smwDisC <- smwDisCFile
     rom <- romFile
-    return (initalAddressMap smwDisC rom)
+    return (initalReadState smwDisC rom)
 
 io_initalSt = do
     smwDisC <- smwDisCFile
