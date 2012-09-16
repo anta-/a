@@ -26,7 +26,9 @@ import Disassemble
 main = undefined
 
 findRAMAccess :: Int -> ST [Address]
-findRAMAccess = undefined
+findRAMAccess x = map fst. filter f. Map.assocs <$> getAddressInfoMap
+    where
+        f (a, AddressInfo {aiAssembly = Just (Assembly {..})}) = undefined
 
 createLongAddressing :: Address -> ST ()
 createLongAddressing a = do
@@ -102,7 +104,7 @@ type Size = Int
 type AddressState = Bool
 
 -- 新しいコードは、その他のhijack情報が必要なこともあるので、
--- 種類だけ覚えておいて、コードは最後に生成する
+-- ある程度だけ覚えておいて、コードは最後に生成する
 -- BrokenJumpはBrokenなAddressに対してを検索してそこにBrokenJump+Brokenに…をやる感じで？
 data NewCode = NewCode
     { ncOriginalAddress :: Int

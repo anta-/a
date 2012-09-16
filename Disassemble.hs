@@ -1,5 +1,5 @@
 module Disassemble
-    ( Code, Assembly (..), Decode (..), Operand (..)
+    ( Code, Assembly (..), Operand (..)
     , disassembleCode, 
     ) where
 
@@ -50,9 +50,9 @@ codeLength = BB.length
 -- Decode
 disassembleCode :: Code -> Maybe Assembly
 disassembleCode c = do
-    decode@(Decode _ addressing) <- decodeCode c
+    (mnem, addressing) <- decodeCode c
     opr <- getOperand addressing c
-    return$ Assembly decode opr
+    return$ Assembly mnem addressing opr
 
 getOperand :: SizedAddressingMode -> Code -> Maybe Operand
 getOperand a c =
@@ -91,13 +91,13 @@ getOperand a c =
         oprWord = OprWord. codeOperand2
         oprLong = OprLong. codeOperand3
 
-decodeCode :: Code -> Maybe Decode
+decodeCode :: Code -> Maybe (Mnemonic, SizedAddressingMode)
 decodeCode c = do
     guard$ codeLength c >= 1
     let op = codeOpecode c
     let mnem = getMnemonic op
     addressing <- getSizedAddressingModeWithCodeLength op (codeLength c)
-    return$ Decode mnem addressing
+    return$ (mnem, addressing)
 
 getMnemonic :: Byte -> Mnemonic
 getMnemonic = (mnemonicMap Array.!)
@@ -146,7 +146,8 @@ getSizedAddressingModeSize a = case a of
 -- Instruction
 
 data Assembly = Assembly 
-    { decode :: Decode
+    { mnemonic :: Mnemonic
+    , addressingMode :: SizedAddressingMode
     , operand :: Operand
     }
     deriving (Show)
@@ -157,12 +158,6 @@ data Operand =
     | OprWord Int | OprRelWord Int
     | OprLong Int
     | Opr2Byte Int Int
-    deriving (Show)
-
-data Decode = Decode
-    { mnemonic :: Mnemonic
-    , addressingMode :: SizedAddressingMode
-    }
     deriving (Show)
 
 data Mnemonic =
