@@ -1,8 +1,12 @@
-module Disassemble where
+module Disassemble
+    ( Code, Assembly (..), Decode (..), Operand (..)
+    , disassembleCode, 
+    ) where
 
 import qualified Data.ByteString as BB
 import Data.Bits
 import qualified Data.Array as Array
+import Control.Monad
 
 toSigned8 :: Int -> Int
 toSigned16 :: Int -> Int
@@ -30,25 +34,30 @@ codeOperand1 x = codeIndex x 1
 codeOperand12 x = codeIndex x 2
 codeOperand1Singed x = toSigned8 (codeOperand1 x)
 codeOperand2 x =
-    fromIntegral (codeIndex x 1) .|.
-    (fromIntegral (codeIndex x 2) `shiftL` 8)
+    let x1 = codeIndex x 1 in
+    let x2 = codeIndex x 2 in
+    fromIntegral x1 .|. (fromIntegral x2 `shiftL` 8)
 codeOperand2Signed x = toSigned16 (codeOperand2 x)
 codeOperand3 x =
-    fromIntegral (codeIndex x 1) .|.
-    (fromIntegral (codeIndex x 2) `shiftL` 8) .|.
-    (fromIntegral (codeIndex x 3) `shiftL` 16)
+    let x1 = codeIndex x 1 in
+    let x2 = codeIndex x 2 in
+    let x3 = codeIndex x 3 in
+    fromIntegral x1 .|. (fromIntegral x2 `shiftL` 8) .|. (fromIntegral x3 `shiftL` 16)
 
 codeLength :: Code -> Int
 codeLength = BB.length
 
 -- Decode
-disassembleCode :: Code -> Assembly
-disassembleCode c =
-    let decode@(Decode _ addressing) = decodeCode c in
-    Assembly decode (getOperand addressing c)
+disassembleCode :: Code -> Maybe Assembly
+disassembleCode c = do
+    decode@(Decode _ addressing) <- decodeCode c
+    opr <- getOperand addressing c
+    return$ Assembly decode opr
 
-getOperand :: SizedAddressingMode -> Code -> Operand
-getOperand a = case a of
+getOperand :: SizedAddressingMode -> Code -> Maybe Operand
+getOperand a c =
+    guard (getSizedAddressingModeSize a == codeLength c-1) >>
+    return ((case a of
     StaticSAM a' -> case a' of
         AM_NONE -> const OprNone
         AM_DIR -> oprByte
@@ -76,33 +85,70 @@ getOperand a = case a of
         AM_ACC -> const OprNone
     SizedSAM a' -> case a' of
         SAM_IMM8 -> oprByte
-        SAM_IMM16 -> oprWord
+        SAM_IMM16 -> oprWord) c)
     where
         oprByte = OprByte. codeOperand1
         oprWord = OprWord. codeOperand2
         oprLong = OprLong. codeOperand3
 
-decodeCode :: Code -> Decode
-decodeCode c = Decode
-    (getMnemonic op)
-    (getSizedAddressingModeWithCodeLength op (codeLength c))
-    where op = codeOpecode c
+decodeCode :: Code -> Maybe Decode
+decodeCode c = do
+    guard$ codeLength c >= 1
+    let op = codeOpecode c
+    let mnem = getMnemonic op
+    addressing <- getSizedAddressingModeWithCodeLength op (codeLength c)
+    return$ Decode mnem addressing
 
 getMnemonic :: Byte -> Mnemonic
 getMnemonic = (mnemonicMap Array.!)
 
-getSizedAddressingModeWithCodeLength :: Byte -> Int -> SizedAddressingMode
+getSizedAddressingModeWithCodeLength :: Byte -> Int -> Maybe SizedAddressingMode
 getSizedAddressingModeWithCodeLength b l =
     case addressingModeMap Array.! b of
-    StaticAM s -> StaticSAM s
-    DynamicAM d -> SizedSAM$ case l of
-        2 -> SAM_IMM8
-        3 -> SAM_IMM16
-        _ -> error$ "getSizedAddressingModeWithCodeLength: codeLength == " ++ show l
+    StaticAM s -> return$ StaticSAM s
+    DynamicAM d -> case l of
+        2 -> return$ SizedSAM SAM_IMM8
+        3 -> return$ SizedSAM SAM_IMM16
+        _ -> Nothing
+
+getSizedAddressingModeSize :: SizedAddressingMode -> Int
+getSizedAddressingModeSize a = case a of
+    StaticSAM a' -> case a' of
+        AM_NONE -> 0
+        AM_DIR -> 1
+        AM_IMM8 -> 1
+        AM_PCR -> 1
+        AM_RAW -> 2
+        AM_DIRS -> 1
+        AM_DIRX -> 1
+        AM_DIRY -> 1
+        AM_ABS -> 2
+        AM_PCRL -> 2
+        AM_ABSX -> 2
+        AM_ABSY -> 2
+        AM_LONG -> 3
+        AM_LONGX -> 3
+        AM_DIRI -> 1
+        AM_DIRIY -> 1
+        AM_DIRSIY -> 1
+        AM_DIRXI -> 1
+        AM_ABSI -> 2
+        AM_ABSXI -> 2
+        AM_ABSIL -> 2
+        AM_DIRIL -> 1
+        AM_DIRILY -> 1
+        AM_ACC -> 0
+    SizedSAM a' -> case a' of
+        SAM_IMM8 -> 1
+        SAM_IMM16 -> 2
+
 
 -- Instruction
 
-data Assembly = Assembly Decode Operand
+data Assembly = Assembly 
+    { decode :: Decode
+    , operand :: Operand
+    }
     deriving (Show)
 
 data Operand =
@@ -113,7 +159,10 @@ data Operand =
     | Opr2Byte Int Int
     deriving (Show)
 
-data Decode = Decode Mnemonic SizedAddressingMode
+data Decode = Decode
+    { mnemonic :: Mnemonic
+    , addressingMode :: SizedAddressingMode
+    }
     deriving (Show)
 
 data Mnemonic =

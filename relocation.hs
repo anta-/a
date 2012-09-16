@@ -21,8 +21,12 @@ import Debug.Trace
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString as BB
 import qualified Data.Attoparsec.Char8 as PS
+import Disassemble
 
 main = undefined
+
+findRAMAccess :: Int -> ST [Address]
+findRAMAccess = undefined
 
 createLongAddressing :: Address -> ST ()
 createLongAddressing a = do
@@ -112,8 +116,8 @@ type ST = RWS AddressOriginArray [NewCode] AddressMap
 type Bytes = BB.ByteString
 
 data AddressInfo = AddressInfo
-    { aiIsData :: Bool
-    , aiBytes :: Bytes
+    { aiBytes :: Bytes
+    , aiAssembly :: Maybe Assembly  -- Nothingの場合、Dataである
     } deriving (Show)
 
 createAddressInfos :: BS.ByteString -> Bytes -> [(Int, AddressInfo)]
@@ -139,8 +143,8 @@ smwDisCAddressToAddressInfoWithROM s x = f (BB.drop 0x200 x) s
     where
         f _ [] = []
         f x (SMWDisCAddress {..} : xs) = (sdaAddress, AddressInfo
-            { aiIsData = sdaIsData
-            , aiBytes = t
+            { aiBytes = t
+            , aiAssembly = guard (not sdaIsData) >> disassembleCode t
             }) : f d xs
             where (t, d) = BB.splitAt sdaLength x
 
