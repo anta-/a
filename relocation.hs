@@ -23,9 +23,6 @@ import qualified Data.Attoparsec.Char8 as PS
 
 main = undefined
 
-type Address = Int
-type Size = Int
-
 breakBytes :: Address -> Size -> ST ()
 breakBytes a size = mapM_ breakOriginAddress =<< getAddressOrigins a size
 
@@ -76,6 +73,9 @@ initalAddressMap s r = Map.fromList. map (second f)$ createAddressInfos s r
     where
         f info = AddressState info False
 
+type Address = Int
+type Size = Int
+
 data AddressState = AddressState
     { asInfo :: AddressInfo
     , asBroken :: Bool  -- hijackによって一部でも使われるアドレス
@@ -124,7 +124,7 @@ smwDisCAddressUnionData xs = f xs
         f x = x
 
 smwDisCAddressToAddressInfoWithROM :: [SMWDisCAddress] -> Bytes -> [(Int, AddressInfo)]
-smwDisCAddressToAddressInfoWithROM s x = f x s
+smwDisCAddressToAddressInfoWithROM s x = f (BB.drop 0x200 x) s
     where
         f _ [] = []
         f x (SMWDisCAddress {..} : xs) = (sdaAddress, AddressInfo
