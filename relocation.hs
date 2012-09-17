@@ -1,4 +1,6 @@
-{-# LANGUAGE OverloadedStrings, RecordWildCards, ViewPatterns #-}
+{-# LANGUAGE 
+      OverloadedStrings, RecordWildCards, ViewPatterns
+    , TupleSections #-}
 module Main where
 
 import System.Environment (getArgs)
@@ -25,14 +27,59 @@ import Disassemble
 
 main = undefined
 
-findRAMAccess :: Int -> ST [Address]
+findAndBrokenJump :: Address -> HJ ()
+findAndBrokenJump a = mapM_ createBrokenJump =<< getAddressJumpRev a
+
+createBrokenJump :: Address -> HJ ()
+createBrokenJump a = do
+    b <- getAddressBroken a
+    if b
+    then return ()
+    else do
+        breakJMLBytes a
+        addNewCode c
+    where
+        c = NewCode
+            { ncOriginalAddress = a
+            , ncLabel = BS.pack$ printf "BJ_%06X" a
+            , ncType = LongAddressing
+            }
+
+getAddressJumpRev :: Address -> HJ [Int]
+getAddressJumpRev a = (Array.! a). jumpRev <$> ask
+
+-- そのアドレスがどこから参照されているか？
+-- 間接ジャンプは無理だから手動で追加する？
+createJumpRev :: AddressInfoMap -> JumpRev
+createJumpRev m = Array.accumArray (flip (:)) [] (0,size) ts
+    where
+        ts = filterMap f$ Map.assocs m
+        f (a, x) = do
+            s <- aiAssembly x
+            j' <- getJumpAddress (enumToSNESAddress a) s
+            let j = snesAddressToEnum j'
+            guard$ 0 <= j && j < size
+            return (j, a)
+        size = lasta + BB.length lastb - 1
+        (lasta, AddressInfo { aiBytes = lastb }) = Map.findMax m
+
+type JumpRev = Array.Array Int [Int]
+
+findAndLongAddressing :: Address -> HJ ()
+findAndLongAddressing x =
+    mapM_ createLongAddressing =<< findRAMAccess x
+
+findRAMAccess :: Int -> HJ [Address]
 findRAMAccess x = map fst. filter f. Map.assocs <$> getAddressInfoMap
     where
-        f (a, AddressInfo {aiAssembly = Just (Assembly {..})}) = undefined
+        f (a, AddressInfo {aiAssembly = Just (Assembly {..})}) =
+            isMemoryAccessAddressing addressingMode
+            && getOpearndInt operand == Just x
+        f _ = False
 
-createLongAddressing :: Address -> ST ()
+createLongAddressing :: Address -> HJ ()
 createLongAddressing a = do
-    breakBytes a 4  -- size of JML
+    breakJMLBytes a
     addNewCode c
     where
         c = NewCode
@@ -41,37 +88,39 @@ createLongAddressing a = do
             , ncType = LongAddressing
             }
 
-breakBytes :: Address -> Size -> ST ()
+breakJMLBytes a = breakBytes a 4
+
+breakBytes :: Address -> Size -> HJ ()
 breakBytes a size = mapM_ breakOriginAddress =<< getAddressOrigins a size
 
-breakOriginAddress :: Address -> ST ()
+breakOriginAddress :: Address -> HJ ()
 breakOriginAddress = modifyAddressState (const True)
 
-getAddrssOrigin :: Address -> ST Address
+getAddrssOrigin :: Address -> HJ Address
 getAddrssOrigin a = (Array.! a). addressOrigin <$> ask
 
-getAddressOrigins :: Address -> Size -> ST [Address]
+getAddressOrigins :: Address -> Size -> HJ [Address]
 getAddressOrigins a size = unique <$> mapM getAddrssOrigin [a..a+size-1]
 
-modifyAddressState :: (AddressState -> AddressState) -> Address -> ST ()
+modifyAddressState :: (AddressState -> AddressState) -> Address -> HJ ()
 modifyAddressState f a = modifyAddressStateMap$ Map.adjust f a
 
-getAddressStateMap :: ST AddressStateMap
+getAddressStateMap :: HJ AddressStateMap
 getAddressStateMap = get
 
-getAddressInfoMap :: ST AddressInfoMap
+getAddressInfoMap :: HJ AddressInfoMap
 getAddressInfoMap = addressInfoMap <$> ask
 
-getAddressInfo :: Address -> ST AddressInfo
+getAddressInfo :: Address -> HJ AddressInfo
 getAddressInfo a = (Map.! a) <$> getAddressInfoMap
 
-getAddressBroken :: Address -> ST Bool
+getAddressBroken :: Address -> HJ Bool
 getAddressBroken a = (Map.! a) <$> getAddressStateMap
 
-modifyAddressStateMap :: (AddressStateMap -> AddressStateMap) -> ST ()
+modifyAddressStateMap :: (AddressStateMap -> AddressStateMap) -> HJ ()
 modifyAddressStateMap = modify
 
-addNewCode :: NewCode -> ST ()
+addNewCode :: NewCode -> HJ ()
 addNewCode c = tell [c]
 
 initalReadState :: BS.ByteString -> Bytes -> ReadState
@@ -80,11 +129,13 @@ initalReadState s r = t
         m = initalAddressInfoMap s r
         t = ReadState
             { addressOrigin = createAddressOrigin m
-            , addressInfoMap = initalAddressInfoMap s r
+            , addressInfoMap = aim
+            , jumpRev = createJumpRev aim
             }
+            where aim = initalAddressInfoMap s r
 
-initalSt :: BS.ByteString -> Bytes -> (ReadState, AddressStateMap)
-initalSt s r = (m, Map.map (const False)$ addressInfoMap m)
+initalHJ :: BS.ByteString -> Bytes -> (ReadState, AddressStateMap)
+initalHJ s r = (m, Map.map (const False)$ addressInfoMap m)
     where
         m = initalReadState s r
 
@@ -122,9 +173,10 @@ type AddressOrigin = Array.Array Int Int
 data ReadState = ReadState
     { addressOrigin :: AddressOrigin
     , addressInfoMap :: AddressInfoMap
+    , jumpRev :: JumpRev
     } deriving (Show)
 
-type ST = RWS ReadState [NewCode] AddressStateMap
+type HJ = RWS ReadState [NewCode] AddressStateMap
 
 type Bytes = BB.ByteString
 
@@ -195,6 +247,9 @@ data SMWDisCAddress = SMWDisCAddress
 snesAddressToEnum :: SNESAddress -> Int
 snesAddressToEnum x = x `div` 0x10000 * 0x8000 + x `mod` 0x8000
 
+enumToSNESAddress :: Int -> SNESAddress
+enumToSNESAddress x = x `div` 0x8000 * 0x10000 + 0x8000 + x `mod` 0x8000
+
 smwDisCFile :: IO BS.ByteString
 smwDisCFile = BS.readFile "SMWDisC.txt"
 
@@ -205,7 +260,6 @@ parseSMWDisCFile :: BS.ByteString -> [SMWDisC]
 parseSMWDisCFile = parseSMWDisC. f 1. BS.lines
     where
         -- 間違っている(邪魔な)行を取り除いたり、加工する
-        -- 0DEFFE+3からかなり抜けてるが、まあ何もしなくていいよね
         f n [] = []
         f n (x:xs)
             | n == 1852 || n == 1853
@@ -335,9 +389,13 @@ io_initalReadState = do
     rom <- romFile
     return (initalReadState smwDisC rom)
 
-io_initalSt = do
+io_initalHJ = do
     smwDisC <- smwDisCFile
     rom <- romFile
-    return (initalSt smwDisC rom)
+    return (initalHJ smwDisC rom)
+
+io_evalRWS t = do
+    (r, s) <- io_initalHJ
+    return$ evalRWS t r s
 
 assert' b = assert b `seq` return ()

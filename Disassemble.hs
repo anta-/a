@@ -1,12 +1,86 @@
+{-# LANGUAGE RecordWildCards #-}
+
 module Disassemble
     ( Code, Assembly (..), Operand (..)
-    , disassembleCode, 
+    , disassembleCode
+    , isMemoryAccessAddressing, getOpearndInt
+    , getJumpAddress
     ) where
 
 import qualified Data.ByteString as BB
 import Data.Bits
 import qualified Data.Array as Array
 import Control.Monad
+import Control.Applicative
+
+-- いろいろ
+
+getJumpAddress :: Int -> Assembly -> Maybe Int
+getJumpAddress a asm@(Assembly {..}) =
+    rel addressingMode <|> abs mnemonic
+    where
+        rel (StaticSAM AM_PCR) = Just (a+2+x)
+        rel (StaticSAM AM_PCRL) = Just (a+3+x)
+        rel _ = Nothing
+        x = case operand of
+            OprRelByte t -> t
+            OprRelWord t -> t
+            _ -> error$ "getJumpAddress: "++show asm
+        abs NM_JMP = short
+        abs NM_JSR = short
+        abs NM_JML = long
+        abs NM_JSL = long
+        abs _ = Nothing
+        short = case addressingMode of
+            StaticSAM AM_ABS -> Just$ (a .&. 0xFF0000) .|. getOperandExpectWord operand
+            _ -> Nothing
+        long = case addressingMode of
+            StaticSAM AM_LONG -> Just$ getOperandExpectLong operand
+            _ -> Nothing
+
+getOperandExpectByte, getOperandExpectWord
+    , getOperandExpectLong :: Operand -> Int
+getOperandExpectByte (OprByte x) = x
+getOperandExpectByte o = errorGetOperandExpect "Byte" o
+getOperandExpectWord (OprWord x) = x
+getOperandExpectWord o = errorGetOperandExpect "Word" o
+getOperandExpectLong (OprLong x) = x
+getOperandExpectLong o = errorGetOperandExpect "Long" o
+
+errorGetOperandExpect s o =
+    error$ "getOperandExpect"++s++": "++show o
+
+getOpearndInt :: Operand -> Maybe Int
+getOpearndInt (OprByte x) = Just x
+getOpearndInt (OprRelByte x) = Just x
+getOpearndInt (OprWord x) = Just x
+getOpearndInt (OprRelWord x) = Just x
+getOpearndInt (OprLong x) = Just x
+getOpearndInt _ = Nothing
+
+isMemoryAccessAddressing :: SizedAddressingMode -> Bool
+isMemoryAccessAddressing (StaticSAM a) = case a of
+     AM_DIR -> True
+     AM_DIRS -> True
+     AM_DIRX -> True
+     AM_DIRY -> True
+     AM_ABS -> True
+     AM_ABSX -> True
+     AM_ABSY -> True
+     AM_LONG -> True
+     AM_LONGX -> True
+     AM_DIRI -> True
+     AM_DIRIY -> True
+     AM_DIRSIY -> True
+     AM_DIRXI -> True
+     AM_ABSI -> True
+     AM_ABSXI -> True
+     AM_ABSIL -> True
+     AM_DIRIL -> True
+     AM_DIRILY -> True
+     _ -> False
+isMemoryAccessAddressing (SizedSAM _) = False
+
 
 toSigned8 :: Int -> Int
 toSigned16 :: Int -> Int
