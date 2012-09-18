@@ -7,6 +7,7 @@ import System.Environment (getArgs)
 import Control.Exception (assert)
 import Control.Applicative
 import Control.Monad
+import Control.Monad.Reader
 import Control.Monad.RWS
 import Data.Monoid
 import Control.Arrow
@@ -27,31 +28,97 @@ import Disassemble
 
 main = undefined
 
-findAndBrokenJump :: Address -> HJ ()
-findAndBrokenJump a = mapM_ createBrokenJump =<< getAddressJumpRev a
 
-createBrokenJump :: Address -> HJ ()
+-- CodeListGen
+
+codeListGen :: [CodeGen] -> HJRead [CodeListGen]
+codeListGen xs = f (-1) xs
+    where
+        f :: Address -> [(Address, CodeGenType)] -> HJRead [CodeListGen]
+        f n ((a, x):xs) = do
+            AddressInfo { aiBytes = (BB.length -> z) } <- getAddressInfo a
+            ys <- f (a+z) xs
+            return$ if n == a
+            then case ys of
+                [] -> [CodeListGen a [x]]
+                ((CodeListGen {..}):ys) -> CodeListGen a (x : lgList) : ys
+            else CodeListGen a [x] : ys
+        f n [] = return []
+
+data CodeListGen = CodeListGen
+    { lgAddress :: Address
+    , lgList :: [CodeGenType]
+    }
+    deriving (Show)
+
+-- CodeGen
+
+execHJ :: HJ () -> ReadState -> AddressStateMap -> [CodeGen]
+execHJ a r s =
+    let (t, w) = evalRWS (a >> getGenBrokenCode) r s in
+    mergeCodeGen t (sortBy (compare`on`fst)$ newCodeCodeGen w)
+    where
+        mergeCodeGen xxs@((a, x):xs) yys@((b, y):ys) = case compare a b of
+            EQ -> (b, y) : mergeCodeGen xs ys
+            LT -> (a, x) : mergeCodeGen xs yys
+            GT -> (b, y) : mergeCodeGen xxs ys
+        mergeCodeGen xs ys = xs ++ ys
+
+newCodeCodeGen :: [NewCode] -> [CodeGen]
+newCodeCodeGen = map f
+    where
+        f (NewCode {..}) = (ncOriginalAddress, GenNewCode
+            { cgLabel = ncLabel
+            , cgType = ncType
+            })
+
+getGenBrokenCode :: HJ [CodeGen]
+getGenBrokenCode = map (second (const GenBrokenCode)). filter snd.
+    Map.assocs <$> getAddressStateMap
+
+type CodeGen = (Address, CodeGenType)
+data CodeGenType =
+      GenBrokenCode
+    | GenNewCode
+    { cgLabel :: BS.ByteString
+    , cgType :: NewCodeType
+    }
+    deriving (Show)
+
+-- BrokenJump
+
+findAndBrokenJumpMany :: Address -> HJ ()
+findAndBrokenJumpMany a =
+    mapM_ findAndBrokenJumpMany =<< findAndBrokenJump a
+
+findAndBrokenJump :: Address -> HJ [Address]
+findAndBrokenJump a =
+    filterMap id <$> (mapM createBrokenJump =<< liftRead (getAddressJumpRev a))
+
+createBrokenJump :: Address -> HJ (Maybe Address)
 createBrokenJump a = do
     b <- getAddressBroken a
     if b
-    then return ()
+    then return Nothing
     else do
         breakJMLBytes a
         addNewCode c
+        return (Just a)
     where
         c = NewCode
             { ncOriginalAddress = a
             , ncLabel = BS.pack$ printf "BJ_%06X" a
-            , ncType = LongAddressing
+            , ncType = BrokenJump
             }
 
-getAddressJumpRev :: Address -> HJ [Int]
+getAddressJumpRev :: Address -> HJRead [Int]
 getAddressJumpRev a = (Array.! a). jumpRev <$> ask
 
 -- そのアドレスがどこから参照されているか？
+-- AddressInfoMapとかの境界に切り捨てる
 -- 間接ジャンプは無理だから手動で追加する？
-createJumpRev :: AddressInfoMap -> JumpRev
-createJumpRev m = Array.accumArray (flip (:)) [] (0,size) ts
+createJumpRev :: AddressInfoMap -> AddressOrigin -> JumpRev
+createJumpRev m o = Array.accumArray (flip (:)) [] (0,size) ts
     where
         ts = filterMap f$ Map.assocs m
         f (a, x) = do
@@ -59,7 +126,7 @@ createJumpRev m = Array.accumArray (flip (:)) [] (0,size) ts
             j' <- getJumpAddress (enumToSNESAddress a) s
             let j = snesAddressToEnum j'
             guard$ 0 <= j && j < size
-            return (j, a)
+            return$ (o Array.! j, a)
         size = lasta + BB.length lastb - 1
         (lasta, AddressInfo { aiBytes = lastb }) = Map.findMax m
 
@@ -70,7 +137,7 @@ findAndLongAddressing x =
     mapM_ createLongAddressing =<< findRAMAccess x
 
 findRAMAccess :: Int -> HJ [Address]
-findRAMAccess x = map fst. filter f. Map.assocs <$> getAddressInfoMap
+findRAMAccess x = map fst. filter f. Map.assocs <$> liftRead getAddressInfoMap
     where
         f (a, AddressInfo {aiAssembly = Just (Assembly {..})}) =
             isMemoryAccessAddressing addressingMode
@@ -80,6 +147,7 @@ findRAMAccess x = map fst. filter f. Map.assocs <$> getAddressInfoMap
 createLongAddressing :: Address -> HJ ()
 createLongAddressing a = do
     breakJMLBytes a
+    findAndBrokenJumpMany a
     addNewCode c
     where
         c = NewCode
@@ -91,15 +159,15 @@ createLongAddressing a = do
 breakJMLBytes a = breakBytes a 4
 
 breakBytes :: Address -> Size -> HJ ()
-breakBytes a size = mapM_ breakOriginAddress =<< getAddressOrigins a size
+breakBytes a size = mapM_ breakOriginAddress =<< liftRead (getAddressOrigins a size)
 
 breakOriginAddress :: Address -> HJ ()
 breakOriginAddress = modifyAddressState (const True)
 
-getAddrssOrigin :: Address -> HJ Address
+getAddrssOrigin :: Address -> HJRead Address
 getAddrssOrigin a = (Array.! a). addressOrigin <$> ask
 
-getAddressOrigins :: Address -> Size -> HJ [Address]
+getAddressOrigins :: Address -> Size -> HJRead [Address]
 getAddressOrigins a size = unique <$> mapM getAddrssOrigin [a..a+size-1]
 
 modifyAddressState :: (AddressState -> AddressState) -> Address -> HJ ()
@@ -108,10 +176,10 @@ modifyAddressState f a = modifyAddressStateMap$ Map.adjust f a
 getAddressStateMap :: HJ AddressStateMap
 getAddressStateMap = get
 
-getAddressInfoMap :: HJ AddressInfoMap
+getAddressInfoMap :: HJRead AddressInfoMap
 getAddressInfoMap = addressInfoMap <$> ask
 
-getAddressInfo :: Address -> HJ AddressInfo
+getAddressInfo :: Address -> HJRead AddressInfo
 getAddressInfo a = (Map.! a) <$> getAddressInfoMap
 
 getAddressBroken :: Address -> HJ Bool
@@ -128,11 +196,13 @@ initalReadState s r = t
     where
         m = initalAddressInfoMap s r
         t = ReadState
-            { addressOrigin = createAddressOrigin m
+            { addressOrigin = o
             , addressInfoMap = aim
-            , jumpRev = createJumpRev aim
+            , jumpRev = createJumpRev aim o
             }
-            where aim = initalAddressInfoMap s r
+            where
+                aim = initalAddressInfoMap s r
+                o = createAddressOrigin m
 
 initalHJ :: BS.ByteString -> Bytes -> (ReadState, AddressStateMap)
 initalHJ s r = (m, Map.map (const False)$ addressInfoMap m)
@@ -148,6 +218,10 @@ createAddressOrigin m = Array.array (0, fst (last ts)) ts
 
 initalAddressInfoMap :: BS.ByteString -> Bytes -> AddressInfoMap
 initalAddressInfoMap s r = Map.fromList$ createAddressInfos s r
+
+liftRead :: HJRead a -> HJ a
+liftRead (ReaderT { runReaderT = f }) =
+    RWST { runRWST = \r s-> f r >>= return. (, s, mzero) }
 
 type Address = Int
 type Size = Int
@@ -177,6 +251,7 @@ data ReadState = ReadState
     } deriving (Show)
 
 type HJ = RWS ReadState [NewCode] AddressStateMap
+type HJRead = Reader ReadState
 
 type Bytes = BB.ByteString
 
