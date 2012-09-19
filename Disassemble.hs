@@ -1,7 +1,7 @@
 {-# LANGUAGE RecordWildCards #-}
 
 module Disassemble
-    ( Code, Assembly (..), Operand (..)
+    ( Code, Assembly (..), Operand (..), CodeBytes (..)
     , disassembleCode
     , isMemoryAccessAddressing, getOpearndInt
     , getJumpAddress
@@ -12,6 +12,8 @@ import Data.Bits
 import qualified Data.Array as Array
 import Control.Monad
 import Control.Applicative
+
+data CodeBytes = CodeAssembly Assembly | CodeDB BB.ByteString
 
 -- いろいろ
 

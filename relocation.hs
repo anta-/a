@@ -28,6 +28,46 @@ import Disassemble
 
 main = undefined
 
+-- gen code
+
+genCodeAll :: [CodeListGen] -> HJRead [CodeBlock]
+genCodeAll = mapM genCode
+
+genCode :: CodeListGen -> HJRead CodeBlock
+genCode xs = (a0,) <$>
+    mapM (\(a, x)-> CodeLine <$> getCodeLabel a <*> genCodeLine a x) xs
+    where
+        a0 = fst$ head xs
+
+genCodeLine :: Address -> CodeGenType -> HJRead [CodeBytes]
+genCodeLine a x = do
+    info <- getAddressInfo a
+    let asm = aiAssembly info
+    let asm' = fromJust$ asm
+    let db = CodeDB$ aiBytes info
+    case x of
+        GenBrokenCode ->
+            return. (\x-> [x])$ maybe db CodeAssembly$ asm
+        GenNewCode LongAddressing ->
+            map CodeAssembly <$> longAddressingCode asm'
+        GenNewCode BrokenJump ->
+            map CodeAssembly <$> brokenJumpCode asm'
+
+longAddressingCode, brokenJumpCode :: Assembly -> HJRead [Assembly]
+longAddressingCode = undefined
+
+brokenJumpCode = undefined
+
+getCodeLabel :: Address -> HJRead BS.ByteString
+getCodeLabel a = return$
+    BS.pack$ printf "HJ_%06X" (enumToSNESAddress a)
+
+type CodeBlock = (Address, [CodeLine])
+
+data CodeLine = CodeLine
+    { clLabel :: BS.ByteString
+    , clAssembly :: [CodeBytes]
+    }
 
 -- CodeListGen
 
@@ -40,16 +80,12 @@ codeListGen xs = f (-1) xs
             ys <- f (a+z) xs
             return$ if n == a
             then case ys of
-                [] -> [CodeListGen a [x]]
-                ((CodeListGen {..}):ys) -> CodeListGen a (x : lgList) : ys
-            else CodeListGen a [x] : ys
+                [] -> [[(a, x)]]
+                (l:ys) -> ((a, x) : l) : ys
+            else [(a, x)] : ys
         f n [] = return []
 
-data CodeListGen = CodeListGen
-    { lgAddress :: Address
-    , lgList :: [CodeGenType]
-    }
-    deriving (Show)
+type CodeListGen = [(Address, CodeGenType)]
 
 -- CodeGen
 
@@ -67,10 +103,7 @@ execHJ a r s =
 newCodeCodeGen :: [NewCode] -> [CodeGen]
 newCodeCodeGen = map f
     where
-        f (NewCode {..}) = (ncOriginalAddress, GenNewCode
-            { cgLabel = ncLabel
-            , cgType = ncType
-            })
+        f (NewCode {..}) = (ncOriginalAddress, GenNewCode ncType)
 
 getGenBrokenCode :: HJ [CodeGen]
 getGenBrokenCode = map (second (const GenBrokenCode)). filter snd.
@@ -79,10 +112,7 @@ getGenBrokenCode = map (second (const GenBrokenCode)). filter snd.
 type CodeGen = (Address, CodeGenType)
 data CodeGenType =
       GenBrokenCode
-    | GenNewCode
-    { cgLabel :: BS.ByteString
-    , cgType :: NewCodeType
-    }
+    | GenNewCode NewCodeType
     deriving (Show)
 
 -- BrokenJump
