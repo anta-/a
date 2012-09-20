@@ -1,1 +1,1 @@
-[(0x19, "!MarioPowerState")]
+[(0x0FBE, "!Pointer16x")]

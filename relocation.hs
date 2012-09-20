@@ -46,11 +46,11 @@ showCodeBlocks :: [CodeBlock] -> (BS.ByteString, BS.ByteString)
 showCodeBlocks = join (***) BS.unlines. unzip. map showCodeBlock
 
 showCodeBlock :: CodeBlock -> (BS.ByteString, BS.ByteString)
-showCodeBlock c@(a, xs) = (codeBlockHijackCode a,)$
+showCodeBlock c@(a, e, xs) = (codeBlockHijackCode a,)$
     BS.unlines$
     codeBlockIntroCode a
     : (map showCodeLine xs
-    ++ [codeBlockEndingCode (codeBlockEndAddress c)])
+    ++ [codeBlockEndingCode e])
 
 hijackCodeLabel :: Address -> BS.ByteString
 hijackCodeLabel a = BS.pack$ printf "HIJACK_%06X" (enumToSNESAddress a)
@@ -75,24 +75,18 @@ initalReadState2 r s = r { brokenMap = s }
 
 -- gen code
 
-codeBlockEndAddress :: CodeBlock -> Address
-codeBlockEndAddress (a, xs) = a + sum (map codeLineLength xs)
-
-codeLineLength :: CodeLine -> Int
-codeLineLength x = sum$ map patchCodeLength (clCode x)
-
-patchCodeLength :: PatchCode -> Int
-patchCodeLength (CodeDB x) = BB.length x
-patchCodeLength (CodeAssembly x) = assembly'Length x
-
 genCodeAll :: [CodeListGen] -> HJRead [CodeBlock]
 genCodeAll = mapM genCode
 
 genCode :: CodeListGen -> HJRead CodeBlock
-genCode xs = (a0,) <$>
+genCode xs = (,,) a0 <$> endAddr <*>
     mapM (\(a, x)-> CodeLine <$> getCodeLabel a <*> genCodeLine a x) xs
     where
         a0 = fst$ head xs
+        endAddr = let (a, _) = last xs in
+            do
+                AddressInfo { aiBytes = (BB.length -> z)} <- getAddressInfo a
+                return (a + z)
 
 genCodeLine :: Address -> CodeGenType -> HJRead [PatchCode]
 genCodeLine a x = do
@@ -132,7 +126,7 @@ getCodeLabel :: Address -> HJRead BS.ByteString
 getCodeLabel a = return$
     BS.pack$ printf "HJ_%06X" (enumToSNESAddress a)
 
-type CodeBlock = (Address, [CodeLine])
+type CodeBlock = (Address, Int, [CodeLine])
 
 data CodeLine = CodeLine
     { clLabel :: BS.ByteString
