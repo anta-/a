@@ -48,8 +48,12 @@ showAssembly' (Assembly' {..}) =
     where
         mnem = showMnemonic' mnemonic' addressingMode'
         opr = case operand' of
-            Opr'Opr o -> showOperand o addressingMode'
-            Opr'Macro m -> m
+            Opr'Opr o ->
+                let (o1, o2, o3) = showOperand o addressingMode' in
+                BS.concat [o1, o2, o3]
+            Opr'Macro m ->
+                let (o1, o2, o3) = showOperand undefined addressingMode' in
+                BS.concat [o1, m, o3]
 
 showMnemonic' :: Mnemonic -> SizedAddressingMode -> BS.ByteString
 showMnemonic' m (SizedSAM x) = showMnemonic m `BS.append` size
@@ -62,39 +66,39 @@ showMnemonic' m (StaticSAM _) = showMnemonic m
 showMnemonic :: Mnemonic -> BS.ByteString
 showMnemonic m = mnemonicStrArray Array.! m
 
-showOperand :: Operand -> SizedAddressingMode -> BS.ByteString
-showOperand o a = BS.pack$ case a of
+showOperand :: Operand -> SizedAddressingMode -> (BS.ByteString, BS.ByteString, BS.ByteString)
+showOperand o a = case a of
     StaticSAM a' -> case a' of
-        AM_NONE -> ""
-        AM_DIR -> p "$%02X"
-        AM_IMM8 -> p "#$%02X"
-        AM_PCR -> p "$%02X"
-        AM_RAW -> printf "$%02X, $%02X" a1 a2
+        AM_NONE -> ("","","")
+        AM_DIR -> ("", p "$%02X", "")
+        AM_IMM8 -> ("#", p "$%02X", "")
+        AM_PCR -> ("", p "$%02X", "")
+        AM_RAW -> (BS.pack (printf "$%02X, $%02X" a1 a2), "", "")
             where (a1, a2) = case o of Opr2Byte x y -> (x, y)
-        AM_DIRS -> p "$%02X,s"
-        AM_DIRX -> p "$%02X,x"
-        AM_DIRY -> p "$%02X,y"
-        AM_ABS -> p "$%04X"
-        AM_PCRL -> p "$%04X"
-        AM_ABSX -> p "$%04X,x"
-        AM_ABSY -> p "$%04X,y"
-        AM_LONG -> p "$%06X"
-        AM_LONGX -> p "$%06X,x"
-        AM_DIRI -> p "($%02X)"
-        AM_DIRIY -> p "($%02X),y"
-        AM_DIRSIY -> p "($%02X,s),y"
-        AM_DIRXI -> p "($%02X,x)"
-        AM_ABSI -> p "($%04X)"
-        AM_ABSXI -> p "($%04X,x)"
-        AM_ABSIL -> p "[$%04X]"
-        AM_DIRIL -> p "[$%02X]"
-        AM_DIRILY -> p "[$%02X],y"
-        AM_ACC -> "A"
+        AM_DIRS -> ("", p "$%02X", ",s")
+        AM_DIRX -> ("", p "$%02X", ",x")
+        AM_DIRY -> ("", p "$%02X", ",y")
+        AM_ABS -> ("", p "$%04X", "")
+        AM_PCRL -> ("", p "$%04X", "")
+        AM_ABSX -> ("", p "$%04X", ",x")
+        AM_ABSY -> ("", p "$%04X", ",y")
+        AM_LONG -> ("", p "$%06X", "")
+        AM_LONGX -> ("", p "$%06X", ",x")
+        AM_DIRI -> ("(", p "$%02X", ")")
+        AM_DIRIY -> ("(", p "$%02X", "),y")
+        AM_DIRSIY -> ("(", p "$%02X", ",s),y")
+        AM_DIRXI -> ("(", p "$%02X", ",x)")
+        AM_ABSI -> ("(", p "$%04X", ")")
+        AM_ABSXI -> ("(", p "$%04X", ",x)")
+        AM_ABSIL -> ("[", p "$%04X", "]")
+        AM_DIRIL -> ("[", p "$%02X", "]")
+        AM_DIRILY -> ("[", p "$%02X", "],y")
+        AM_ACC -> ("A", "", "")
     SizedSAM a' -> case a' of
-        SAM_IMM8 -> p "#$%02X"
-        SAM_IMM16 -> p "#$%04X"
+        SAM_IMM8 -> ("#", p "$%02X", "")
+        SAM_IMM16 -> ("#", p "$%04X", "")
     where
-        p s = printf s x
+        p s = BS.pack$ printf s x
         x = fromJust$ getOperandInt o
 
 assemblyToLongJump :: Assembly -> Either Int BS.ByteString -> [Assembly']

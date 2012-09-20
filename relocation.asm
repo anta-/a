@@ -4,8 +4,8 @@ lorom
 ; 複数のオフセットで使われてる奴は面倒だからやめよう
 ; スプライト系のRAMはぱっと数えただけで 12 * 50 = 0x258 ある。
 
-!itizi_ram = $13BA
-!itizi_ram2 = $13BC
+!itizi_ram = $1DFD	; 2bytes
+!itizi_ram2 = $1E00	; 1byte
 
 ;##############################
 ; アドレスだけ変えるもの
@@ -18,8 +18,8 @@ lorom
 ;##############################
 ; hijackするもの
 
-!Pointer16x = $0FBE
-incsrc relocationPatch.asm
+!Pointer16x = $7EC100
+incsrc relocationPatch_0FBE.asm
 
 
 ;##############################
@@ -36,7 +36,7 @@ db "Hello!"
 
 ; ここから
 
-incsrc relocationHijack.asm
+incsrc relocationHijack_0FBE.asm
 
 CodeEnd:
 	print "pc: ", pc
