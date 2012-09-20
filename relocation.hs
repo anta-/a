@@ -3,7 +3,6 @@
     , TupleSections #-}
 module Main where
 
-import Control.Exception (assert)
 import Control.Applicative
 import Control.Monad
 import Control.Monad.Reader
@@ -36,8 +35,8 @@ main = do
 findAndShowCode :: [(Int, String)] -> BS.ByteString -> Bytes -> (BS.ByteString, BS.ByteString)
 findAndShowCode m smwDisC rom =
     let (r, s) = initalHJ smwDisC rom (Map.fromList$ map (second BS.pack) m) in
-    let c = execHJ (mapM_ findAndLongAddressing (map fst m)) r s in
-    let g = runReader (genCodeAll =<< codeListGen c) (initalReadState2 r s) in
+    let (c, s') = execHJ (mapM_ findAndLongAddressing (map fst m)) r s in
+    let g = runReader (genCodeAll =<< codeListGen c) (initalReadState2 r s') in
     showCodeBlocks g
 
 showCodeBlocks :: [CodeBlock] -> (BS.ByteString, BS.ByteString)
@@ -107,8 +106,9 @@ longAddressingCode (asm@Assembly {..}) = do
 
 genBrokenCode :: Address -> Assembly -> HJRead [Assembly']
 genBrokenCode a asm
+    | case special of Nothing -> False; _ -> True = return$ fromJust special
     | jumpAddr /= Nothing = do
-        j <- getAddrssOrigin jumpAddr'
+        j <- getAddressOrigin jumpAddr'
         b <- (Map.! j). brokenMap <$> ask
         if b
         then do
@@ -117,6 +117,7 @@ genBrokenCode a asm
         else return$ assemblyToLongJump asm (Left (enumToSNESAddress jumpAddr'))
     | otherwise = return [assemblyToAssembly' asm]
     where
+        special = genSpecialCode (enumToSNESAddress a) asm
         jumpAddr' = snesAddressToEnum$ fromJust jumpAddr
         jumpAddr = getJumpAddress (enumToSNESAddress a) asm
 
@@ -149,10 +150,10 @@ type CodeListGen = [(Address, CodeGenType)]
 
 -- CodeGen
 
-execHJ :: HJ () -> ReadState -> AddressStateMap -> [CodeGen]
+execHJ :: HJ () -> ReadState -> AddressStateMap -> ([CodeGen], AddressStateMap)
 execHJ a r s =
-    let (t, w) = evalRWS (a >> getGenBrokenCode) r s in
-    mergeCodeGen t (sortBy (compare`on`fst)$ newCodeCodeGen w)
+    let (t, s', w) = runRWS (a >> getGenBrokenCode) r s in
+    (mergeCodeGen t (sortBy (compare`on`fst)$ newCodeCodeGen w), s')
     where
         mergeCodeGen xxs@((a, x):xs) yys@((b, y):ys) = case compare a b of
             EQ -> (b, y) : mergeCodeGen xs ys
@@ -179,7 +180,9 @@ data CodeGenType =
 
 findAndBrokenJumpMany :: Address -> HJ ()
 findAndBrokenJumpMany a =
-    mapM_ findAndBrokenJumpMany =<< findAndBrokenJump a
+    mapM_ findAndBrokenJumpMany. concat =<< mapM createRange =<< findAndBrokenJump a
+    where
+        createRange a = unique <$> mapM (liftRead. getAddressOrigin) [a..a+3]
 
 findAndBrokenJump :: Address -> HJ [Address]
 findAndBrokenJump a =
@@ -258,11 +261,11 @@ breakOriginAddress = modifyAddressState (const True)
 getRAMMacroName :: Int -> HJRead BS.ByteString
 getRAMMacroName a = (Map.! a). ramMacroName <$> ask
 
-getAddrssOrigin :: Address -> HJRead Address
-getAddrssOrigin a = (Array.! a). addressOrigin <$> ask
+getAddressOrigin :: Address -> HJRead Address
+getAddressOrigin a = (Array.! a). addressOrigin <$> ask
 
 getAddressOrigins :: Address -> Size -> HJRead [Address]
-getAddressOrigins a size = unique <$> mapM getAddrssOrigin [a..a+size-1]
+getAddressOrigins a size = unique <$> mapM getAddressOrigin [a..a+size-1]
 
 modifyAddressState :: (AddressState -> AddressState) -> Address -> HJ ()
 modifyAddressState f a = modifyAddressStateMap$ Map.adjust f a
@@ -294,7 +297,7 @@ initalReadState s r n = t
             , addressInfoMap = aim
             , jumpRev = createJumpRev aim o
             , ramMacroName = n
-            , brokenMap = undefined
+            , brokenMap = error "brokenMap"
             }
             where
                 aim = initalAddressInfoMap s r
