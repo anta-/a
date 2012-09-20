@@ -26,9 +26,64 @@ import qualified Data.ByteString as BB
 import qualified Data.Attoparsec.Char8 as PS
 import Disassemble
 
-main = undefined
+main = do
+    list <- read <$> readFile "findRAMList.txt"
+    smwDisC <- smwDisCFile
+    rom <- romFile
+    let (s1, s2) = findAndShowCode list smwDisC rom
+    BS.writeFile "relocationPatch.asm" s1
+    BS.writeFile "relocationHijack.asm" s2
+    putStrLn "OK"
+
+findAndShowCode :: [(Int, String)] -> BS.ByteString -> Bytes -> (BS.ByteString, BS.ByteString)
+findAndShowCode m smwDisC rom =
+    let (r, s) = initalHJ smwDisC rom (Map.fromList$ map (second BS.pack) m) in
+    let c = execHJ (mapM_ findAndLongAddressing (map fst m)) r s in
+    let g = runReader (genCodeAll =<< codeListGen c) (initalReadState2 r s) in
+    showCodeBlocks g
+
+showCodeBlocks :: [CodeBlock] -> (BS.ByteString, BS.ByteString)
+showCodeBlocks = join (***) BS.unlines. unzip. map showCodeBlock
+
+showCodeBlock :: CodeBlock -> (BS.ByteString, BS.ByteString)
+showCodeBlock c@(a, xs) = (codeBlockHijackCode a,)$
+    BS.unlines$
+    codeBlockIntroCode a
+    : (map showCodeLine xs
+    ++ [codeBlockEndingCode (codeBlockEndAddress c)])
+
+hijackCodeLabel :: Address -> BS.ByteString
+hijackCodeLabel a = BS.pack$ printf "HIJACK_%06X" (enumToSNESAddress a)
+
+codeBlockHijackCode, codeBlockIntroCode, codeBlockEndingCode :: Address -> BS.ByteString
+
+codeBlockHijackCode a = BS.concat
+    [ BS.pack$ printf "org $%06X\n" (enumToSNESAddress a)
+    , "\tJML ", hijackCodeLabel a
+    ]
+
+codeBlockIntroCode a = hijackCodeLabel a `BS.append` ":"
+
+codeBlockEndingCode a = BS.pack$ printf "\tJML $%06X" (enumToSNESAddress a)
+
+showCodeLine :: CodeLine -> BS.ByteString
+showCodeLine (CodeLine {..}) = BS.concat$ [ clLabel, ":\t"] ++ code
+    where code = tail$ concatMap (\x-> [" : ", showPatchCode x]) clCode
+
+initalReadState2 :: ReadState -> AddressStateMap -> ReadState
+initalReadState2 r s = r { brokenMap = s }
 
 -- gen code
+
+codeBlockEndAddress :: CodeBlock -> Address
+codeBlockEndAddress (a, xs) = a + sum (map codeLineLength xs)
+
+codeLineLength :: CodeLine -> Int
+codeLineLength x = sum$ map patchCodeLength (clCode x)
+
+patchCodeLength :: PatchCode -> Int
+patchCodeLength (CodeDB x) = BB.length x
+patchCodeLength (CodeAssembly x) = assembly'Length x
 
 genCodeAll :: [CodeListGen] -> HJRead [CodeBlock]
 genCodeAll = mapM genCode
@@ -39,24 +94,39 @@ genCode xs = (a0,) <$>
     where
         a0 = fst$ head xs
 
-genCodeLine :: Address -> CodeGenType -> HJRead [CodeBytes]
+genCodeLine :: Address -> CodeGenType -> HJRead [PatchCode]
 genCodeLine a x = do
     info <- getAddressInfo a
     let asm = aiAssembly info
     let asm' = fromJust$ asm
-    let db = CodeDB$ aiBytes info
+    let db = [CodeDB$ aiBytes info]
     case x of
         GenBrokenCode ->
-            return. (\x-> [x])$ maybe db CodeAssembly$ asm
+            maybe (return db) (fmap (map CodeAssembly). genBrokenCode a)$ asm
         GenNewCode LongAddressing ->
             map CodeAssembly <$> longAddressingCode asm'
         GenNewCode BrokenJump ->
-            map CodeAssembly <$> brokenJumpCode asm'
+            map CodeAssembly <$> genBrokenCode a asm'
 
-longAddressingCode, brokenJumpCode :: Assembly -> HJRead [Assembly]
-longAddressingCode = undefined
+longAddressingCode :: Assembly -> HJRead [Assembly']
+longAddressingCode (asm@Assembly {..}) = do
+    macro <- getRAMMacroName (fromJust$ getOperandInt operand)
+    return$ assemblyToLongAddressing asm macro
 
-brokenJumpCode = undefined
+genBrokenCode :: Address -> Assembly -> HJRead [Assembly']
+genBrokenCode a asm
+    | jumpAddr /= Nothing = do
+        j <- getAddrssOrigin jumpAddr'
+        b <- (Map.! j). brokenMap <$> ask
+        if b
+        then do
+            label <- getCodeLabel jumpAddr'
+            return$ assemblyToLongJump asm (Right label)
+        else return$ assemblyToLongJump asm (Left (enumToSNESAddress jumpAddr'))
+    | otherwise = return [assemblyToAssembly' asm]
+    where
+        jumpAddr' = snesAddressToEnum$ fromJust jumpAddr
+        jumpAddr = getJumpAddress (enumToSNESAddress a) asm
 
 getCodeLabel :: Address -> HJRead BS.ByteString
 getCodeLabel a = return$
@@ -66,24 +136,22 @@ type CodeBlock = (Address, [CodeLine])
 
 data CodeLine = CodeLine
     { clLabel :: BS.ByteString
-    , clAssembly :: [CodeBytes]
+    , clCode :: [PatchCode]
     }
+    deriving (Show)
 
 -- CodeListGen
 
 codeListGen :: [CodeGen] -> HJRead [CodeListGen]
-codeListGen xs = f (-1) xs
+codeListGen xs = map (map fst). groupBy' g <$> mapM (\x->(x,)<$>f x) xs
     where
-        f :: Address -> [(Address, CodeGenType)] -> HJRead [CodeListGen]
-        f n ((a, x):xs) = do
-            AddressInfo { aiBytes = (BB.length -> z) } <- getAddressInfo a
-            ys <- f (a+z) xs
-            return$ if n == a
-            then case ys of
-                [] -> [[(a, x)]]
-                (l:ys) -> ((a, x) : l) : ys
-            else [(a, x)] : ys
-        f n [] = return []
+        f (a, _) = BB.length. aiBytes <$> getAddressInfo a
+        g ((a, _), z) ((b, _), _) = a + z == b
+        groupBy' _ [] = []
+        groupBy' _ [x] = [[x]]
+        groupBy' f (x:y:xs)
+            | f x y = let (z:zs) = groupBy' f (y:xs) in (x:z):zs
+            | otherwise = [x] : groupBy' f (y:xs)
 
 type CodeListGen = [(Address, CodeGenType)]
 
@@ -171,7 +239,7 @@ findRAMAccess x = map fst. filter f. Map.assocs <$> liftRead getAddressInfoMap
     where
         f (a, AddressInfo {aiAssembly = Just (Assembly {..})}) =
             isMemoryAccessAddressing addressingMode
-            && getOpearndInt operand == Just x
+            && getOperandInt operand == Just x
         f _ = False
 
 createLongAddressing :: Address -> HJ ()
@@ -193,6 +261,9 @@ breakBytes a size = mapM_ breakOriginAddress =<< liftRead (getAddressOrigins a s
 
 breakOriginAddress :: Address -> HJ ()
 breakOriginAddress = modifyAddressState (const True)
+
+getRAMMacroName :: Int -> HJRead BS.ByteString
+getRAMMacroName a = (Map.! a). ramMacroName <$> ask
 
 getAddrssOrigin :: Address -> HJRead Address
 getAddrssOrigin a = (Array.! a). addressOrigin <$> ask
@@ -221,23 +292,25 @@ modifyAddressStateMap = modify
 addNewCode :: NewCode -> HJ ()
 addNewCode c = tell [c]
 
-initalReadState :: BS.ByteString -> Bytes -> ReadState
-initalReadState s r = t
+initalReadState :: BS.ByteString -> Bytes -> RAMMacroNameMap -> ReadState
+initalReadState s r n = t
     where
         m = initalAddressInfoMap s r
         t = ReadState
             { addressOrigin = o
             , addressInfoMap = aim
             , jumpRev = createJumpRev aim o
+            , ramMacroName = n
+            , brokenMap = undefined
             }
             where
                 aim = initalAddressInfoMap s r
                 o = createAddressOrigin m
 
-initalHJ :: BS.ByteString -> Bytes -> (ReadState, AddressStateMap)
-initalHJ s r = (m, Map.map (const False)$ addressInfoMap m)
+initalHJ :: BS.ByteString -> Bytes -> RAMMacroNameMap -> (ReadState, AddressStateMap)
+initalHJ s r n = (m, Map.map (const False)$ addressInfoMap m)
     where
-        m = initalReadState s r
+        m = initalReadState s r n
 
 createAddressOrigin :: AddressInfoMap -> AddressOrigin
 createAddressOrigin m = Array.array (0, fst (last ts)) ts
@@ -273,11 +346,14 @@ data NewCodeType = LongAddressing | BrokenJump
 type AddressStateMap = Map.IntMap AddressState
 type AddressInfoMap = Map.IntMap AddressInfo
 type AddressOrigin = Array.Array Int Int
+type RAMMacroNameMap = Map.IntMap BS.ByteString
 
 data ReadState = ReadState
     { addressOrigin :: AddressOrigin
     , addressInfoMap :: AddressInfoMap
     , jumpRev :: JumpRev
+    , ramMacroName :: RAMMacroNameMap
+    , brokenMap :: AddressStateMap
     } deriving (Show)
 
 type HJ = RWS ReadState [NewCode] AddressStateMap
@@ -497,10 +573,11 @@ io_initalReadState = do
 io_initalHJ = do
     smwDisC <- smwDisCFile
     rom <- romFile
-    return (initalHJ smwDisC rom)
+    return (initalHJ smwDisC rom Map.empty)
 
 io_evalRWS t = do
     (r, s) <- io_initalHJ
     return$ evalRWS t r s
 
 assert' b = assert b `seq` return ()
+

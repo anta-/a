@@ -71,7 +71,7 @@ org $0C94AD
 org $0C94FD
 	jml HIJACK_0C94FD
 
-incsrc a1.log
+; incsrc a1.log
 
 
 ;##############################
@@ -189,7 +189,7 @@ HIJACK_0C94FD:
 
 ;==============================
 ; 
-incsrc a2.log
+; incsrc a2.log
 
 
 

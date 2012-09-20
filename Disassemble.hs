@@ -1,19 +1,250 @@
-{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE RecordWildCards, OverloadedStrings #-}
 
 module Disassemble
-    ( Code, Assembly (..), Operand (..), CodeBytes (..)
+    ( Code, Assembly (..), Operand (..)
+    , Operand', Assembly', PatchCode (..)
     , disassembleCode
-    , isMemoryAccessAddressing, getOpearndInt
+    , isMemoryAccessAddressing, getOperandInt
     , getJumpAddress
+    , assemblyToAssembly'
+    , assemblyToLongAddressing, assemblyToLongJump
+    , showAssembly', showPatchCode
+    , assembly'Length
     ) where
 
+import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString as BB
 import Data.Bits
 import qualified Data.Array as Array
 import Control.Monad
 import Control.Applicative
+import Data.Maybe
+import Data.List
+import Data.Word (Word8)
+import Text.Printf (printf)
 
-data CodeBytes = CodeAssembly Assembly | CodeDB BB.ByteString
+assembly'Length :: Assembly' -> Int
+assembly'Length (Assembly' {..}) =
+    1 + getSizedAddressingModeSize addressingMode'
+
+showPatchCode :: PatchCode -> BS.ByteString
+showPatchCode (CodeDB b) = BS.concat$
+    "db " : tail (concatMap (\x-> [",", "$", BB.pack (showHex2 x)])$ BB.unpack b)
+showPatchCode (CodeAssembly a) = showAssembly' a
+
+showHex2 :: Word8 -> [Word8]
+showHex2 x = let (q, r) = quotRem x 16 in
+    [ hexDigit q, hexDigit r ]
+    where
+        hexDigit x
+            | x >= 0xA = x + (65 - 0xA)
+            | otherwise = x + 48
+
+showAssembly' :: Assembly' -> BS.ByteString
+showAssembly' (Assembly' {..}) =
+    if BS.null opr
+    then mnem
+    else BS.concat [mnem, " ", opr]
+    where
+        mnem = showMnemonic' mnemonic' addressingMode'
+        opr = case operand' of
+            Opr'Opr o -> showOperand o addressingMode'
+            Opr'Macro m -> m
+
+showMnemonic' :: Mnemonic -> SizedAddressingMode -> BS.ByteString
+showMnemonic' m (SizedSAM x) = showMnemonic m `BS.append` size
+    where
+        size = case x of
+            SAM_IMM8 -> ".b"
+            SAM_IMM16 -> ".w"
+showMnemonic' m (StaticSAM _) = showMnemonic m
+
+showMnemonic :: Mnemonic -> BS.ByteString
+showMnemonic m = mnemonicStrArray Array.! m
+
+showOperand :: Operand -> SizedAddressingMode -> BS.ByteString
+showOperand o a = BS.pack$ case a of
+    StaticSAM a' -> case a' of
+        AM_NONE -> ""
+        AM_DIR -> p "$%02X"
+        AM_IMM8 -> p "#$%02X"
+        AM_PCR -> p "$%02X"
+        AM_RAW -> printf "$%02X, $%02X" a1 a2
+            where (a1, a2) = case o of Opr2Byte x y -> (x, y)
+        AM_DIRS -> p "$%02X,s"
+        AM_DIRX -> p "$%02X,x"
+        AM_DIRY -> p "$%02X,y"
+        AM_ABS -> p "$%04X"
+        AM_PCRL -> p "$%04X"
+        AM_ABSX -> p "$%04X,x"
+        AM_ABSY -> p "$%04X,y"
+        AM_LONG -> p "$%06X"
+        AM_LONGX -> p "$%06X,x"
+        AM_DIRI -> p "($%02X)"
+        AM_DIRIY -> p "($%02X),y"
+        AM_DIRSIY -> p "($%02X,s),y"
+        AM_DIRXI -> p "($%02X,x)"
+        AM_ABSI -> p "($%04X)"
+        AM_ABSXI -> p "($%04X,x)"
+        AM_ABSIL -> p "[$%04X]"
+        AM_DIRIL -> p "[$%02X]"
+        AM_DIRILY -> p "[$%02X],y"
+        AM_ACC -> "A"
+    SizedSAM a' -> case a' of
+        SAM_IMM8 -> p "#$%02X"
+        SAM_IMM16 -> p "#$%04X"
+    where
+        p s = printf s x
+        x = fromJust$ getOperandInt o
+
+assemblyToLongJump :: Assembly -> Either Int BS.ByteString -> [Assembly']
+assemblyToLongJump (asm@Assembly {..}) addr = case mnemonic of
+    NM_JMP -> jmlCode
+    NM_JML -> jmlCode
+    NM_JSR -> jslCode
+    NM_JSL -> jslCode
+    NM_BRL -> error$ "assemblyToLongJump: BRL: " ++ show asm
+    n -> branchCode n
+    where
+        opr = case addr of
+            Left a -> Opr'Opr (OprLong a)
+            Right label -> Opr'Macro label
+        jmlCode = [ Assembly' NM_JML (StaticSAM AM_LONG) opr ]
+        jslCode = [ Assembly' NM_JSL (StaticSAM AM_LONG) opr ]
+        branchCode n =
+            [ Assembly' (negBranch n) (StaticSAM AM_PCR) (Opr'Opr$ OprRelByte 4)
+            , Assembly' NM_JML (StaticSAM AM_LONG) opr
+            ]
+
+negBranch :: Mnemonic -> Mnemonic
+negBranch NM_BCS = NM_BCC
+negBranch NM_BCC = NM_BCS
+negBranch NM_BEQ = NM_BNE
+negBranch NM_BNE = NM_BEQ
+negBranch NM_BMI = NM_BPL
+negBranch NM_BPL = NM_BMI
+negBranch NM_BVC = NM_BVS
+negBranch NM_BVS = NM_BVC
+negBranch x = x
+
+itiziRAMAddressingMode = StaticSAM AM_ABS
+itiziRAMOperand, itiziRAM2Operand :: Operand'
+itiziRAMOperand = Opr'Macro "!itizi_ram"
+itiziRAM2Operand = Opr'Macro "!itizi_ram2"
+
+assemblyToLongAddressing :: Assembly -> BS.ByteString -> [Assembly']
+assemblyToLongAddressing (asm@Assembly {..}) name
+    | isFullMnemonic mnemonic && la /= Nothing =
+        fullCode
+    | isFullMnemonic mnemonic && xa /= Nothing =
+        fullYCode
+    | mnemonic == NM_STY && addressingMode == StaticSAM AM_DIRX =
+        styXCode
+    | otherwise =
+        longCode
+    where
+        la = StaticSAM <$> (toLongAddressing =<< toStaticSizedAM addressingMode)
+        aa = fromMaybe (error$ "assemblyToLongAddressing: unsupported instruction: "++show asm)$
+            StaticSAM <$> (toAbsAddressing =<< toStaticSizedAM addressingMode)
+        xa
+            | addressingMode == StaticSAM AM_DIRY = Just$ StaticSAM AM_LONGX
+            | addressingMode == StaticSAM AM_ABSY = Just$ StaticSAM AM_LONGX
+            | otherwise = Nothing
+        fullCode =
+            [ Assembly' mnemonic (fromJust la) (Opr'Macro name)
+            ]
+        fullYCode =
+            [ Assembly' NM_STX itiziRAMAddressingMode itiziRAMOperand
+            , d [0x08], d [0xBB], d [0x28]  -- PHP : TYX : PLP
+            , Assembly' mnemonic (fromJust xa) (Opr'Macro name)
+            , d [0x08]
+            , Assembly' NM_LDX itiziRAMAddressingMode itiziRAMOperand
+            , d [0x28]
+            ]
+        styXCode =
+            [ Assembly' NM_STA itiziRAMAddressingMode itiziRAMOperand
+            , d [0x08], d [0x98], d [0x28]  -- PHP : TYA : PLP
+            , Assembly' NM_STA (fromJust la) (Opr'Macro name)
+            , d [0x08]
+            , Assembly' NM_LDA itiziRAMAddressingMode itiziRAMOperand
+            , d [0x28]
+            ]
+        longCode =
+            [ d [0x8B], d [0x08]    -- PHB : PHP
+            , Assembly' NM_PEA (StaticSAM AM_ABS) (Opr'Macro$ name `BS.append` ">>8")
+                -- PEA !name>>8
+            , d [0xAB], d [0xAB], d [0x28]  -- PLB : PLB : PLP
+            , Assembly' mnemonic aa (Opr'Macro$ name `BS.append` "&$FFFF")
+            , d [0x08] -- PHP
+            , d [0xE2, 0x20]    -- SEP #$20
+            , Assembly' NM_STA itiziRAMAddressingMode itiziRAMOperand   -- STA !itizi_ram
+            , d [0x68]  -- PLA
+            , Assembly' NM_STA itiziRAMAddressingMode itiziRAM2Operand  -- STA !itizi_ram2
+            , d [0xAB]  -- PLB
+            , Assembly' NM_LDA itiziRAMAddressingMode itiziRAM2Operand  -- LDA !itizi_ram2
+            , d [0x48]  -- PHA
+            , Assembly' NM_LDA itiziRAMAddressingMode itiziRAMOperand   -- LDA !itizi_ram
+            , d [0x28]  -- PLP
+            ]
+        d = assemblyToAssembly'. fromJust. disassembleCode. BB.pack
+
+toStaticSizedAM :: SizedAddressingMode -> Maybe StaticSizedAM
+toStaticSizedAM (StaticSAM x) = Just x
+toStaticSizedAM (SizedSAM _) = Nothing
+
+toAbsAddressing, toLongAddressing :: StaticSizedAM -> Maybe StaticSizedAM
+toLongAddressing AM_DIR = Just AM_LONG
+toLongAddressing AM_DIRX = Just AM_LONGX
+toLongAddressing AM_ABS = Just AM_LONG
+toLongAddressing AM_ABSX = Just AM_LONGX
+toLongAddressing AM_LONG = Just AM_LONG
+toLongAddressing AM_LONGX = Just AM_LONGX
+toLongAddressing _ = Nothing
+
+toAbsAddressing AM_DIR = Just AM_ABS
+toAbsAddressing AM_DIRX = Just AM_ABSX
+toAbsAddressing AM_DIRY = Just AM_ABSY
+toAbsAddressing AM_ABS = Just AM_ABS
+toAbsAddressing AM_ABSX = Just AM_ABSX
+toAbsAddressing AM_ABSY = Just AM_ABSY
+toAbsAddressing AM_DIRI = Just AM_ABSI
+toAbsAddressing AM_ABSI = Just AM_ABSI
+toAbsAddressing AM_DIRXI = Just AM_ABSXI
+toAbsAddressing AM_ABSXI = Just AM_ABSXI
+toAbsAddressing AM_DIRIL = Just AM_ABSIL
+toAbsAddressing AM_ABSIL = Just AM_ABSIL
+toAbsAddressing _ = Nothing
+
+isFullMnemonic :: Mnemonic -> Bool
+isFullMnemonic NM_LDA = True
+isFullMnemonic NM_STA = True
+isFullMnemonic NM_ORA = True
+isFullMnemonic NM_AND = True
+isFullMnemonic NM_EOR = True
+isFullMnemonic NM_ADC = True
+isFullMnemonic NM_CMP = True
+isFullMnemonic NM_SBC = True
+isFullMnemonic _ = False
+
+assemblyToAssembly' :: Assembly -> Assembly'
+assemblyToAssembly' (Assembly {..}) = Assembly'
+    { mnemonic' = mnemonic
+    , addressingMode' = addressingMode
+    , operand' = Opr'Opr operand
+    }
+
+data PatchCode = CodeAssembly Assembly' | CodeDB BB.ByteString
+    deriving (Show)
+
+data Assembly' = Assembly'
+    { mnemonic' :: Mnemonic
+    , addressingMode' :: SizedAddressingMode
+    , operand' :: Operand'
+    }
+    deriving (Show)
+
+data Operand' = Opr'Opr Operand | Opr'Macro BS.ByteString
+    deriving (Show)
 
 -- いろいろ
 
@@ -52,13 +283,13 @@ getOperandExpectLong o = errorGetOperandExpect "Long" o
 errorGetOperandExpect s o =
     error$ "getOperandExpect"++s++": "++show o
 
-getOpearndInt :: Operand -> Maybe Int
-getOpearndInt (OprByte x) = Just x
-getOpearndInt (OprRelByte x) = Just x
-getOpearndInt (OprWord x) = Just x
-getOpearndInt (OprRelWord x) = Just x
-getOpearndInt (OprLong x) = Just x
-getOpearndInt _ = Nothing
+getOperandInt :: Operand -> Maybe Int
+getOperandInt (OprByte x) = Just x
+getOperandInt (OprRelByte x) = Just x
+getOperandInt (OprWord x) = Just x
+getOperandInt (OprRelWord x) = Just x
+getOperandInt (OprLong x) = Just x
+getOperandInt _ = Nothing
 
 isMemoryAccessAddressing :: SizedAddressingMode -> Bool
 isMemoryAccessAddressing (StaticSAM a) = case a of
@@ -221,12 +452,39 @@ getSizedAddressingModeSize a = case a of
 
 -- Instruction
 
+mnemonicStrArray :: Array.Array Mnemonic BS.ByteString
+mnemonicStrArray = Array.listArray (minBound, maxBound)
+    [ "ADC", "AND", "ASL", "BCC"
+    , "BCS", "BEQ", "BIT", "BMI"
+    , "BNE", "BPL", "BRA", "BRK"
+    , "BRL", "BVC", "BVS", "CLC"
+    , "CLD", "CLI", "CLV", "CMP"
+    , "COP", "CPX", "CPY", "DEC"
+    , "DEX", "DEY", "EOR", "INC"
+    , "INX", "INY", "JML", "JMP"
+    , "JSL", "JSR", "LDA", "LDX"
+    , "LDY", "LSR", "MVN", "MVP"
+    , "NOP", "ORA", "PEA", "PEI"
+    , "PER", "PHA", "PHB", "PHD"
+    , "PHK", "PHP", "PHX", "PHY"
+    , "PLA", "PLB", "PLD", "PLP"
+    , "PLX", "PLY", "REP", "ROL"
+    , "ROR", "RTI", "RTL", "RTS"
+    , "SBC", "SEC", "SED", "SEI"
+    , "SEP", "STA", "STP", "STX"
+    , "STY", "STZ", "TAX", "TAY"
+    , "TCD", "TCS", "TDC", "TRB"
+    , "TSB", "TSC", "TSX", "TXA"
+    , "TXY", "TYA", "TYX", "WAI"
+    , "WDM", "XBA", "XCE"
+    ]
+
 data Assembly = Assembly 
     { mnemonic :: Mnemonic
     , addressingMode :: SizedAddressingMode
     , operand :: Operand
     }
-    deriving (Show)
+    deriving (Eq, Show)
 
 data Operand =
       OprNone
@@ -234,7 +492,7 @@ data Operand =
     | OprWord Int | OprRelWord Int
     | OprLong Int
     | Opr2Byte Int Int
-    deriving (Show)
+    deriving (Eq, Show)
 
 data Mnemonic =
       NM_ADC | NM_AND | NM_ASL | NM_BCC
@@ -260,7 +518,7 @@ data Mnemonic =
     | NM_TSB | NM_TSC | NM_TSX | NM_TXA
     | NM_TXY | NM_TYA | NM_TYX | NM_WAI
     | NM_WDM | NM_XBA | NM_XCE
-    deriving (Show)
+    deriving (Eq, Show, Enum, Ord, Array.Ix, Bounded)
 
 -- アドレッシングモード
 data StaticSizedAM =
@@ -270,18 +528,18 @@ data StaticSizedAM =
     | AM_LONG | AM_LONGX | AM_DIRI | AM_DIRIY
     | AM_DIRSIY | AM_DIRXI | AM_ABSI | AM_ABSXI
     | AM_ABSIL | AM_DIRIL | AM_DIRILY | AM_ACC
-    deriving (Show)
+    deriving (Eq, Show)
 data DynamicSizedAM = AM_IMMA | AM_IMMXY
-    deriving (Show)
+    deriving (Eq, Show)
 -- DynamicSizedAMにフラグが与えられることによってSizedAMが決まる
 data SizedAM = SAM_IMM8 | SAM_IMM16
-    deriving (Show)
+    deriving (Eq, Show)
 data AddressingMode =
     StaticAM StaticSizedAM | DynamicAM DynamicSizedAM
-    deriving (Show)
+    deriving (Eq, Show)
 data SizedAddressingMode =
     StaticSAM StaticSizedAM | SizedSAM SizedAM
-    deriving (Show)
+    deriving (Eq, Show)
 
 mnemonicMap :: Array.Array Int Mnemonic
 mnemonicMap = Array.listArray (0, 0xff)
