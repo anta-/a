@@ -20,7 +20,8 @@ lorom
 
 !Pointer16x = $7EC100
 incsrc relocationPatch_0FBE.asm
-
+!SpriteNum = $9E
+incsrc relocationPatch.asm
 
 ;##############################
 ; hijack用の空き領域
@@ -37,6 +38,7 @@ db "Hello!"
 ; ここから
 
 incsrc relocationHijack_0FBE.asm
+incsrc relocationHijack.asm
 
 CodeEnd:
 	print "pc: ", pc

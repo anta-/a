@@ -19,7 +19,6 @@ import qualified Data.Array as Array
 import Control.Monad
 import Control.Applicative
 import Data.Maybe
-import Data.List
 import Data.Word (Word8)
 import Text.Printf (printf)
 
@@ -31,14 +30,15 @@ showPatchCode :: PatchCode -> BS.ByteString
 showPatchCode (CodeDB b) = BS.concat$
     "db " : tail (concatMap (\x-> [",", "$", BB.pack (showHex2 x)])$ BB.unpack b)
 showPatchCode (CodeAssembly a) = showAssembly' a
+showPatchCode (CodeRaw s) = s
 
 showHex2 :: Word8 -> [Word8]
 showHex2 x = let (q, r) = quotRem x 16 in
     [ hexDigit q, hexDigit r ]
     where
-        hexDigit x
-            | x >= 0xA = x + (65 - 0xA)
-            | otherwise = x + 48
+        hexDigit d
+            | d >= 0xA = d + (65 - 0xA)
+            | otherwise = d + 48
 
 showAssembly' :: Assembly' -> BS.ByteString
 showAssembly' (Assembly' {..}) =
@@ -52,7 +52,7 @@ showAssembly' (Assembly' {..}) =
                 let (o1, o2, o3) = showOperand o addressingMode' in
                 BS.concat [o1, o2, o3]
             Opr'Macro m ->
-                let (o1, o2, o3) = showOperand undefined addressingMode' in
+                let (o1, _, o3) = showOperand undefined addressingMode' in
                 BS.concat [o1, m, o3]
 
 showMnemonic' :: Mnemonic -> SizedAddressingMode -> BS.ByteString
@@ -74,7 +74,7 @@ showOperand o a = case a of
         AM_IMM8 -> ("#", p "$%02X", "")
         AM_PCR -> ("", p "$%02X", "")
         AM_RAW -> (BS.pack (printf "$%02X, $%02X" a1 a2), "", "")
-            where (a1, a2) = case o of Opr2Byte x y -> (x, y)
+            where (a1, a2) = case o of Opr2Byte x y -> (x, y); _ -> error$ "showOperand: "++show o
         AM_DIRS -> ("", p "$%02X", ",s")
         AM_DIRX -> ("", p "$%02X", ",x")
         AM_DIRY -> ("", p "$%02X", ",y")
@@ -98,8 +98,8 @@ showOperand o a = case a of
         SAM_IMM8 -> ("#", p "$%02X", "")
         SAM_IMM16 -> ("#", p "$%04X", "")
     where
-        p s = BS.pack$ printf s x
-        x = fromJust$ getOperandInt o
+        p s = BS.pack$ printf s t
+        t = fromJust$ getOperandInt o
 
 assemblyToLongJump :: Assembly -> Either Int BS.ByteString -> [Assembly']
 assemblyToLongJump (asm@Assembly {..}) addr = case mnemonic of
@@ -131,19 +131,20 @@ negBranch NM_BVC = NM_BVS
 negBranch NM_BVS = NM_BVC
 negBranch x = x
 
+itiziRAMAddressingMode :: SizedAddressingMode
 itiziRAMAddressingMode = StaticSAM AM_ABS
 itiziRAMOperand, itiziRAM2Operand :: Operand'
 itiziRAMOperand = Opr'Macro "!itizi_ram"
 itiziRAM2Operand = Opr'Macro "!itizi_ram2"
 
-assemblyToLongAddressing :: Assembly -> BS.ByteString -> [Assembly']
+assemblyToLongAddressing :: Assembly -> BS.ByteString -> [PatchCode]
 assemblyToLongAddressing (asm@Assembly {..}) name
     | isFullMnemonic mnemonic && la /= Nothing =
-        fullCode
+        map CodeAssembly fullCode
     | isFullMnemonic mnemonic && xa /= Nothing =
-        fullYCode
+        map CodeAssembly fullYCode
     | mnemonic == NM_STY && addressingMode == StaticSAM AM_DIRX =
-        styXCode
+        map CodeAssembly styXCode
     | otherwise =
         longCode
     where
@@ -174,23 +175,24 @@ assemblyToLongAddressing (asm@Assembly {..}) name
             , d [0x28]
             ]
         longCode =
-            [ d [0x8B], d [0x08]    -- PHB : PHP
-            , Assembly' NM_PEA (StaticSAM AM_ABS) (Opr'Macro$ name `BS.append` ">>8")
+            [ e [0x8B], e [0x08]    -- PHB : PHP
+            , CodeRaw$ BS.concat ["db $F4 : dw ", name, ">>8"]
                 -- PEA !name>>8
-            , d [0xAB], d [0xAB], d [0x28]  -- PLB : PLB : PLP
-            , Assembly' mnemonic aa (Opr'Macro$ name `BS.append` "&$FFFF")
-            , d [0x08] -- PHP
-            , d [0xE2, 0x20]    -- SEP #$20
-            , Assembly' NM_STA itiziRAMAddressingMode itiziRAMOperand   -- STA !itizi_ram
-            , d [0x68]  -- PLA
-            , Assembly' NM_STA itiziRAMAddressingMode itiziRAM2Operand  -- STA !itizi_ram2
-            , d [0xAB]  -- PLB
-            , Assembly' NM_LDA itiziRAMAddressingMode itiziRAM2Operand  -- LDA !itizi_ram2
-            , d [0x48]  -- PHA
-            , Assembly' NM_LDA itiziRAMAddressingMode itiziRAMOperand   -- LDA !itizi_ram
-            , d [0x28]  -- PLP
+            , e [0xAB], e [0xAB], e [0x28]  -- PLB : PLB : PLP
+            , CodeAssembly$ Assembly' mnemonic aa (Opr'Macro name)
+            , e [0x08] -- PHP
+            , e [0xE2, 0x20]    -- SEP #$20
+            , CodeAssembly$ Assembly' NM_STA itiziRAMAddressingMode itiziRAMOperand   -- STA !itizi_ram
+            , e [0x68]  -- PLA
+            , CodeAssembly$ Assembly' NM_STA itiziRAMAddressingMode itiziRAM2Operand  -- STA !itizi_ram2
+            , e [0xAB]  -- PLB
+            , CodeAssembly$ Assembly' NM_LDA itiziRAMAddressingMode itiziRAM2Operand  -- LDA !itizi_ram2
+            , e [0x48]  -- PHA
+            , CodeAssembly$ Assembly' NM_LDA itiziRAMAddressingMode itiziRAMOperand   -- LDA !itizi_ram
+            , e [0x28]  -- PLP
             ]
         d = assemblyToAssembly'. fromJust. disassembleCode. BB.pack
+        e = CodeAssembly. d
 
 toStaticSizedAM :: SizedAddressingMode -> Maybe StaticSizedAM
 toStaticSizedAM (StaticSAM x) = Just x
@@ -237,7 +239,7 @@ assemblyToAssembly' (Assembly {..}) = Assembly'
     , operand' = Opr'Opr operand
     }
 
-data PatchCode = CodeAssembly Assembly' | CodeDB BB.ByteString
+data PatchCode = CodeAssembly Assembly' | CodeDB BB.ByteString | CodeRaw BS.ByteString
     deriving (Show)
 
 data Assembly' = Assembly'
@@ -275,10 +277,7 @@ getJumpAddress a asm@(Assembly {..}) =
             StaticSAM AM_LONG -> Just$ getOperandExpectLong operand
             _ -> Nothing
 
-getOperandExpectByte, getOperandExpectWord
-    , getOperandExpectLong :: Operand -> Int
-getOperandExpectByte (OprByte x) = x
-getOperandExpectByte o = errorGetOperandExpect "Byte" o
+getOperandExpectWord, getOperandExpectLong :: Operand -> Int
 getOperandExpectWord (OprWord x) = x
 getOperandExpectWord o = errorGetOperandExpect "Word" o
 getOperandExpectLong (OprLong x) = x
@@ -374,7 +373,7 @@ getOperand a c =
         AM_DIR -> oprByte
         AM_IMM8 -> oprByte
         AM_PCR -> OprRelByte. codeOperand1Singed
-        AM_RAW -> \c-> Opr2Byte (codeOperand1 c) (codeOperand12 c)
+        AM_RAW -> \t-> Opr2Byte (codeOperand1 t) (codeOperand12 t)
         AM_DIRS -> oprByte
         AM_DIRX -> oprByte
         AM_DIRY -> oprByte
@@ -417,7 +416,7 @@ getSizedAddressingModeWithCodeLength :: Byte -> Int -> Maybe SizedAddressingMode
 getSizedAddressingModeWithCodeLength b l =
     case addressingModeMap Array.! b of
     StaticAM s -> return$ StaticSAM s
-    DynamicAM d -> case l of
+    DynamicAM _ -> case l of
         2 -> return$ SizedSAM SAM_IMM8
         3 -> return$ SizedSAM SAM_IMM16
         _ -> Nothing

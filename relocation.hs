@@ -3,29 +3,27 @@
     , TupleSections #-}
 module Main where
 
-import System.Environment (getArgs)
 import Control.Exception (assert)
 import Control.Applicative
 import Control.Monad
 import Control.Monad.Reader
 import Control.Monad.RWS
-import Data.Monoid
+import Data.Monoid ()
 import Control.Arrow
 import Data.Function
 import Data.List
 import Data.Maybe
-import Data.Char
 import Text.Printf
 import qualified Data.IntMap as Map
 import qualified Data.Array as Array
 import Numeric
-import Control.DeepSeq
 import Debug.Trace
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.ByteString as BB
 import qualified Data.Attoparsec.Char8 as PS
 import Disassemble
 
+main :: IO ()
 main = do
     list <- read <$> readFile "findRAMList.txt"
     smwDisC <- smwDisCFile
@@ -46,7 +44,7 @@ showCodeBlocks :: [CodeBlock] -> (BS.ByteString, BS.ByteString)
 showCodeBlocks = join (***) BS.unlines. unzip. map showCodeBlock
 
 showCodeBlock :: CodeBlock -> (BS.ByteString, BS.ByteString)
-showCodeBlock c@(a, e, xs) = (codeBlockHijackCode a,)$
+showCodeBlock (a, e, xs) = (codeBlockHijackCode a,)$
     BS.unlines$
     codeBlockIntroCode a
     : (map showCodeLine xs
@@ -98,11 +96,11 @@ genCodeLine a x = do
         GenBrokenCode ->
             maybe (return db) (fmap (map CodeAssembly). genBrokenCode a)$ asm
         GenNewCode LongAddressing ->
-            map CodeAssembly <$> longAddressingCode asm'
+            longAddressingCode asm'
         GenNewCode BrokenJump ->
             map CodeAssembly <$> genBrokenCode a asm'
 
-longAddressingCode :: Assembly -> HJRead [Assembly']
+longAddressingCode :: Assembly -> HJRead [PatchCode]
 longAddressingCode (asm@Assembly {..}) = do
     macro <- getRAMMacroName (fromJust$ getOperandInt operand)
     return$ assemblyToLongAddressing asm macro
@@ -231,7 +229,7 @@ findAndLongAddressing x =
 findRAMAccess :: Int -> HJ [Address]
 findRAMAccess x = map fst. filter f. Map.assocs <$> liftRead getAddressInfoMap
     where
-        f (a, AddressInfo {aiAssembly = Just (Assembly {..})}) =
+        f (_, AddressInfo {aiAssembly = Just (Assembly {..})}) =
             isMemoryAccessAddressing addressingMode
             && getOperandInt operand == Just x
         f _ = False
@@ -248,6 +246,7 @@ createLongAddressing a = do
             , ncType = LongAddressing
             }
 
+breakJMLBytes :: Address -> HJ ()
 breakJMLBytes a = breakBytes a 4
 
 breakBytes :: Address -> Size -> HJ ()
@@ -391,7 +390,7 @@ smwDisCAddressToAddressInfoWithROM s x = f (BB.drop 0x200 x) s
 addressSMWDisC :: [SMWDisC] -> [SMWDisCAddress]
 addressSMWDisC x = f 0 x
     where
-        f n [] = []
+        f _ [] = []
         f n (SMWDisC {..}:xs) =
             SMWDisCAddress
                 { sdaIsData = fromMaybe False sdcIsData
@@ -432,10 +431,10 @@ romFile :: IO BB.ByteString
 romFile = BB.readFile "base.smc"
 
 parseSMWDisCFile :: BS.ByteString -> [SMWDisC]
-parseSMWDisCFile = parseSMWDisC. f 1. BS.lines
+parseSMWDisCFile = parseSMWDisC. f (1 :: Int). BS.lines
     where
         -- 間違っている(邪魔な)行を取り除いたり、加工する
-        f n [] = []
+        f _ [] = []
         f n (x:xs)
             | n == 1852 || n == 1853
             || (13874 <= n && n <= 14469)
@@ -502,7 +501,6 @@ parseSMWDisCLine = isData <|> isNotData <|> unknownAddress <|> lengthOnly
         lengthOnly = do
             spaces
             SMWDisC Nothing Nothing <$> (bytesLength <|> dbdw)
-        isHexDigit c = ('A' <= c && c <= 'F') || ('0' <= c && c <= '9')
         bytes = PS.many1 (do
             x <- PS.hexadecimal :: PS.Parser Int
             PS.space
@@ -530,48 +528,3 @@ unique xs = xs
 
 infixl 0 `traceSeq`
 traceSeq s x = trace s () `seq` x
-
--- てすとこーど
-
-io_SMWDisC :: IO [SMWDisC]
-io_SMWDisC = parseSMWDisCFile <$> smwDisCFile
-
--- sdcLengthが妥当かどうか
-addressCheck_parseSMWDisC :: [SMWDisC] -> [(SNESAddress, Bool)]
-addressCheck_parseSMWDisC (x:SMWDisC {sdcAddress = Nothing, sdcLength = ly}:zs) =
-    addressCheck_parseSMWDisC ((x {sdcLength = sdcLength x + ly}):zs)
-addressCheck_parseSMWDisC (SMWDisC {sdcAddress=Just ax, sdcLength=lx}:y@SMWDisC {sdcAddress=Just ay}:zs) =
-    (ax, ax+lx == ay) : addressCheck_parseSMWDisC (y:zs)
-addressCheck_parseSMWDisC xs = []
-
-test_addressCheck_parseSMWDisC = do
-    s <- io_SMWDisC
-    mapM_ (either print$ (>> putStrLn""). mapM_ print). map (g s. fst). filter (not. snd).
-        addressCheck_parseSMWDisC. map f$ s
-    where
-        f x = x {sdcAddress = snesAddressToEnum <$> sdcAddress x}
-        g s i = do
-            j <- maybe (Left i) Right$ findIndex (\x-> Just i == sdcAddress (f x)) s
-            return (take 10. drop (j-5). zip [0..]$ s)
-
-io_AddressMap = do
-    smwDisC <- smwDisCFile
-    rom <- romFile
-    return (createAddressInfos smwDisC rom)
-
-io_initalReadState = do
-    smwDisC <- smwDisCFile
-    rom <- romFile
-    return (initalReadState smwDisC rom)
-
-io_initalHJ = do
-    smwDisC <- smwDisCFile
-    rom <- romFile
-    return (initalHJ smwDisC rom Map.empty)
-
-io_evalRWS t = do
-    (r, s) <- io_initalHJ
-    return$ evalRWS t r s
-
-assert' b = assert b `seq` return ()
-
