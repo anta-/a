@@ -205,8 +205,8 @@ assemblyToLongAddressing (asm@Assembly {..}) name
         map CodeAssembly fullCode
     | isFullMnemonic mnemonic && xa /= Nothing =
         map CodeAssembly fullYCode
-    | mnemonic == NM_STY && addressingMode == StaticSAM AM_DIRX =
-        map CodeAssembly styXCode
+    | (mnemonic == NM_LDY || mnemonic == NM_STY) && addressingMode == StaticSAM AM_DIRX =
+        map CodeAssembly ldstyXCode
     | otherwise =
         longCode
     where
@@ -228,10 +228,10 @@ assemblyToLongAddressing (asm@Assembly {..}) name
             , Assembly' NM_LDX itiziRAMAddressingMode itiziRAMOperand
             , d [0x28]
             ]
-        styXCode =
+        ldstyXCode =
             [ Assembly' NM_STA itiziRAMAddressingMode itiziRAMOperand
             , d [0x08], d [0x98], d [0x28]  -- PHP : TYA : PLP
-            , Assembly' NM_STA (fromJust la) (Opr'Macro name)
+            , Assembly' (if mnemonic == NM_STY then NM_STA else NM_LDA) (fromJust la) (Opr'Macro name)
             , d [0x08]
             , Assembly' NM_LDA itiziRAMAddressingMode itiziRAMOperand
             , d [0x28]
