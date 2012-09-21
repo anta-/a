@@ -10,6 +10,7 @@ module Disassemble
     , assemblyToLongAddressing, assemblyToLongJump, genSpecialCode, genRTSCode
     , showAssembly', showPatchCode
     , assembly'Length
+    , isExecutePtrLong
     ) where
 
 import qualified Data.ByteString.Char8 as BS
@@ -21,6 +22,13 @@ import Control.Applicative
 import Data.Maybe
 import Data.Word (Word8)
 import Text.Printf (printf)
+
+isExecutePtrLong :: Assembly -> Maybe Bool
+isExecutePtrLong (Assembly
+    { mnemonic = NM_JSL, operand = OprLong 0x86DF }) = Just False
+isExecutePtrLong (Assembly
+    { mnemonic = NM_JSL, operand = OprLong 0x86FA }) = Just True
+isExecutePtrLong _ = Nothing
 
 genRTSCode :: Int -> Assembly -> Maybe [Assembly']
 genRTSCode bank (Assembly {..})
@@ -40,18 +48,20 @@ genRTSCode bank (Assembly {..})
 
 genSpecialCode :: Int -> Assembly -> Maybe [Assembly']
 genSpecialCode a asm@(Assembly {..})
-    | mnemonic == NM_JSL && operand == OprLong 0x0086DF =
-        let b = a + 3 in
-        Just
-            [ d [0x85, 0x00]    -- STA $00
-            , d [0xA9, b `div` 0x10000] -- LDA #$
-            , d [0x48]  -- PHA
-            , d [0xF4, b `mod` 0x100, b `div` 0x100 `mod` 0x100]    -- PEA
-            , d [0xA5, 0x00]    -- LDA $00
-            , d [0x5C, 0xDF, 0x86, 0x00]    -- JML $0086DF
-            ]
+    | isJust e = executePtr (fromJust e)
     | otherwise = Nothing
     where
+        e = isExecutePtrLong asm
+        executePtr isLong =
+            let b = a + 3 in
+            Just
+                [ d [0x85, 0x00]    -- STA $00
+                , d [0xA9, b `div` 0x10000] -- LDA #$
+                , d [0x48]  -- PHA
+                , d [0xF4, b `mod` 0x100, b `div` 0x100 `mod` 0x100]    -- PEA
+                , d [0xA5, 0x00]    -- LDA $00
+                , d [0x5C, if isLong then 0xFA else 0xDF, 0x86, 0x00]    -- JML $0086DF / 0086FA
+                ]
         d = assemblyToAssembly'. fromJust. disassembleCode. BB.pack. map fromIntegral
 
 assembly'Length :: Assembly' -> Int

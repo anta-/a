@@ -1,1 +1,1 @@
-[(0x9E, "!SpriteNum"),(0xAA,"!SpriteYSpeed"),(0xB6,"!SpriteXSpeed"),(0xC2,"!SpriteState"),(0xD8,"!SpritePosYLo"),(0xE4,"!SpritePosXLo")]
+[(0x9E, "!SpriteNum")]

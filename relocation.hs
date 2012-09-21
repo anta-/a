@@ -98,11 +98,30 @@ genCodeLine a x = do
             longAddressingCode asm'
         GenNewCode BrokenJump ->
             genBrokenCode a asm'
+        GenNewCode BrokenExecutePtr ->
+            genBrokenExecutePtr a
 
 longAddressingCode :: Assembly -> HJRead [PatchCode]
 longAddressingCode (asm@Assembly {..}) = do
     macro <- getRAMMacroName (fromJust$ getOperandInt operand)
     return$ assemblyToLongAddressing asm macro
+
+genBrokenExecutePtr :: Address -> HJRead [PatchCode]
+genBrokenExecutePtr a = do
+    (ExecutePtr {..}) <- (Map.! a). executePtr <$> ask
+    (jsl:) <$> mapM (f epIsLong) epTable
+    where
+        jsl = CodeAssembly. assemblyToAssembly'. fromJust$
+            disassembleCode (BB.pack [0x22, 0xFA, 0x86, 0x00])
+        f isLong x = do
+            b <- (Map.! x). brokenMap <$> ask
+            opr <- if b
+                then getCodeLabel x
+                else return (BS.pack$ printf "$%06X" addr)
+            return$ CodeRaw$
+                "dl " `BS.append` opr
+            where
+                addr = enumToSNESAddress x
 
 genBrokenCode :: Address -> Assembly -> HJRead [PatchCode]
 genBrokenCode a asm
@@ -181,6 +200,43 @@ data CodeGenType =
     | GenNewCode NewCodeType
     deriving (Show)
 
+-- ExecutePtr
+createExecutePtrJumpRev :: ExecutePtrMap -> JumpRev
+createExecutePtrJumpRev e =
+    foldr (\(a, Right-> b)-> Map.alter (Just. maybe [b] (b:)) a) Map.empty.
+    concatMap f$ Map.assocs e
+    where
+        f (a, ExecutePtr {..}) = map (\x-> (x, a)) epTable
+
+type ExecutePtrRev = Map.IntMap [Address]
+type ExecutePtrMap = Map.IntMap ExecutePtr
+
+createExecutePtr :: AddressInfoMap -> ExecutePtrMap
+createExecutePtr m = Map.fromList$ f$ Map.assocs m
+    where
+        f ((a,x):y:zs)
+            | isJust e = (a, ExecutePtr e' (createTable e' bank (aiBytes$ snd y))) : f zs
+            | otherwise = f (y:zs)
+            where
+                bank = enumToSNESAddress a `div` 0x10000
+                e' = fromJust e
+                e = isExecutePtrLong =<< aiAssembly x
+        f _ = []
+        createTable isLong bank bs
+            | BB.null bs = []
+            | otherwise =
+                let (t, us) = BB.splitAt (if isLong then 3 else 2) bs in
+                snesAddressToEnum (g t) : createTable isLong bank us
+            where
+                g x = (if isLong then id else (bank*0x10000+))$
+                    foldr (\x y-> y * 0x100 + x) 0. map fromIntegral$ BB.unpack x
+
+data ExecutePtr = ExecutePtr
+    { epIsLong :: Bool
+    , epTable :: [Address]
+    }
+    deriving (Show)
+
 -- BrokenJump
 
 findAndBrokenJumpMany :: Address -> HJ ()
@@ -193,8 +249,8 @@ findAndBrokenJump :: Address -> HJ [Address]
 findAndBrokenJump a =
     filterMap id <$> (mapM createBrokenJump =<< liftRead (getAddressJumpRev a))
 
-createBrokenJump :: Address -> HJ (Maybe Address)
-createBrokenJump a = do
+createBrokenJump :: JumpType -> HJ (Maybe Address)
+createBrokenJump (either (,False) (,True)-> (a, f)) = do
     b <- getAddressBroken a
     if b
     then return Nothing
@@ -205,18 +261,19 @@ createBrokenJump a = do
     where
         c = NewCode
             { ncOriginalAddress = a
-            , ncLabel = BS.pack$ printf "BJ_%06X" a
-            , ncType = BrokenJump
+            , ncType = if f
+                then BrokenExecutePtr
+                else BrokenJump
             }
 
-getAddressJumpRev :: Address -> HJRead [Int]
-getAddressJumpRev a = (Array.! a). jumpRev <$> ask
+getAddressJumpRev :: Address -> HJRead [JumpType]
+getAddressJumpRev a = fromMaybe []. Map.lookup a. jumpRev <$> ask
 
 -- そのアドレスがどこから参照されているか？
 -- AddressInfoMapとかの境界に切り捨てる
 -- 間接ジャンプは無理だから手動で追加する？
 createJumpRev :: AddressInfoMap -> AddressOrigin -> JumpRev
-createJumpRev m o = Array.accumArray (flip (:)) [] (0,size) ts
+createJumpRev m o = foldr (\(a, Left-> b)-> Map.alter (Just. maybe [b] (b:)) a) Map.empty ts
     where
         ts = filterMap f$ Map.assocs m
         f (a, x) = do
@@ -228,7 +285,8 @@ createJumpRev m o = Array.accumArray (flip (:)) [] (0,size) ts
         size = lasta + BB.length lastb - 1
         (lasta, AddressInfo { aiBytes = lastb }) = Map.findMax m
 
-type JumpRev = Array.Array Int [Int]
+type JumpRev = Map.IntMap [JumpType]
+type JumpType = Either Address Address
 
 findAndLongAddressing :: Address -> HJ ()
 findAndLongAddressing x =
@@ -251,7 +309,6 @@ createLongAddressing a = do
     where
         c = NewCode
             { ncOriginalAddress = a
-            , ncLabel = BS.pack$ printf "LA_%06X" a
             , ncType = LongAddressing
             }
 
@@ -301,13 +358,15 @@ initalReadState s r n = t
         t = ReadState
             { addressOrigin = o
             , addressInfoMap = aim
-            , jumpRev = createJumpRev aim o
+            , jumpRev = createExecutePtrJumpRev e `Map.union` createJumpRev aim o
             , ramMacroName = n
+            , executePtr = e
             , brokenMap = error "brokenMap"
             }
             where
                 aim = initalAddressInfoMap s r
                 o = createAddressOrigin m
+                e = createExecutePtr aim
 
 initalHJ :: BS.ByteString -> Bytes -> RAMMacroNameMap -> (ReadState, AddressStateMap)
 initalHJ s r n = (m, Map.map (const False)$ addressInfoMap m)
@@ -338,11 +397,10 @@ type AddressState = Bool
 -- BrokenJumpはBrokenなAddressに対してを検索してそこにBrokenJump+Brokenに…をやる感じで？
 data NewCode = NewCode
     { ncOriginalAddress :: Int
-    , ncLabel :: BS.ByteString
     , ncType :: NewCodeType
     } deriving (Show)
 
-data NewCodeType = LongAddressing | BrokenJump
+data NewCodeType = LongAddressing | BrokenJump | BrokenExecutePtr
     deriving (Show)
 
 type AddressStateMap = Map.IntMap AddressState
@@ -355,6 +413,7 @@ data ReadState = ReadState
     , addressInfoMap :: AddressInfoMap
     , jumpRev :: JumpRev
     , ramMacroName :: RAMMacroNameMap
+    , executePtr :: ExecutePtrMap
     , brokenMap :: AddressStateMap
     } deriving (Show)
 
@@ -487,7 +546,11 @@ parseSMWDisCLine = isData <|> isNotData <|> unknownAddress <|> unknownOnly <|> l
             a <- maybe (fail "aaa") return$ readMaybe readHex$ BS.unpack sa
             spaces
             l <- bytesLength
-            return (SMWDisC (Just False) (Just a) l)
+            spaces
+            (\b-> SMWDisC b (Just a) l) <$> isdbdw
+        isdbdw =
+                (PS.char '.' >> return (Just True)) <|>
+                (PS.satisfy PS.isAlpha_ascii >> return (Just False))
         unknownAddress = do
             PS.many1 (PS.satisfy (\c-> c /= ':' && c /= ' '))
             PS.char ':'
