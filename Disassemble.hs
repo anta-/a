@@ -12,6 +12,7 @@ module Disassemble
     , assembly'Length
     , isExecutePtrLong
     , assemblyToAACO
+    , createGetDrawInfoPLA
     ) where
 
 import qualified Data.ByteString.Char8 as BS
@@ -24,6 +25,19 @@ import Data.Maybe
 import Data.Word (Word8)
 import Text.Printf (printf)
 
+createGetDrawInfoPLA :: Int -> [Assembly']
+createGetDrawInfoPLA a =
+    [ d [0xF0, 5+4]
+    ] ++ replicate 5 (d [0x68])
+    ++ next
+    where
+        next
+            | bank == 1 = [ d [0x5C, 0xCD, 0xA3, 0x01]]    -- JML。ここが壊れてるとだめだけど…問題ないよね
+            | bank == 3 = genRTSCode' bank
+            | otherwise = error$ "createGetDrawInfoPLA: bank == " ++ show bank
+        bank = a `div` 0x10000
+        d = assemblyToAssembly'. fromJust. disassembleCode. BB.pack
+
 assemblyToAACO :: Assembly -> BS.ByteString -> [PatchCode]
 assemblyToAACO (Assembly {..}) macro = do
     [ CodeAssembly (Assembly' mnemonic addressingMode (Opr'Macro macro)) ]
@@ -35,13 +49,10 @@ isExecutePtrLong (Assembly
     { mnemonic = NM_JSL, operand = OprLong 0x86FA }) = Just True
 isExecutePtrLong _ = Nothing
 
-genRTSCode :: Int -> Assembly -> Maybe [Assembly']
-genRTSCode bank (Assembly {..})
-    | mnemonic == NM_RTS = Just
-        -- jml bank_rts
-        [ Assembly' NM_JML (StaticSAM AM_LONG) (Opr'Opr$ OprLong rtsAddr)
-        ]
-    | otherwise = Nothing
+genRTSCode' :: Int -> [Assembly']
+genRTSCode' bank =
+    [ Assembly' NM_JML (StaticSAM AM_LONG) (Opr'Opr$ OprLong rtsAddr)
+    ]
     where
         rtsAddr = bankRTSlist!!bank
         bankRTSlist =
@@ -50,6 +61,11 @@ genRTSCode bank (Assembly {..})
             , 0x08800A, 0x098002, 0x0A8293, 0x0B805E
             , 0x0C9F5B, 0x0DA53C, 0x0E8056, 0x0F868A
             ]
+
+genRTSCode :: Int -> Assembly -> Maybe [Assembly']
+genRTSCode bank (Assembly {..})
+    | mnemonic == NM_RTS = Just (genRTSCode' bank)
+    | otherwise = Nothing
 
 genSpecialCode :: Int -> Assembly -> Maybe [Assembly']
 genSpecialCode a asm@(Assembly {..})

@@ -31,29 +31,11 @@ main = do
     BS.writeFile "relocationPatch.asm" s1
     BS.writeFile "relocationHijack.asm" s2
     putStrLn "OK"
---    absAddressChangeOnly
-
-absAddressChangeOnly :: IO ()
-absAddressChangeOnly = do
-    list <- read <$> readFile "findRAMListAACO.txt"
-    smwDisC <- smwDisCFile
-    rom <- romFile
-    let s = aacoAndShowCode list smwDisC rom
-    BS.writeFile "relocationAACO.asm" s
-    putStrLn "AACO: OK"
-
-aacoAndShowCode :: [(Int, String)] -> BS.ByteString -> Bytes -> BS.ByteString
-aacoAndShowCode m smwDisC rom =
-    let (r, s) = initalHJ smwDisC rom (Map.fromList$ map (second BS.pack) m) in
-    let (c, s') = execHJ (mapM_ findAndAACO (map fst m)) r s in
-    let g = runReader (genCodeAll =<< codeListGen c) (initalReadState2 r s') in
-    let (q, _) = showCodeBlocks g in
-    q
 
 findAndShowCode :: [(Int, String)] -> BS.ByteString -> Bytes -> (BS.ByteString, BS.ByteString)
 findAndShowCode m smwDisC rom =
     let (r, s) = initalHJ smwDisC rom (Map.fromList$ map (second BS.pack) m) in
-    let (c, s') = execHJ (mapM_ findAndLongAddressing (map fst m)) r s in
+    let (c, s') = execHJ (specialNewCode >> mapM_ findAndLongAddressing (map fst m)) r s in
     let g = runReader (genCodeAll =<< codeListGen c) (initalReadState2 r s') in
     showCodeBlocks g
 
@@ -120,6 +102,9 @@ genCodeLine a x = do
             genBrokenExecutePtr a
         GenNewCode AACO ->
             genAACO asm'
+        GenNewCode GetDrawInfoPLA ->
+            return. map CodeAssembly$
+                createGetDrawInfoPLA (enumToSNESAddress a)
 
 genAACO :: Assembly -> HJRead [PatchCode]
 genAACO (asm@Assembly {..}) = do
@@ -316,6 +301,17 @@ createJumpRev m o = foldr (\(a, Left-> b)-> Map.alter (Just. maybe [b] (b:)) a) 
 type JumpRev = Map.IntMap [JumpType]
 type JumpType = Either Address Address
 
+specialNewCode :: HJ ()
+specialNewCode = do
+    let a3 = snesAddressToEnum 0x03B78E
+    breakJMLBytes a3
+    findAndBrokenJump (snesAddressToEnum 0x03B760)
+    addNewCode (NewCode a3 GetDrawInfoPLA)
+    let a1 = snesAddressToEnum 0x01A393
+    breakJMLBytes a1
+    findAndBrokenJump (snesAddressToEnum 0x01A365)
+    addNewCode (NewCode a1 GetDrawInfoPLA)
+
 findAndAACO :: Address -> HJ ()
 findAndAACO x =
     mapM_ createAACO =<< findRAMAccess x
@@ -436,7 +432,12 @@ data NewCode = NewCode
     , ncType :: NewCodeType
     } deriving (Show)
 
-data NewCodeType = LongAddressing | BrokenJump | BrokenExecutePtr | AACO
+data NewCodeType =
+      LongAddressing
+    | BrokenJump
+    | BrokenExecutePtr
+    | AACO
+    | GetDrawInfoPLA
     deriving (Show)
 
 type AddressStateMap = Map.IntMap AddressState
