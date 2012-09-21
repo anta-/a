@@ -30,7 +30,7 @@ genRTSCode bank (Assembly {..})
         ]
     | otherwise = Nothing
     where
-        rtsAddr = bankRTSlist!!bank - 1
+        rtsAddr = bankRTSlist!!bank
         bankRTSlist =
             [ 0x0080E7, 0x01800D, 0x028BB8, 0x03818A
             , 0x048430, 0x058339, 0x06801F, 0x078101
