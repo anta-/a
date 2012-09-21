@@ -21,6 +21,11 @@ lorom
 !Pointer16x = $7EC100
 incsrc relocationPatch_0FBE.asm
 !SpriteNum = $9E
+!SpriteYSpeed = $AA
+!SpriteXSpeed = $B6
+!SpriteState = $C2
+!SpritePosYLo = $D8
+!SpritePosXLo = $E4
 incsrc relocationPatch.asm
 
 ;##############################
@@ -36,8 +41,6 @@ dw !RatsCodeSize-$01^$FFFF
 db "Hello!"
 
 ; ここから
-Bank10RTL:
-	RTL
 
 incsrc relocationHijack_0FBE.asm
 incsrc relocationHijack.asm

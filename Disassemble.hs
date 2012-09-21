@@ -133,9 +133,6 @@ showOperand o a = case a of
         p s = BS.pack$ printf s t
         t = fromJust$ getOperandInt o
 
-hijackCodeBank :: Word8
-hijackCodeBank = 0x10
-
 codeAssembly' m a o = CodeAssembly$ Assembly' m a o
 
 assemblyToLongJump :: Assembly -> Either Int BS.ByteString -> Int -> [PatchCode]
@@ -144,7 +141,7 @@ assemblyToLongJump (asm@Assembly {..}) addr bank = case mnemonic of
     NM_JML -> jmlCode
     NM_JSR -> jsrCode
     NM_JSL -> jslCode
-    NM_BRL -> error$ "assemblyToLongJump: BRL: " ++ show asm
+    NM_BRL -> jmlCode
     n -> branchCode n
     where
         opr = case addr of
@@ -161,19 +158,9 @@ assemblyToLongJump (asm@Assembly {..}) addr bank = case mnemonic of
                     | n == NM_BRA = []
                     | otherwise = [ Assembly' (negBranch n) (StaticSAM AM_PCR) (Opr'Opr$ OprRelByte 4) ]
         jsrCode =
-            -- sta !itizi_ram1 : php : pla : sta !itizi_ram2 : sep #$20 : lda #$XX : pha : lda !itizi_ram2 : pha : pha : plp : lda !itizi_ram1 : plp
             -- per $04 ; 帰ってきたい所をpushする
             -- pea $YYYY : jml ZZZZ ; RTLがある所をpushする
-            [ codeAssembly' NM_STA itiziRAMAddressingMode itiziRAMOperand
-            , d [0x08], d [0x68]
-            , codeAssembly' NM_STA itiziRAMAddressingMode itiziRAM2Operand
-            , d [0xe2, 0x20]
-            , d [0xa9, hijackCodeBank]   -- ここ自身のバンク
-            , d [0x48]
-            , codeAssembly' NM_LDA itiziRAMAddressingMode itiziRAM2Operand
-            , d [0x48], d [0x48], d [0x68]
-            , codeAssembly' NM_LDA itiziRAMAddressingMode itiziRAMOperand
-            , d [0x68]
+            [ d [0x4B]  -- PHK
             , d [0x62, 0x06, 0x00]  -- PER $06
             , codeAssembly' NM_PEA (StaticSAM AM_ABS) (Opr'Opr$ OprWord (bankRTLlist!!bank - 1))
             , codeAssembly' NM_JML (StaticSAM AM_LONG) opr
