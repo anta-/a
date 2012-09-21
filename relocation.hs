@@ -472,7 +472,7 @@ eitherToMaybe (Left _) = Nothing
 eitherToMaybe (Right x) = Just x
 
 parseSMWDisCLine :: PS.Parser SMWDisC
-parseSMWDisCLine = isData <|> isNotData <|> unknownAddress <|> lengthOnly
+parseSMWDisCLine = isData <|> isNotData <|> unknownAddress <|> unknownOnly <|> lengthOnly
     where
         isData = do
             PS.string "DATA_"
@@ -491,14 +491,7 @@ parseSMWDisCLine = isData <|> isNotData <|> unknownAddress <|> lengthOnly
         unknownAddress = do
             PS.many1 (PS.satisfy (\c-> c /= ':' && c /= ' '))
             PS.char ':'
-            spaces
-            SMWDisC Nothing Nothing <$> dbdw <|> (do
-                l <- bytesLength
-                spaces
-                (dat <|> code) <*> return l)
-            where
-                dat = PS.char '.' >> return (SMWDisC (Just True) Nothing)
-                code = PS.satisfy PS.isAlpha_ascii >> return (SMWDisC (Just False) Nothing)
+            unknownOnly
         dbdw = do
             PS.char '.'
             db <|> dw
@@ -507,6 +500,15 @@ parseSMWDisCLine = isData <|> isNotData <|> unknownAddress <|> lengthOnly
                 dw = PS.string "dw" >> (2*) <$> dbdws
                 dbdws = PS.space >>
                     length <$> PS.sepBy (PS.many1 (PS.satisfy (\c-> c /= ' ' && c /= ','))) (PS.char ',')
+        unknownOnly = do
+            spaces
+            uncurry (flip SMWDisC Nothing) <$> ((Just True,) <$> dbdw) <|> (do
+                l <- bytesLength
+                spaces
+                (dat <|> code) <*> return l)
+            where
+                dat = PS.char '.' >> return (SMWDisC (Just True) Nothing)
+                code = PS.satisfy PS.isAlpha_ascii >> return (SMWDisC (Just False) Nothing)
         lengthOnly = do
             spaces
             SMWDisC Nothing Nothing <$> (bytesLength <|> dbdw)
