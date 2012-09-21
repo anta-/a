@@ -24,6 +24,7 @@ incsrc relocationPatch_0FBE.asm
 !SpriteState = $C2;!SpriteTableSize*3+!SpriteTableStart
 !SpritePosYLo = $D8;!SpriteTableSize*4+!SpriteTableStart
 !SpritePosXLo = $E4;!SpriteTableSize*5+!SpriteTableStart
+!SpriteState2 = $14C8
 incsrc relocationPatch.asm
 
 ;##############################

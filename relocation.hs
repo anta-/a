@@ -7,12 +7,14 @@ import Control.Applicative
 import Control.Monad
 import Control.Monad.Reader
 import Control.Monad.RWS
+import Control.Monad.Error
 import Data.Monoid ()
 import Control.Arrow
 import Data.Function
 import Data.List
 import Data.Maybe
 import Text.Printf
+import qualified Data.IntSet as Set
 import qualified Data.IntMap as Map
 import qualified Data.Array as Array
 import Numeric
@@ -24,39 +26,54 @@ import Disassemble
 
 main :: IO ()
 main = do
-    list <- read <$> readFile "findRAMList.txt"
+    list <- read <$> readFile "findRAMList.txt" :: IO [(Int, String)]
+    list2 <- read <$> readFile "findRAMListAACO.txt" :: IO [(Int, String)]
     smwDisC <- smwDisCFile
     rom <- romFile
-    let (s1, s2) = findAndShowCode list smwDisC rom
+    let (s1, s2) = findAndShowCode list list2 smwDisC rom
     BS.writeFile "relocationPatch.asm" s1
     BS.writeFile "relocationHijack.asm" s2
     putStrLn "OK"
 
-findAndShowCode :: [(Int, String)] -> BS.ByteString -> Bytes -> (BS.ByteString, BS.ByteString)
-findAndShowCode m smwDisC rom =
-    let (r, s) = initalHJ smwDisC rom (Map.fromList$ map (second BS.pack) m) in
-    let (c, s') = execHJ (specialNewCode >> mapM_ findAndLongAddressing (map fst m)) r s in
+findAndShowCode :: [(Int, String)] -> [(Int, String)] -> BS.ByteString -> Bytes -> (BS.ByteString, BS.ByteString)
+findAndShowCode m m2 smwDisC rom =
+    let (r, s) = initalHJ smwDisC rom (Map.fromList$ map (second BS.pack) (m++m2)) (map fst m2) in
+    let (c, s') = execHJ (mainHJ m m2) r s in
     let g = runReader (genCodeAll =<< codeListGen c) (initalReadState2 r s') in
     showCodeBlocks g
+
+mainHJ :: [(Int, String)] -> [(Int, String)] -> HJ ()
+mainHJ m m2 = do
+    specialNewCode
+    mapM_ findAndAACO (map fst m2)
+    mapM_ findAndLongAddressing (map fst m)
 
 showCodeBlocks :: [CodeBlock] -> (BS.ByteString, BS.ByteString)
 showCodeBlocks = join (***) BS.unlines. unzip. map showCodeBlock
 
 showCodeBlock :: CodeBlock -> (BS.ByteString, BS.ByteString)
-showCodeBlock (a, e, xs) = (codeBlockHijackCode a,)$
+showCodeBlock (CodeBlock a e xs) = (codeBlockHijackCode a,)$
     BS.unlines$
     codeBlockIntroCode a
     : (map showCodeLine xs
     ++ [codeBlockEndingCode e])
+showCodeBlock (CodeBlockPatchOnly a xs) = (,"")$
+    BS.concat$
+    codeBlockHijackOrg a : "\n"
+    : (map showCodeLine xs)
 
 hijackCodeLabel :: Address -> BS.ByteString
 hijackCodeLabel a = BS.pack$ printf "HIJACK_%06X" (enumToSNESAddress a)
 
-codeBlockHijackCode, codeBlockIntroCode, codeBlockEndingCode :: Address -> BS.ByteString
+codeBlockHijackOrg, codeBlockHijackCode
+    , codeBlockIntroCode, codeBlockEndingCode :: Address -> BS.ByteString
+
+codeBlockHijackOrg a =
+    BS.pack$ printf "org $%06X" (enumToSNESAddress a)
 
 codeBlockHijackCode a = BS.concat
-    [ BS.pack$ printf "org $%06X\n" (enumToSNESAddress a)
-    , "\tJML ", hijackCodeLabel a
+    [ codeBlockHijackOrg a
+    , "\n\tJML ", hijackCodeLabel a
     ]
 
 codeBlockIntroCode a = hijackCodeLabel a `BS.append` ":"
@@ -68,7 +85,7 @@ showCodeLine (CodeLine {..}) = BS.concat$ [ clLabel, ":\t"] ++ code
     where code = tail$ concatMap (\x-> [" : ", showPatchCode x]) clCode
 
 initalReadState2 :: ReadState -> AddressStateMap -> ReadState
-initalReadState2 r s = r { brokenMap = s }
+initalReadState2 r s = r { brokenMap = Map.map fst s }
 
 -- gen code
 
@@ -76,9 +93,13 @@ genCodeAll :: [CodeListGen] -> HJRead [CodeBlock]
 genCodeAll = mapM genCode
 
 genCode :: CodeListGen -> HJRead CodeBlock
-genCode xs = (,,) a0 <$> endAddr <*>
-    mapM (\(a, x)-> CodeLine <$> getCodeLabel a <*> genCodeLine a x) xs
+genCode xs
+    | all f xs = CodeBlockPatchOnly a0 <$> codeLine
+    | otherwise = CodeBlock a0 <$> endAddr <*> codeLine
     where
+        f (_, GenNewCode AACO) = True
+        f _ = False
+        codeLine = mapM (\(a, x)-> CodeLine <$> getCodeLabel a <*> genCodeLine a x) xs
         a0 = fst$ head xs
         endAddr = let (a, _) = last xs in
             do
@@ -101,14 +122,18 @@ genCodeLine a x = do
         GenNewCode BrokenExecutePtr ->
             genBrokenExecutePtr a
         GenNewCode AACO ->
-            genAACO asm'
+            genBrokenCode a asm'
         GenNewCode GetDrawInfoPLA ->
             return. map CodeAssembly$
                 createGetDrawInfoPLA (enumToSNESAddress a)
 
-genAACO :: Assembly -> HJRead [PatchCode]
+genAACO :: Assembly -> HJRead (Maybe [PatchCode])
 genAACO (asm@Assembly {..}) = do
-    macro <- getRAMMacroName (fromJust$ getOperandInt operand)
+    let opr' = getOperandInt operand
+    flip (maybe (return Nothing)) opr'$ \opr-> do
+    b <- Set.member opr. isAACO <$> ask
+    if not b then return Nothing else do
+    macro <- getRAMMacroName opr
     return$ assemblyToAACO asm macro
 
 longAddressingCode :: Assembly -> HJRead [PatchCode]
@@ -134,18 +159,20 @@ genBrokenExecutePtr a = do
                 addr = enumToSNESAddress x
 
 genBrokenCode :: Address -> Assembly -> HJRead [PatchCode]
-genBrokenCode a asm
-    | isJust special = return$ fromJust special
-    | isJust rts = return$ map CodeAssembly$ fromJust rts
-    | isJust jumpAddr = do
+genBrokenCode a asm = do
+    if isJust special then return$ fromJust special else do
+    if isJust rts then return$ map CodeAssembly$ fromJust rts else do
+    aaco <- genAACO asm
+    if isJust aaco then return$ fromJust aaco else do
+    if isJust jumpAddr then do
         j <- getAddressOrigin jumpAddr''
         b <- (Map.! j). brokenMap <$> ask
         if b
         then do
             label <- getCodeLabel jumpAddr''
             return$ assemblyToLongJump asm (Right label) bank
-        else return$ assemblyToLongJump asm (Left jumpAddr') bank
-    | otherwise = return$ map CodeAssembly [assemblyToAssembly' asm]
+        else return$ assemblyToLongJump asm (Left jumpAddr') bank else do
+    return$ map CodeAssembly [assemblyToAssembly' asm]
     where
         a' = enumToSNESAddress a
         bank = a' `div` 0x10000
@@ -159,7 +186,15 @@ getCodeLabel :: Address -> HJRead BS.ByteString
 getCodeLabel a = return$
     BS.pack$ printf "HJ_%06X" (enumToSNESAddress a)
 
-type CodeBlock = (Address, Int, [CodeLine])
+data CodeBlock = CodeBlock
+    { cbAddress :: Address
+    , cbEndAddress :: Address
+    , cbCodeLine :: [CodeLine]
+    } | CodeBlockPatchOnly
+    { poAddress :: Address
+    , poCodeLine :: [CodeLine]
+    }
+    deriving (Show)
 
 data CodeLine = CodeLine
     { clLabel :: BS.ByteString
@@ -201,14 +236,14 @@ newCodeCodeGen = map f
         f (NewCode {..}) = (ncOriginalAddress, GenNewCode ncType)
 
 getGenBrokenCode :: HJ [CodeGen]
-getGenBrokenCode = map (second (const GenBrokenCode)). filter snd.
+getGenBrokenCode = map (second (const GenBrokenCode)). filter (fst. snd).
     Map.assocs <$> getAddressStateMap
 
 type CodeGen = (Address, CodeGenType)
 data CodeGenType =
       GenBrokenCode
     | GenNewCode NewCodeType
-    deriving (Show)
+    deriving (Show, Eq)
 
 -- ExecutePtr
 createExecutePtrJumpRev :: ExecutePtrMap -> JumpRev
@@ -232,7 +267,10 @@ createExecutePtr m = Map.fromList$ f$ Map.assocs m
                 e' = fromJust e
                 e = isExecutePtrLong =<< aiAssembly x
         f _ = []
-        g x = maybe False (\x-> isJust$ aiAssembly x)$ Map.lookup x m
+        g x
+            | x == snesAddressToEnum 0x01E41F = True    -- Unusedだって
+            | otherwise =
+                maybe False (\x-> isJust$ aiAssembly x)$ Map.lookup x m
         createTable isLong bank bs
             | BB.null bs = []
             | otherwise =
@@ -254,9 +292,10 @@ data ExecutePtr = ExecutePtr
 
 findAndBrokenJumpMany :: Address -> HJ ()
 findAndBrokenJumpMany a =
-    mapM_ findAndBrokenJumpMany. concat =<< mapM createRange =<< findAndBrokenJump a
+    mapM_ findAndBrokenJumpMany. unique. sort. concat
+    =<< mapM createRange =<< findAndBrokenJump a
     where
-        createRange a = unique <$> mapM (liftRead. getAddressOrigin) [a..a+3]
+        createRange a = mapM (liftRead. getAddressOrigin) [a..a+3]
 
 findAndBrokenJump :: Address -> HJ [Address]
 findAndBrokenJump a =
@@ -265,10 +304,12 @@ findAndBrokenJump a =
 createBrokenJump :: JumpType -> HJ (Maybe Address)
 createBrokenJump (either (,False) (,True)-> (a, f)) = do
     b <- getAddressBroken a
-    if b
+    b' <- getAddressBroken2 a
+    if not (not b || (f && not b'))
     then return Nothing
     else do
         breakJMLBytes a
+        when f (break2OriginAddress a)
         addNewCode c
         return (Just a)
     where
@@ -305,11 +346,11 @@ specialNewCode :: HJ ()
 specialNewCode = do
     let a3 = snesAddressToEnum 0x03B78E
     breakJMLBytes a3
-    findAndBrokenJump (snesAddressToEnum 0x03B760)
+    findAndBrokenJumpMany (snesAddressToEnum 0x03B760)
     addNewCode (NewCode a3 GetDrawInfoPLA)
     let a1 = snesAddressToEnum 0x01A393
     breakJMLBytes a1
-    findAndBrokenJump (snesAddressToEnum 0x01A365)
+    findAndBrokenJumpMany (snesAddressToEnum 0x01A365)
     addNewCode (NewCode a1 GetDrawInfoPLA)
 
 findAndAACO :: Address -> HJ ()
@@ -318,6 +359,7 @@ findAndAACO x =
 
 createAACO :: Address -> HJ ()
 createAACO a = do
+    breakBytes a 3
     addNewCode (NewCode a AACO)
 
 findAndLongAddressing :: Address -> HJ ()
@@ -351,7 +393,10 @@ breakBytes :: Address -> Size -> HJ ()
 breakBytes a size = mapM_ breakOriginAddress =<< liftRead (getAddressOrigins a size)
 
 breakOriginAddress :: Address -> HJ ()
-breakOriginAddress = modifyAddressState (const True)
+breakOriginAddress = modifyAddressState (first (const True))
+
+break2OriginAddress :: Address -> HJ ()
+break2OriginAddress = modifyAddressState (second (const True))
 
 getRAMMacroName :: Int -> HJRead BS.ByteString
 getRAMMacroName a = (Map.! a). ramMacroName <$> ask
@@ -375,7 +420,10 @@ getAddressInfo :: Address -> HJRead AddressInfo
 getAddressInfo a = (Map.! a) <$> getAddressInfoMap
 
 getAddressBroken :: Address -> HJ Bool
-getAddressBroken a = (Map.! a) <$> getAddressStateMap
+getAddressBroken a = fst. (Map.! a) <$> getAddressStateMap
+
+getAddressBroken2 :: Address -> HJ Bool
+getAddressBroken2 a = snd. (Map.! a) <$> getAddressStateMap
 
 modifyAddressStateMap :: (AddressStateMap -> AddressStateMap) -> HJ ()
 modifyAddressStateMap = modify
@@ -383,8 +431,8 @@ modifyAddressStateMap = modify
 addNewCode :: NewCode -> HJ ()
 addNewCode c = tell [c]
 
-initalReadState :: BS.ByteString -> Bytes -> RAMMacroNameMap -> ReadState
-initalReadState s r n = t
+initalReadState :: BS.ByteString -> Bytes -> RAMMacroNameMap -> [Int] -> ReadState
+initalReadState s r n aaco = t
     where
         m = initalAddressInfoMap s r
         t = ReadState
@@ -394,16 +442,17 @@ initalReadState s r n = t
             , ramMacroName = n
             , executePtr = e
             , brokenMap = error "brokenMap"
+            , isAACO = Set.fromList aaco
             }
             where
                 aim = initalAddressInfoMap s r
                 o = createAddressOrigin m
                 e = createExecutePtr aim
 
-initalHJ :: BS.ByteString -> Bytes -> RAMMacroNameMap -> (ReadState, AddressStateMap)
-initalHJ s r n = (m, Map.map (const False)$ addressInfoMap m)
+initalHJ :: BS.ByteString -> Bytes -> RAMMacroNameMap -> [Int] -> (ReadState, AddressStateMap)
+initalHJ s r n aaco = (m, Map.map (const (False, False))$ addressInfoMap m)
     where
-        m = initalReadState s r n
+        m = initalReadState s r n aaco
 
 createAddressOrigin :: AddressInfoMap -> AddressOrigin
 createAddressOrigin m = Array.array (0, fst (last ts)) ts
@@ -422,7 +471,7 @@ liftRead (ReaderT { runReaderT = f }) =
 type Address = Int
 type Size = Int
 
-type AddressState = Bool
+type AddressState = (Bool, Bool)
 
 -- 新しいコードは、その他のhijack情報が必要なこともあるので、
 -- ある程度だけ覚えておいて、コードは最後に生成する
@@ -438,7 +487,7 @@ data NewCodeType =
     | BrokenExecutePtr
     | AACO
     | GetDrawInfoPLA
-    deriving (Show)
+    deriving (Show, Eq)
 
 type AddressStateMap = Map.IntMap AddressState
 type AddressInfoMap = Map.IntMap AddressInfo
@@ -451,7 +500,8 @@ data ReadState = ReadState
     , jumpRev :: JumpRev
     , ramMacroName :: RAMMacroNameMap
     , executePtr :: ExecutePtrMap
-    , brokenMap :: AddressStateMap
+    , brokenMap :: Map.IntMap Bool
+    , isAACO :: Set.IntSet
     } deriving (Show)
 
 type HJ = RWS ReadState [NewCode] AddressStateMap

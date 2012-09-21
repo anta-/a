@@ -38,9 +38,20 @@ createGetDrawInfoPLA a =
         bank = a `div` 0x10000
         d = assemblyToAssembly'. fromJust. disassembleCode. BB.pack
 
-assemblyToAACO :: Assembly -> BS.ByteString -> [PatchCode]
+assemblyToAACO :: Assembly -> BS.ByteString -> Maybe [PatchCode]
 assemblyToAACO (Assembly {..}) macro = do
-    [ CodeAssembly (Assembly' mnemonic addressingMode (Opr'Macro macro)) ]
+    guard$ isAbsAddressingMode addressingMode
+    return [ CodeAssembly (Assembly' mnemonic addressingMode (Opr'Macro macro)) ]
+    where
+        isAbsAddressingMode (StaticSAM a) = case a of
+            AM_ABS -> True
+            AM_ABSX -> True
+            AM_ABSY -> True
+            AM_ABSI -> True
+            AM_ABSXI -> True
+            AM_ABSIL -> True
+            _ -> False
+        isAbsAddressingMode _ = False
 
 isExecutePtrLong :: Assembly -> Maybe Bool
 isExecutePtrLong (Assembly
