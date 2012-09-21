@@ -119,12 +119,39 @@ showAssembly' (Assembly' {..}) =
                 BS.concat [o1, m, o3]
 
 showMnemonic' :: Mnemonic -> SizedAddressingMode -> BS.ByteString
-showMnemonic' m (SizedSAM x) = showMnemonic m `BS.append` size
+showMnemonic' m x = showMnemonic m `BS.append` size
     where
+        b = ".b"
+        w = ".w"
+        l = ".l"
         size = case x of
-            SAM_IMM8 -> ".b"
-            SAM_IMM16 -> ".w"
-showMnemonic' m (StaticSAM _) = showMnemonic m
+            StaticSAM a' -> case a' of
+                AM_DIR -> b
+                AM_IMM8 -> b
+                AM_PCR -> b
+                AM_DIRS -> b
+                AM_DIRX -> b
+                AM_DIRY -> b
+                AM_ABS -> w
+                AM_PCRL -> w
+                AM_ABSX -> w
+                AM_ABSY -> w
+                AM_LONG -> l
+                AM_LONGX -> l
+                AM_DIRI -> b
+                AM_DIRIY -> b
+                AM_DIRSIY -> b
+                AM_DIRXI -> b
+                AM_ABSI -> w
+                AM_ABSXI -> w
+                AM_ABSIL -> w
+                AM_DIRIL -> b
+                AM_DIRILY -> b
+                _ -> ""
+            SizedSAM a' -> case a' of
+                SAM_IMM8 -> b
+                SAM_IMM16 -> w
+
 
 showMnemonic :: Mnemonic -> BS.ByteString
 showMnemonic m = mnemonicStrArray Array.! m
