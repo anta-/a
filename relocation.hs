@@ -93,33 +93,38 @@ genCodeLine a x = do
     let db = [CodeDB$ aiBytes info]
     case x of
         GenBrokenCode ->
-            maybe (return db) (fmap (map CodeAssembly). genBrokenCode a)$ asm
+            maybe (return db) (genBrokenCode a)$ asm
         GenNewCode LongAddressing ->
             longAddressingCode asm'
         GenNewCode BrokenJump ->
-            map CodeAssembly <$> genBrokenCode a asm'
+            genBrokenCode a asm'
 
 longAddressingCode :: Assembly -> HJRead [PatchCode]
 longAddressingCode (asm@Assembly {..}) = do
     macro <- getRAMMacroName (fromJust$ getOperandInt operand)
     return$ assemblyToLongAddressing asm macro
 
-genBrokenCode :: Address -> Assembly -> HJRead [Assembly']
+genBrokenCode :: Address -> Assembly -> HJRead [PatchCode]
 genBrokenCode a asm
-    | case special of Nothing -> False; _ -> True = return$ fromJust special
-    | jumpAddr /= Nothing = do
-        j <- getAddressOrigin jumpAddr'
+    | isJust special = return$ fromJust special
+    | isJust rts = return$ map CodeAssembly$ fromJust rts
+    | isJust jumpAddr = do
+        j <- getAddressOrigin jumpAddr''
         b <- (Map.! j). brokenMap <$> ask
         if b
         then do
-            label <- getCodeLabel jumpAddr'
-            return$ assemblyToLongJump asm (Right label)
-        else return$ assemblyToLongJump asm (Left (enumToSNESAddress jumpAddr'))
-    | otherwise = return [assemblyToAssembly' asm]
+            label <- getCodeLabel jumpAddr''
+            return$ assemblyToLongJump asm (Right label) bank
+        else return$ assemblyToLongJump asm (Left jumpAddr') bank
+    | otherwise = return$ map CodeAssembly [assemblyToAssembly' asm]
     where
-        special = genSpecialCode (enumToSNESAddress a) asm
-        jumpAddr' = snesAddressToEnum$ fromJust jumpAddr
-        jumpAddr = getJumpAddress (enumToSNESAddress a) asm
+        a' = enumToSNESAddress a
+        bank = a' `div` 0x10000
+        special = map CodeAssembly <$> genSpecialCode a' asm
+        jumpAddr'' = snesAddressToEnum jumpAddr'
+        jumpAddr' = fromJust jumpAddr
+        jumpAddr = getJumpAddress a' asm
+        rts = genRTSCode bank asm
 
 getCodeLabel :: Address -> HJRead BS.ByteString
 getCodeLabel a = return$

@@ -7,7 +7,7 @@ module Disassemble
     , isMemoryAccessAddressing, getOperandInt
     , getJumpAddress
     , assemblyToAssembly'
-    , assemblyToLongAddressing, assemblyToLongJump, genSpecialCode
+    , assemblyToLongAddressing, assemblyToLongJump, genSpecialCode, genRTSCode
     , showAssembly', showPatchCode
     , assembly'Length
     ) where
@@ -21,6 +21,22 @@ import Control.Applicative
 import Data.Maybe
 import Data.Word (Word8)
 import Text.Printf (printf)
+
+genRTSCode :: Int -> Assembly -> Maybe [Assembly']
+genRTSCode bank (Assembly {..})
+    | mnemonic == NM_RTS = Just
+        -- jml bank_rts
+        [ Assembly' NM_JML (StaticSAM AM_LONG) (Opr'Opr$ OprLong rtsAddr)
+        ]
+    | otherwise = Nothing
+    where
+        rtsAddr = bankRTSlist!!bank - 1
+        bankRTSlist =
+            [ 0x0080E7, 0x01800D, 0x028BB8, 0x03818A
+            , 0x048430, 0x058339, 0x06801F, 0x078101
+            , 0x08800A, 0x098002, 0x0A8293, 0x0B805E
+            , 0x0C9F5B, 0x0DA53C, 0x0E8056, 0x0F868A
+            ]
 
 genSpecialCode :: Int -> Assembly -> Maybe [Assembly']
 genSpecialCode a asm@(Assembly {..})
@@ -120,8 +136,10 @@ showOperand o a = case a of
 hijackCodeBank :: Word8
 hijackCodeBank = 0x10
 
-assemblyToLongJump :: Assembly -> Either Int BS.ByteString -> [Assembly']
-assemblyToLongJump (asm@Assembly {..}) addr = case mnemonic of
+codeAssembly' m a o = CodeAssembly$ Assembly' m a o
+
+assemblyToLongJump :: Assembly -> Either Int BS.ByteString -> Int -> [PatchCode]
+assemblyToLongJump (asm@Assembly {..}) addr bank = case mnemonic of
     NM_JMP -> jmlCode
     NM_JML -> jmlCode
     NM_JSR -> jsrCode
@@ -132,35 +150,31 @@ assemblyToLongJump (asm@Assembly {..}) addr = case mnemonic of
         opr = case addr of
             Left a -> Opr'Opr (OprLong a)
             Right label -> Opr'Macro label
-        jmlCode = [ Assembly' NM_JML (StaticSAM AM_LONG) opr ]
-        jslCode = [ Assembly' NM_JSL (StaticSAM AM_LONG) opr ]
-        branchCode n =
+        jmlCode = map CodeAssembly [ Assembly' NM_JML (StaticSAM AM_LONG) opr ]
+        jslCode = map CodeAssembly [ Assembly' NM_JSL (StaticSAM AM_LONG) opr ]
+        branchCode n = map CodeAssembly
             [ Assembly' (negBranch n) (StaticSAM AM_PCR) (Opr'Opr$ OprRelByte 4)
             , Assembly' NM_JML (StaticSAM AM_LONG) opr
             ]
-        jsrCode
-            | oprBank == 0x10 =
-            [ Assembly' NM_JSR (StaticSAM AM_ABS) opr ]
-            | otherwise =
+        jsrCode =
             -- sta !itizi_ram1 : php : pla : sta !itizi_ram2 : sep #$20 : lda #$XX : pha : lda !itizi_ram2 : pha : pha : plp : lda !itizi_ram1 : plp
             -- per $04 ; 帰ってきたい所をpushする
             -- pea $YYYY : jml ZZZZ ; RTLがある所をpushする
-            [ Assembly' NM_STA itiziRAMAddressingMode itiziRAMOperand
+            [ codeAssembly' NM_STA itiziRAMAddressingMode itiziRAMOperand
             , d [0x08], d [0x68]
-            , Assembly' NM_STA itiziRAMAddressingMode itiziRAM2Operand
+            , codeAssembly' NM_STA itiziRAMAddressingMode itiziRAM2Operand
             , d [0xe2, 0x20]
             , d [0xa9, hijackCodeBank]   -- ここ自身のバンク
             , d [0x48]
-            , Assembly' NM_LDA itiziRAMAddressingMode itiziRAM2Operand
+            , codeAssembly' NM_LDA itiziRAMAddressingMode itiziRAM2Operand
             , d [0x48], d [0x48], d [0x68]
-            , Assembly' NM_LDA itiziRAMAddressingMode itiziRAMOperand
+            , codeAssembly' NM_LDA itiziRAMAddressingMode itiziRAMOperand
             , d [0x68]
             , d [0x62, 0x06, 0x00]  -- PER $06
-            , Assembly' NM_PEA (StaticSAM AM_ABS) (Opr'Opr$ OprWord (bankRTLlist!!oprBank - 1))
-            , Assembly' NM_JML (StaticSAM AM_LONG) opr
+            , codeAssembly' NM_PEA (StaticSAM AM_ABS) (Opr'Opr$ OprWord (bankRTLlist!!bank - 1))
+            , codeAssembly' NM_JML (StaticSAM AM_LONG) opr
             ]
-        d = assemblyToAssembly'. fromJust. disassembleCode. BB.pack
-        oprBank = either (`div`0x10000) (fromIntegral. const hijackCodeBank) addr
+        d = CodeAssembly. assemblyToAssembly'. fromJust. disassembleCode. BB.pack
         bankRTLlist =
             [ 0x804D, 0x90B9, 0x8BB7, 0x943E
             , 0xA6FA, 0x8125, 0x956D, 0x8BF2
@@ -227,16 +241,16 @@ assemblyToLongAddressing (asm@Assembly {..}) name
             , CodeRaw$ BS.concat ["db $F4 : dw ", name, ">>8"]
                 -- PEA !name>>8
             , e [0xAB], e [0xAB], e [0x28]  -- PLB : PLB : PLP
-            , CodeAssembly$ Assembly' mnemonic aa (Opr'Macro name)
+            , codeAssembly' mnemonic aa (Opr'Macro name)
             , e [0x08] -- PHP
             , e [0xE2, 0x20]    -- SEP #$20
-            , CodeAssembly$ Assembly' NM_STA itiziRAMAddressingMode itiziRAMOperand   -- STA !itizi_ram
+            , codeAssembly' NM_STA itiziRAMAddressingMode itiziRAMOperand   -- STA !itizi_ram
             , e [0x68]  -- PLA
-            , CodeAssembly$ Assembly' NM_STA itiziRAMAddressingMode itiziRAM2Operand  -- STA !itizi_ram2
+            , codeAssembly' NM_STA itiziRAMAddressingMode itiziRAM2Operand  -- STA !itizi_ram2
             , e [0xAB]  -- PLB
-            , CodeAssembly$ Assembly' NM_LDA itiziRAMAddressingMode itiziRAM2Operand  -- LDA !itizi_ram2
+            , codeAssembly' NM_LDA itiziRAMAddressingMode itiziRAM2Operand  -- LDA !itizi_ram2
             , e [0x48]  -- PHA
-            , CodeAssembly$ Assembly' NM_LDA itiziRAMAddressingMode itiziRAMOperand   -- LDA !itizi_ram
+            , codeAssembly' NM_LDA itiziRAMAddressingMode itiziRAMOperand   -- LDA !itizi_ram
             , e [0x28]  -- PLP
             ]
         d = assemblyToAssembly'. fromJust. disassembleCode. BB.pack

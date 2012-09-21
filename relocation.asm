@@ -36,6 +36,8 @@ dw !RatsCodeSize-$01^$FFFF
 db "Hello!"
 
 ; ここから
+Bank10RTL:
+	RTL
 
 incsrc relocationHijack_0FBE.asm
 incsrc relocationHijack.asm
