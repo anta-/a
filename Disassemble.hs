@@ -152,10 +152,14 @@ assemblyToLongJump (asm@Assembly {..}) addr bank = case mnemonic of
             Right label -> Opr'Macro label
         jmlCode = map CodeAssembly [ Assembly' NM_JML (StaticSAM AM_LONG) opr ]
         jslCode = map CodeAssembly [ Assembly' NM_JSL (StaticSAM AM_LONG) opr ]
-        branchCode n = map CodeAssembly
-            [ Assembly' (negBranch n) (StaticSAM AM_PCR) (Opr'Opr$ OprRelByte 4)
-            , Assembly' NM_JML (StaticSAM AM_LONG) opr
+        branchCode n = map CodeAssembly$
+            negCode ++
+            [ Assembly' NM_JML (StaticSAM AM_LONG) opr
             ]
+            where
+                negCode
+                    | n == NM_BRA = []
+                    | otherwise = [ Assembly' (negBranch n) (StaticSAM AM_PCR) (Opr'Opr$ OprRelByte 4) ]
         jsrCode =
             -- sta !itizi_ram1 : php : pla : sta !itizi_ram2 : sep #$20 : lda #$XX : pha : lda !itizi_ram2 : pha : pha : plp : lda !itizi_ram1 : plp
             -- per $04 ; 帰ってきたい所をpushする
@@ -205,8 +209,10 @@ assemblyToLongAddressing (asm@Assembly {..}) name
         map CodeAssembly fullCode
     | isFullMnemonic mnemonic && xa /= Nothing =
         map CodeAssembly fullYCode
-    | (mnemonic == NM_LDY || mnemonic == NM_STY) && addressingMode == StaticSAM AM_DIRX =
-        map CodeAssembly ldstyXCode
+    | mnemonic == NM_STY && addressingMode == StaticSAM AM_DIRX =
+        map CodeAssembly styXCode
+    | mnemonic == NM_LDY && addressingMode == StaticSAM AM_DIRX =
+        map CodeAssembly ldyXCode
     | otherwise =
         longCode
     where
@@ -228,10 +234,18 @@ assemblyToLongAddressing (asm@Assembly {..}) name
             , Assembly' NM_LDX itiziRAMAddressingMode itiziRAMOperand
             , d [0x28]
             ]
-        ldstyXCode =
+        styXCode =
             [ Assembly' NM_STA itiziRAMAddressingMode itiziRAMOperand
             , d [0x08], d [0x98], d [0x28]  -- PHP : TYA : PLP
-            , Assembly' (if mnemonic == NM_STY then NM_STA else NM_LDA) (fromJust la) (Opr'Macro name)
+            , Assembly' NM_STA (fromJust la) (Opr'Macro name)
+            , d [0x08]
+            , Assembly' NM_LDA itiziRAMAddressingMode itiziRAMOperand
+            , d [0x28]
+            ]
+        ldyXCode =
+            [ Assembly' NM_STA itiziRAMAddressingMode itiziRAMOperand
+            , Assembly' NM_LDA (fromJust la) (Opr'Macro name)
+            , d [0xA8]  -- TAY ; どうせフラグ変化はLDAのものと同じなのでPHP : PLP必要ない
             , d [0x08]
             , Assembly' NM_LDA itiziRAMAddressingMode itiziRAMOperand
             , d [0x28]
