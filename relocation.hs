@@ -245,7 +245,8 @@ findRAMAccess x = map fst. filter f. Map.assocs <$> liftRead getAddressInfoMap
 createLongAddressing :: Address -> HJ ()
 createLongAddressing a = do
     breakJMLBytes a
-    findAndBrokenJumpMany a
+    mapM_ findAndBrokenJumpMany. unique =<<
+        mapM (liftRead. getAddressOrigin) [a..a+3]
     addNewCode c
     where
         c = NewCode
