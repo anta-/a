@@ -11,6 +11,7 @@ module Disassemble
     , showAssembly', showPatchCode
     , assembly'Length
     , isExecutePtrLong
+    , assemblyToAACO
     ) where
 
 import qualified Data.ByteString.Char8 as BS
@@ -22,6 +23,10 @@ import Control.Applicative
 import Data.Maybe
 import Data.Word (Word8)
 import Text.Printf (printf)
+
+assemblyToAACO :: Assembly -> BS.ByteString -> [PatchCode]
+assemblyToAACO (Assembly {..}) macro = do
+    [ CodeAssembly (Assembly' mnemonic addressingMode (Opr'Macro macro)) ]
 
 isExecutePtrLong :: Assembly -> Maybe Bool
 isExecutePtrLong (Assembly

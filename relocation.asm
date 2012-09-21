@@ -10,22 +10,20 @@ lorom
 ;##############################
 ; アドレスだけ変えるもの
 
-; !st_start = $0FBE
-; !st_size = $C
-
-; incsrc st.asm
 
 ;##############################
 ; hijackするもの
 
 !Pointer16x = $7EC100
 incsrc relocationPatch_0FBE.asm
-!SpriteNum = $9E
-!SpriteYSpeed = $AA
-!SpriteXSpeed = $B6
-!SpriteState = $C2
-!SpritePosYLo = $D8
-!SpritePosXLo = $E4
+!SpriteTableStart = $0FBE
+!SpriteTableSize = $C
+!SpriteNum = $9E;!SpriteTableSize*0+!SpriteTableStart
+!SpriteYSpeed = $AA;!SpriteTableSize*1+!SpriteTableStart
+!SpriteXSpeed = $B6;!SpriteTableSize*2+!SpriteTableStart
+!SpriteState = $C2;!SpriteTableSize*3+!SpriteTableStart
+!SpritePosYLo = $D8;!SpriteTableSize*4+!SpriteTableStart
+!SpritePosXLo = $E4;!SpriteTableSize*5+!SpriteTableStart
 incsrc relocationPatch.asm
 
 ;##############################

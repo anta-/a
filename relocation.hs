@@ -31,6 +31,24 @@ main = do
     BS.writeFile "relocationPatch.asm" s1
     BS.writeFile "relocationHijack.asm" s2
     putStrLn "OK"
+--    absAddressChangeOnly
+
+absAddressChangeOnly :: IO ()
+absAddressChangeOnly = do
+    list <- read <$> readFile "findRAMListAACO.txt"
+    smwDisC <- smwDisCFile
+    rom <- romFile
+    let s = aacoAndShowCode list smwDisC rom
+    BS.writeFile "relocationAACO.asm" s
+    putStrLn "AACO: OK"
+
+aacoAndShowCode :: [(Int, String)] -> BS.ByteString -> Bytes -> BS.ByteString
+aacoAndShowCode m smwDisC rom =
+    let (r, s) = initalHJ smwDisC rom (Map.fromList$ map (second BS.pack) m) in
+    let (c, s') = execHJ (mapM_ findAndAACO (map fst m)) r s in
+    let g = runReader (genCodeAll =<< codeListGen c) (initalReadState2 r s') in
+    let (q, _) = showCodeBlocks g in
+    q
 
 findAndShowCode :: [(Int, String)] -> BS.ByteString -> Bytes -> (BS.ByteString, BS.ByteString)
 findAndShowCode m smwDisC rom =
@@ -100,6 +118,13 @@ genCodeLine a x = do
             genBrokenCode a asm'
         GenNewCode BrokenExecutePtr ->
             genBrokenExecutePtr a
+        GenNewCode AACO ->
+            genAACO asm'
+
+genAACO :: Assembly -> HJRead [PatchCode]
+genAACO (asm@Assembly {..}) = do
+    macro <- getRAMMacroName (fromJust$ getOperandInt operand)
+    return$ assemblyToAACO asm macro
 
 longAddressingCode :: Assembly -> HJRead [PatchCode]
 longAddressingCode (asm@Assembly {..}) = do
@@ -215,19 +240,22 @@ createExecutePtr :: AddressInfoMap -> ExecutePtrMap
 createExecutePtr m = Map.fromList$ f$ Map.assocs m
     where
         f ((a,x):y:zs)
-            | isJust e = (a, ExecutePtr e' (createTable e' bank (aiBytes$ snd y))) : f zs
+            | isJust e = (a, ExecutePtr e' (takeWhile g$ createTable e' bank (aiBytes$ snd y))) : f zs
             | otherwise = f (y:zs)
             where
                 bank = enumToSNESAddress a `div` 0x10000
                 e' = fromJust e
                 e = isExecutePtrLong =<< aiAssembly x
         f _ = []
+        g x = maybe False (\x-> isJust$ aiAssembly x)$ Map.lookup x m
         createTable isLong bank bs
             | BB.null bs = []
             | otherwise =
-                let (t, us) = BB.splitAt (if isLong then 3 else 2) bs in
-                snesAddressToEnum (g t) : createTable isLong bank us
+                let (t, us) = BB.splitAt size bs in
+                if BB.length t < size then []
+                else snesAddressToEnum (g t) : createTable isLong bank us
             where
+                size = if isLong then 3 else 2
                 g x = (if isLong then id else (bank*0x10000+))$
                     foldr (\x y-> y * 0x100 + x) 0. map fromIntegral$ BB.unpack x
 
@@ -287,6 +315,14 @@ createJumpRev m o = foldr (\(a, Left-> b)-> Map.alter (Just. maybe [b] (b:)) a) 
 
 type JumpRev = Map.IntMap [JumpType]
 type JumpType = Either Address Address
+
+findAndAACO :: Address -> HJ ()
+findAndAACO x =
+    mapM_ createAACO =<< findRAMAccess x
+
+createAACO :: Address -> HJ ()
+createAACO a = do
+    addNewCode (NewCode a AACO)
 
 findAndLongAddressing :: Address -> HJ ()
 findAndLongAddressing x =
@@ -400,7 +436,7 @@ data NewCode = NewCode
     , ncType :: NewCodeType
     } deriving (Show)
 
-data NewCodeType = LongAddressing | BrokenJump | BrokenExecutePtr
+data NewCodeType = LongAddressing | BrokenJump | BrokenExecutePtr | AACO
     deriving (Show)
 
 type AddressStateMap = Map.IntMap AddressState
