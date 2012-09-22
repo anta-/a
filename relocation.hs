@@ -314,10 +314,11 @@ createBrokenJump (either (,False) (,True)-> (a, f)) = do
     if not (not b || (f && not b'))
     then return Nothing
     else do
-        breakJMLBytes a
-        when f (break2OriginAddress a)
+        a' <- liftRead$ dataYokeruOffset a
+        breakJMLBytes a'
+        when f (break2OriginAddress a')
         addNewCode c
-        return (Just a)
+        return (Just a')
     where
         c = NewCode
             { ncOriginalAddress = a
@@ -381,11 +382,23 @@ findRAMAccess x = map fst. filter f. Map.assocs <$> liftRead getAddressInfoMap
             && getOperandInt operand == Just x
         f _ = False
 
+dataYokeruOffset :: Address -> HJRead Address
+dataYokeruOffset a =
+    g <$> (filterM f =<< filterM (\x-> (x==) <$> getAddressOrigin x) [a-3..a])
+    where
+        g [] = trace ("dataYokeruOffset: null: "++show a) () `seq` a
+        g xs = last xs
+        f x =
+            all id. map (isJust. aiAssembly) <$>
+            ( mapM getAddressInfo. unique =<<
+                mapM getAddressOrigin [x..x+3] )
+
 createLongAddressing :: Address -> HJ ()
 createLongAddressing a = do
-    breakJMLBytes a
+    a' <- liftRead$ dataYokeruOffset a
+    breakJMLBytes a'
     mapM_ findAndBrokenJumpMany. unique =<<
-        mapM (liftRead. getAddressOrigin) [a..a+3]
+        mapM (liftRead. getAddressOrigin) [a'..a'+3]
     addNewCode c
     where
         c = NewCode
