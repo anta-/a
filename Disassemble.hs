@@ -33,7 +33,7 @@ createGetDrawInfoPLA a =
     where
         next
             | bank == 1 = [ d [0x5C, 0xCD, 0xA3, 0x01]]    -- JML。ここが壊れてるとだめだけど…問題ないよね
-            | bank == 3 = genRTSCode' bank
+            | bank == 2 || bank == 3 = genRTSCode' bank
             | otherwise = error$ "createGetDrawInfoPLA: bank == " ++ show bank
         bank = a `div` 0x10000
         d = assemblyToAssembly'. fromJust. disassembleCode. BB.pack

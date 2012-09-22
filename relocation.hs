@@ -35,6 +35,12 @@ main = do
     BS.writeFile "relocationHijack.asm" s2
     putStrLn "OK"
 
+sprAACOmacroCreate :: IO ()
+sprAACOmacroCreate = do
+    m <- read <$> readFile "findRAMListAACO.txt" :: IO [(Int, String)]
+    putStr$ unlines$ map (\(i, (a, x))-> printf "%s = $%04X" x (0x0FBE+0xC*i))$ zip [(0::Int)..]$ m
+
+
 findAndShowCode :: [(Int, String)] -> [(Int, String)] -> BS.ByteString -> Bytes -> (BS.ByteString, BS.ByteString)
 findAndShowCode m m2 smwDisC rom =
     let (r, s) = initalHJ smwDisC rom (Map.fromList$ map (second BS.pack) (m++m2)) (map fst m2) in
@@ -58,8 +64,8 @@ showCodeBlock (CodeBlock a e xs) = (codeBlockHijackCode a,)$
     : (map showCodeLine xs
     ++ [codeBlockEndingCode e])
 showCodeBlock (CodeBlockPatchOnly a xs) = (,"")$
-    BS.concat$
-    codeBlockHijackOrg a : "\n"
+    BS.unlines$
+    codeBlockHijackOrg a
     : (map showCodeLine xs)
 
 hijackCodeLabel :: Address -> BS.ByteString
@@ -344,14 +350,14 @@ type JumpType = Either Address Address
 
 specialNewCode :: HJ ()
 specialNewCode = do
-    let a3 = snesAddressToEnum 0x03B78E
-    breakJMLBytes a3
-    findAndBrokenJumpMany (snesAddressToEnum 0x03B760)
-    addNewCode (NewCode a3 GetDrawInfoPLA)
     let a1 = snesAddressToEnum 0x01A393
-    breakJMLBytes a1
     findAndBrokenJumpMany (snesAddressToEnum 0x01A365)
-    addNewCode (NewCode a1 GetDrawInfoPLA)
+    let a2 = snesAddressToEnum 0x02D3A6
+    findAndBrokenJumpMany (snesAddressToEnum 0x02D378)
+    let a3 = snesAddressToEnum 0x03B78E
+    findAndBrokenJumpMany (snesAddressToEnum 0x03B760)
+    mapM_ (\a-> breakJMLBytes a >>
+        addNewCode (NewCode a GetDrawInfoPLA)) [a1, a2, a3]
 
 findAndAACO :: Address -> HJ ()
 findAndAACO x =
@@ -360,6 +366,7 @@ findAndAACO x =
 createAACO :: Address -> HJ ()
 createAACO a = do
     breakBytes a 3
+    findAndBrokenJumpMany a
     addNewCode (NewCode a AACO)
 
 findAndLongAddressing :: Address -> HJ ()
@@ -438,7 +445,7 @@ initalReadState s r n aaco = t
         t = ReadState
             { addressOrigin = o
             , addressInfoMap = aim
-            , jumpRev = createExecutePtrJumpRev e `Map.union` createJumpRev aim o
+            , jumpRev = Map.unionWith (++) (createExecutePtrJumpRev e) (createJumpRev aim o)
             , ramMacroName = n
             , executePtr = e
             , brokenMap = error "brokenMap"
