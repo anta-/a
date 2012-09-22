@@ -1,8 +1,6 @@
 header
 lorom
 ;##############################
-; 複数のオフセットで使われてる奴は面倒だからやめよう
-; スプライト系のRAMはぱっと数えただけで 12 * 50 = 0x258 ある。
 
 !itizi_ram = $1DFD	; 2bytes
 !itizi_ram2 = $1E00	; 1byte
@@ -18,56 +16,102 @@ lorom
 incsrc relocationPatch_0FBE.asm
 
 !SpriteNum = $0FBE
-!SpriteYSpeed = $0FCA
-!SpriteXSpeed = $0FD6
-!SpriteState = $0FE2
-!SpritePosYLo = $0FEE
-!SpritePosXLo = $0FFA
-!SpriteAction = $1006
-!SpriteYHi = $1012
-!SpriteXHi = $101E
-!SprTbl14EC = $102A
-!SprTbl14F8 = $1036
-!SprTbl1504 = $1042
-!SprTbl1510 = $104E
-!SprTbl151C = $105A
-!SprTbl1528 = $1066
-!SprTbl1534 = $1072
-!SprTbl1540 = $107E
-!DisableInter = $108A
-!SprTbl1558 = $1096
-!SprTbl1564 = $10A2
-!SprTbl1570 = $10AE
-!SpriteDir = $10BA
-!SprObjStatus = $10C6
-!SprTbl1594 = $10D2
-!OffscreenHorz = $10DE
-!SprTbl15AC = $10EA
-!SprTbl15B8 = $10F6
-!SprTbl15C4 = $1102
-!SprTbl15D0 = $110E
-!SprTbl15DC = $111A
-!SprOAMIndex = $1126
-!SpritePal = $1132
-!SprTbl1602 = $113E
-!SprTbl160E = $114A
-!SprIndexInLvl = $1156
-!SprTbl1626 = $1162
-!SprBehindScrn = $116E
-!SprTbl163E = $117A
-!SprTbl164A = $1186
-!Tweaker1656 = $1192
-!Tweaker1662 = $119E
-!Tweaker166E = $11AA
-!Tweaker167A = $11B6
-!Tweaker1686 = $11C2
-!OffscreenVert = $11CE
-!SprTbl187B = $11DA
-!Tweaker190F = $11E6
-!SprTbl1FD6 = $11F2
-!SprTbl1FE2 = $11FE
+!SpriteYSpeed = $0FD2
+!SpriteXSpeed = $0FE6
+!SpriteState = $0FFA
+!SpritePosYLo = $100E
+!SpritePosXLo = $1022
+!SpriteAction = $1036
+!SpriteYHi = $104A
+!SpriteXHi = $105E
+!SprTbl14EC = $1072
+!SprTbl14F8 = $1086
+!SprTbl1504 = $109A
+!SprTbl1510 = $10AE
+!SprTbl151C = $10C2
+!SprTbl1528 = $10D6
+!SprTbl1534 = $10EA
+!SprTbl1540 = $10FE
+!DisableInter = $1112
+!SprTbl1558 = $1126
+!SprTbl1564 = $113A
+!SprTbl1570 = $114E
+!SpriteDir = $1162
+!SprObjStatus = $1176
+!SprTbl1594 = $118A
+!OffscreenHorz = $119E
+!SprTbl15AC = $11B2
+!SprTbl15B8 = $11C6
+!SprTbl15C4 = $11DA
+!SprTbl15D0 = $11EE
+!SprTbl15DC = $1202
+!SprOAMIndex = $1216
+!SpritePal = $122A
+!SprTbl1602 = $123E
+!SprTbl160E = $1252
+!SprIndexInLvl = $1266
+!SprTbl1626 = $127A
+!SprBehindScrn = $128E
+!SprTbl163E = $12A2
+!SprTbl164A = $12B6
+!Tweaker1656 = $12CA
+!Tweaker1662 = $12DE
+!Tweaker166E = $12F2
+!Tweaker167A = $1306
+!Tweaker1686 = $131A
+!OffscreenVert = $132E
+!SprTbl187B = $1342
+!Tweaker190F = $1356
+!SprTbl1FD6 = $136A
+!SprTbl1FE2 = $137E
+
+!SprTblSize = $14
+!SprTblIdxMax = !SprTblSize-1
+!SprTblNmrIdxMax = !SprTblIdxMax-2
 
 incsrc relocationPatch.asm
+
+;##############################
+; SprTblSizeの修正
+org $01ABCE
+	ADC.b #!SprTblSize
+org $02D28A
+	ADC.b #!SprTblSize
+; LDX
+org $00FA10 : LDX.b #!SprTblIdxMax
+org $00FCEC : LDX.b #!SprTblIdxMax
+org $0180A7 : LDX.b #!SprTblIdxMax
+org $028017 : LDX.b #!SprTblIdxMax
+org $028905 : LDX.b #!SprTblIdxMax
+org $0293AE : LDX.b #!SprTblIdxMax
+org $02ABFE : LDX.b #!SprTblIdxMax
+org $03C2DA : LDX.b #!SprTblIdxMax
+; LDY
+org $00FA8F : LDY.b #!SprTblIdxMax
+org $00FC23 : LDY.b #!SprTblIdxMax
+org $01C2D3 : LDY.b #!SprTblIdxMax
+org $01E1C8 : LDY.b #!SprTblIdxMax
+org $01F566 : LDY.b #!SprTblIdxMax
+org $01F629 : LDY.b #!SprTblIdxMax
+org $0289DF : LDY.b #!SprTblIdxMax
+org $02BAB5 : LDY.b #!SprTblIdxMax
+org $02E5F7 : LDY.b #!SprTblIdxMax
+org $02EA4E : LDY.b #!SprTblIdxMax
+org $02EF6E : LDY.b #!SprTblIdxMax
+org $0381E4 : LDY.b #!SprTblIdxMax
+; SpriteSlotMax
+org $02A773
+	db !SprTblNmrIdxMax,$05,$07,$07,$07,$06,$07,$06
+	db $06,!SprTblNmrIdxMax,$08,$04,$07,$07,$07,$08
+	db !SprTblNmrIdxMax,$05,$05
+	
+	db !SprTblNmrIdxMax,$07,$07,$01,$00,$01,$07,$06
+	db $06,$00,$02,$00,$07,$01,$07,$08
+	db !SprTblNmrIdxMax,$07,$05
+	
+	db !SprTblNmrIdxMax,$07,$07,$01,$00,$06,$07,$06
+	db $06,$00,$02,$00,$07,$01,$07,$08
+	db !SprTblNmrIdxMax,$07,$05
 
 ;##############################
 ; hijack用の空き領域

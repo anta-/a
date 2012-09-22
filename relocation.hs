@@ -40,7 +40,7 @@ sprAACOmacroCreate = do
     list <- read <$> readFile "findRAMList.txt" :: IO [(Int, String)]
     list2 <- read <$> readFile "findRAMListAACO.txt" :: IO [(Int, String)]
     putStr$ unlines$
-        map (\(i, (a, x))-> printf "%s = $%04X" x (0x0FBE+0xC*i))$
+        map (\(i, (a, x))-> printf "%s = $%04X" x (0x0FBE+0x14*i))$
         zip [(0::Int)..]$ (list++list2)
 
 
