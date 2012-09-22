@@ -102,16 +102,21 @@ org $0381E4 : LDY.b #!SprTblIdxMax
 ; SpriteSlotMax
 org $02A773
 	db !SprTblNmrIdxMax,$05,$07,$07,$07,$06,$07,$06
-	db $06,!SprTblNmrIdxMax,$08,$04,$07,$07,$07,$08
-	db !SprTblNmrIdxMax,$05,$05
+	db $06,$09,$08,$04,$07,$07,$07,$08
+	db $09,$05,$05
 	
 	db !SprTblNmrIdxMax,$07,$07,$01,$00,$01,$07,$06
 	db $06,$00,$02,$00,$07,$01,$07,$08
-	db !SprTblNmrIdxMax,$07,$05
+	db $09,$07,$05
 	
 	db !SprTblNmrIdxMax,$07,$07,$01,$00,$06,$07,$06
 	db $06,$00,$02,$00,$07,$01,$07,$08
-	db !SprTblNmrIdxMax,$07,$05
+	db $09,$07,$05
+; スプライトのOAMアドレス
+org $07F000
+	db $30,$3C,$48,$54,$60,$6C,$78,$84
+	db $90,$9C,$A8,$B4,$C0,$CC,$B8,$C4
+	db $D0,$DC,$28,$2C
 
 ;##############################
 ; hijack用の空き領域
