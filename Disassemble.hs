@@ -104,7 +104,7 @@ showPatchCode :: PatchCode -> BS.ByteString
 showPatchCode (CodeDB b) = BS.concat$
     "db " : tail (concatMap (\x-> [",", "$", BB.pack (showHex2 x)])$ BB.unpack b)
 showPatchCode (CodeAssembly a) = showAssembly' a
-showPatchCode (CodeRaw s) = s
+showPatchCode (CodeRaw s _) = s
 
 showHex2 :: Word8 -> [Word8]
 showHex2 x = let (q, r) = quotRem x 16 in
@@ -308,7 +308,7 @@ assemblyToLongAddressing (asm@Assembly {..}) name
             ]
         longCode =
             [ e [0x8B], e [0x08]    -- PHB : PHP
-            , CodeRaw$ BS.concat ["db $F4 : dw ", name, ">>8"]
+            , CodeRaw (BS.concat ["db $F4 : dw ", name, ">>8"]) 3
                 -- PEA !name>>8
             , e [0xAB], e [0xAB], e [0x28]  -- PLB : PLB : PLP
             , codeAssembly' mnemonic aa (Opr'Macro name)
@@ -371,7 +371,7 @@ assemblyToAssembly' (Assembly {..}) = Assembly'
     , operand' = Opr'Opr operand
     }
 
-data PatchCode = CodeAssembly Assembly' | CodeDB BB.ByteString | CodeRaw BS.ByteString
+data PatchCode = CodeAssembly Assembly' | CodeDB BB.ByteString | CodeRaw BS.ByteString Int
     deriving (Show)
 
 data Assembly' = Assembly'

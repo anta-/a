@@ -37,8 +37,11 @@ main = do
 
 sprAACOmacroCreate :: IO ()
 sprAACOmacroCreate = do
-    m <- read <$> readFile "findRAMListAACO.txt" :: IO [(Int, String)]
-    putStr$ unlines$ map (\(i, (a, x))-> printf "%s = $%04X" x (0x0FBE+0xC*i))$ zip [(0::Int)..]$ m
+    list <- read <$> readFile "findRAMList.txt" :: IO [(Int, String)]
+    list2 <- read <$> readFile "findRAMListAACO.txt" :: IO [(Int, String)]
+    putStr$ unlines$
+        map (\(i, (a, x))-> printf "%s = $%04X" x (0x0FBE+0xC*i))$
+        zip [(0::Int)..]$ (list++list2)
 
 
 findAndShowCode :: [(Int, String)] -> [(Int, String)] -> BS.ByteString -> Bytes -> (BS.ByteString, BS.ByteString)
@@ -55,15 +58,37 @@ mainHJ m m2 = do
     mapM_ findAndLongAddressing (map fst m)
 
 showCodeBlocks :: [CodeBlock] -> (BS.ByteString, BS.ByteString)
-showCodeBlocks = join (***) BS.unlines. unzip. map showCodeBlock
+showCodeBlocks = (BS.unlines *** f). unzip. map showCodeBlock
+    where
+        f :: [(BS.ByteString, Int)] -> BS.ByteString
+        f = BS.unlines. concat.
+            map (\(b, xs)->
+                BS.pack (printf "print \"bank %02X start: \", pc" b)
+                : BS.pack (printf "org $%06X" (if b == 0x10 then startOffset else b*0x10000+0x8000)) : xs).
+            zip [(0x10::Int)..]. g ((startOffset`mod`0x10000) - 0x8000)
+        startOffset = 0x10812A
+        g n ((t,x):xs) =
+            let m = n+x in if m >= 0x8000
+            then [] : g 0 ((t,x):xs)
+            else let (y:ys) = g m xs in (t : y) : ys
+        g _ [] = [[]]
 
-showCodeBlock :: CodeBlock -> (BS.ByteString, BS.ByteString)
+codeLineLength :: CodeLine -> Int
+codeLineLength = sum. map patchCodeLength. clCode
+
+patchCodeLength :: PatchCode -> Int
+patchCodeLength (CodeAssembly asm) = assembly'Length asm
+patchCodeLength (CodeDB bs) = BB.length bs
+patchCodeLength (CodeRaw _ z) = z
+
+showCodeBlock :: CodeBlock -> (BS.ByteString, (BS.ByteString, Int))
 showCodeBlock (CodeBlock a e xs) = (codeBlockHijackCode a,)$
+    (,4 + sum (map codeLineLength xs))$
     BS.unlines$
     codeBlockIntroCode a
     : (map showCodeLine xs
     ++ [codeBlockEndingCode e])
-showCodeBlock (CodeBlockPatchOnly a xs) = (,"")$
+showCodeBlock (CodeBlockPatchOnly a xs) = (,("",0))$
     BS.unlines$
     codeBlockHijackOrg a
     : (map showCodeLine xs)
@@ -159,8 +184,8 @@ genBrokenExecutePtr a = do
             opr <- if b
                 then getCodeLabel x
                 else return (BS.pack$ printf "$%06X" addr)
-            return$ CodeRaw$
-                "dl " `BS.append` opr
+            return$ CodeRaw (
+                "dl " `BS.append` opr) 3
             where
                 addr = enumToSNESAddress x
 
